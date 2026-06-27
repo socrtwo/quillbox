@@ -1,6 +1,7 @@
 package info.socrtwo.quillbox.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -15,6 +16,12 @@ interface AccountDao {
 
     @Update
     suspend fun update(account: AccountEntity)
+
+    @Delete
+    suspend fun delete(account: AccountEntity)
+
+    @Query("SELECT * FROM accounts ORDER BY id")
+    fun observeAll(): Flow<List<AccountEntity>>
 
     @Query("SELECT * FROM accounts ORDER BY id LIMIT 1")
     fun observePrimaryAccount(): Flow<AccountEntity?>

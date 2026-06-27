@@ -15,6 +15,7 @@ import info.socrtwo.quillbox.ui.messages.MessageDetailScreen
 import info.socrtwo.quillbox.ui.messages.MessageListScreen
 import info.socrtwo.quillbox.ui.rules.RulesScreen
 import info.socrtwo.quillbox.ui.root.RootViewModel
+import info.socrtwo.quillbox.ui.settings.SettingsScreen
 
 @Composable
 fun QuillboxNavHost(rootViewModel: RootViewModel) {
@@ -32,8 +33,14 @@ fun QuillboxNavHost(rootViewModel: RootViewModel) {
         composable(Routes.ACCOUNT_SETUP) {
             AccountSetupScreen(
                 onSaved = {
-                    navController.navigate(Routes.FOLDERS) {
-                        popUpTo(Routes.ACCOUNT_SETUP) { inclusive = true }
+                    // First-run setup (no back stack) lands on the mailbox; adding a
+                    // subsequent account from Settings simply returns to where we came from.
+                    if (navController.previousBackStackEntry == null) {
+                        navController.navigate(Routes.FOLDERS) {
+                            popUpTo(Routes.ACCOUNT_SETUP) { inclusive = true }
+                        }
+                    } else {
+                        navController.popBackStack()
                     }
                 }
             )
@@ -43,7 +50,7 @@ fun QuillboxNavHost(rootViewModel: RootViewModel) {
             FolderListScreen(
                 onOpenFolder = { id, name -> navController.navigate(Routes.messages(id, name)) },
                 onCompose = { navController.navigate(Routes.COMPOSE) },
-                onManageRules = { navController.navigate(Routes.RULES) }
+                onOpenSettings = { navController.navigate(Routes.SETTINGS) }
             )
         }
 
@@ -56,7 +63,8 @@ fun QuillboxNavHost(rootViewModel: RootViewModel) {
         ) {
             MessageListScreen(
                 onOpenMessage = { messageId -> navController.navigate(Routes.detail(messageId)) },
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onOpenSettings = { navController.navigate(Routes.SETTINGS) }
             )
         }
 
@@ -73,6 +81,14 @@ fun QuillboxNavHost(rootViewModel: RootViewModel) {
 
         composable(Routes.RULES) {
             RulesScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable(Routes.SETTINGS) {
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                onAddAccount = { navController.navigate(Routes.ACCOUNT_SETUP) },
+                onManageRules = { navController.navigate(Routes.RULES) }
+            )
         }
     }
 }

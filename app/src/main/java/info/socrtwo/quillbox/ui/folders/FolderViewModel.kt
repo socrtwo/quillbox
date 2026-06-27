@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
@@ -30,10 +31,19 @@ class FolderViewModel @Inject constructor(
     private val mailRepository: MailRepository
 ) : ViewModel() {
 
-    val account: StateFlow<AccountEntity?> = accountRepository.observePrimaryAccount()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    /** All configured accounts (for the account switcher). */
+    val accounts: StateFlow<List<AccountEntity>> = accountRepository.observeAccounts()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    val folders: StateFlow<List<FolderEntity>> = accountRepository.observePrimaryAccount()
+    /** The account currently being viewed: the selected one, or the first if none chosen. */
+    val currentAccount: StateFlow<AccountEntity?> = combine(
+        accountRepository.observeAccounts(),
+        accountRepository.selectedAccountId
+    ) { list, selectedId ->
+        list.firstOrNull { it.id == selectedId } ?: list.firstOrNull()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
+    val folders: StateFlow<List<FolderEntity>> = currentAccount
         .flatMapLatest { acc ->
             if (acc == null) flowOf(emptyList()) else mailRepository.observeFolders(acc.id)
         }
@@ -42,9 +52,11 @@ class FolderViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FolderUiState())
     val uiState: StateFlow<FolderUiState> = _uiState.asStateFlow()
 
-    /** Pull-to-refresh: fetch new mail and route it through the rules engine. */
+    fun selectAccount(id: Long) = accountRepository.selectAccount(id)
+
+    /** Fetch new mail for the current account and route it through the rules engine. */
     fun refresh() {
-        val acc = account.value ?: return
+        val acc = currentAccount.value ?: return
         viewModelScope.launch {
             _uiState.value = FolderUiState(isRefreshing = true)
             val result = mailRepository.syncMessages(acc)

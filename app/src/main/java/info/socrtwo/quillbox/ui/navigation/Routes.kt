@@ -8,6 +8,7 @@ object Routes {
     const val DETAIL = "detail/{messageId}"
     const val COMPOSE = "compose"
     const val RULES = "rules"
+    const val SETTINGS = "settings"
 
     fun messages(folderId: Long, folderName: String) = "messages/$folderId/$folderName"
     fun detail(messageId: Long) = "detail/$messageId"

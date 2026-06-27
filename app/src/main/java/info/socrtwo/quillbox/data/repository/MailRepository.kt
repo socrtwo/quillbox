@@ -100,6 +100,13 @@ class MailRepository @Inject constructor(
         stored
     }
 
+    /** Syncs the account that owns [folderId]. Convenience for the message-list screen. */
+    suspend fun syncFolder(folderId: Long): Result<Int> {
+        val folder = folderDao.getById(folderId) ?: return Result.success(0)
+        val account = accountDao.getById(folder.accountId) ?: return Result.success(0)
+        return syncMessages(account)
+    }
+
     suspend fun markRead(messageId: Long, read: Boolean) = messageDao.setRead(messageId, read)
 
     suspend fun moveMessage(messageId: Long, accountId: Long, folderName: String) {

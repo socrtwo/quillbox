@@ -56,7 +56,7 @@ class ComposeViewModel @Inject constructor(
         }
         viewModelScope.launch {
             _state.update { it.copy(sending = true, error = null) }
-            val account = accountRepository.getPrimaryAccount()
+            val account = accountRepository.getSelectedAccount()
             if (account == null) {
                 _state.update { it.copy(sending = false, error = "No account configured") }
                 return@launch

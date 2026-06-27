@@ -84,6 +84,8 @@ class AccountViewModel @Inject constructor(
             }
             val id = accountRepository.saveAccount(account)
             mailRepository.ensureDefaultFolders(id)
+            // Make the just-added account the active one.
+            accountRepository.selectAccount(id)
             _state.update { it.copy(saving = false) }
             onSaved()
         }
