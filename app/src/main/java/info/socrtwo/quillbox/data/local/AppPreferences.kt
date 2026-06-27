@@ -21,6 +21,10 @@ class AppPreferences @Inject constructor(
     private val _selectedAccountId = MutableStateFlow(readSelectedAccountId())
     val selectedAccountId: StateFlow<Long?> = _selectedAccountId.asStateFlow()
 
+    /** Sender addresses (lower-cased) the user has approved to load remote images from. */
+    private val _trustedImageSenders = MutableStateFlow(readTrustedSenders())
+    val trustedImageSenders: StateFlow<Set<String>> = _trustedImageSenders.asStateFlow()
+
     private fun readSelectedAccountId(): Long? =
         prefs.getLong(KEY_SELECTED_ACCOUNT, -1L).takeIf { it >= 0 }
 
@@ -29,7 +33,17 @@ class AppPreferences @Inject constructor(
         _selectedAccountId.value = id
     }
 
+    private fun readTrustedSenders(): Set<String> =
+        prefs.getStringSet(KEY_TRUSTED_SENDERS, emptySet())?.toSet() ?: emptySet()
+
+    fun trustImageSender(sender: String) {
+        val updated = readTrustedSenders() + sender.lowercase().trim()
+        prefs.edit().putStringSet(KEY_TRUSTED_SENDERS, updated).apply()
+        _trustedImageSenders.value = updated
+    }
+
     companion object {
         private const val KEY_SELECTED_ACCOUNT = "selected_account_id"
+        private const val KEY_TRUSTED_SENDERS = "trusted_image_senders"
     }
 }

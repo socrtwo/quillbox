@@ -49,7 +49,7 @@ class MailClient @Inject constructor() {
     suspend fun fetchMessages(
         account: AccountEntity,
         remoteFolder: String = "INBOX",
-        limit: Int = 50
+        limit: Int = Int.MAX_VALUE
     ): List<FetchedMessage> = withContext(Dispatchers.IO) {
         val session = Session.getInstance(incomingProperties(account))
         val store = session.getStore(storeProtocol(account))
@@ -60,8 +60,8 @@ class MailClient @Inject constructor() {
             folder.open(Folder.READ_ONLY)
             try {
                 val all = folder.messages
-                // Take the newest [limit] messages (servers return oldest-first).
-                val slice = if (all.size > limit) all.copyOfRange(all.size - limit, all.size) else all
+                // By default sync every message; callers may pass a smaller [limit] to cap it.
+                val slice = if (limit < all.size) all.copyOfRange(all.size - limit, all.size) else all
                 slice.map { it.toFetchedMessage() }.reversed()
             } finally {
                 if (folder.isOpen) folder.close(false)
@@ -199,7 +199,8 @@ class MailClient @Inject constructor() {
             bodyHtml = parts.html?.trim(),
             sentDate = sentDate?.time ?: System.currentTimeMillis(),
             receivedDate = (this as? MimeMessage)?.receivedDate?.time ?: System.currentTimeMillis(),
-            hasAttachments = parts.hasAttachments
+            hasAttachments = parts.attachments.isNotEmpty(),
+            attachments = parts.attachments.toList()
         )
     }
 
@@ -209,18 +210,19 @@ class MailClient @Inject constructor() {
     private class ExtractedBody {
         val text = StringBuilder()
         var html: String? = null
-        var hasAttachments = false
+        val attachments = mutableListOf<FetchedAttachment>()
     }
 
-    /** Recursively walks a MIME part, collecting plain text, HTML and attachment flags. */
+    /** Recursively walks a MIME part, collecting plain text, HTML and attachment bytes. */
     private fun extractBody(part: Part, out: ExtractedBody) {
         try {
             val disposition = part.disposition
-            if (disposition != null &&
+            val isAttachment = disposition != null &&
                 (disposition.equals(Part.ATTACHMENT, ignoreCase = true) ||
-                    disposition.equals(Part.INLINE, ignoreCase = true) && part.fileName != null)
-            ) {
-                out.hasAttachments = true
+                    (disposition.equals(Part.INLINE, ignoreCase = true) && part.fileName != null))
+
+            if (isAttachment || (part.fileName != null && !part.isMimeType("multipart/*"))) {
+                captureAttachment(part, out)
                 return
             }
 
@@ -238,12 +240,22 @@ class MailClient @Inject constructor() {
                         extractBody(mp.getBodyPart(i), out)
                     }
                 }
-                part.fileName != null -> {
-                    out.hasAttachments = true
-                }
             }
         } catch (_: Exception) {
             // Tolerate malformed parts; partial bodies are acceptable for display.
+        }
+    }
+
+    private fun captureAttachment(part: Part, out: ExtractedBody) {
+        try {
+            val rawName = part.fileName ?: "attachment"
+            val name = runCatching { jakarta.mail.internet.MimeUtility.decodeText(rawName) }.getOrDefault(rawName)
+            val mime = part.contentType?.substringBefore(';')?.trim()?.ifBlank { null }
+                ?: "application/octet-stream"
+            val bytes = part.inputStream.use { it.readBytes() }
+            out.attachments.add(FetchedAttachment(fileName = name, mimeType = mime, bytes = bytes))
+        } catch (_: Exception) {
+            // Skip an attachment we can't read rather than failing the whole message.
         }
     }
 }

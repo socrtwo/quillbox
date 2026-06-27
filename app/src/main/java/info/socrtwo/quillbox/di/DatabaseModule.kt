@@ -11,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import info.socrtwo.quillbox.data.local.QuillboxDatabase
 import info.socrtwo.quillbox.data.local.dao.AccountDao
+import info.socrtwo.quillbox.data.local.dao.AttachmentDao
 import info.socrtwo.quillbox.data.local.dao.FolderDao
 import info.socrtwo.quillbox.data.local.dao.MessageDao
 import info.socrtwo.quillbox.data.local.dao.RuleDao
@@ -45,10 +46,15 @@ object DatabaseModule {
                     )
                 }
             })
+            // The attachments table was added in v2. Recreate the local cache on schema
+            // change rather than ship a hand-written migration; accounts/rules are quick to
+            // re-add and mail can simply be re-synced from the server.
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides fun provideAccountDao(db: QuillboxDatabase): AccountDao = db.accountDao()
     @Provides fun provideFolderDao(db: QuillboxDatabase): FolderDao = db.folderDao()
     @Provides fun provideMessageDao(db: QuillboxDatabase): MessageDao = db.messageDao()
     @Provides fun provideRuleDao(db: QuillboxDatabase): RuleDao = db.ruleDao()
+    @Provides fun provideAttachmentDao(db: QuillboxDatabase): AttachmentDao = db.attachmentDao()
 }

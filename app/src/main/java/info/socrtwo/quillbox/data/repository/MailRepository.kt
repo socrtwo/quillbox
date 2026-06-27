@@ -1,9 +1,13 @@
 package info.socrtwo.quillbox.data.repository
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import info.socrtwo.quillbox.data.local.dao.AccountDao
+import info.socrtwo.quillbox.data.local.dao.AttachmentDao
 import info.socrtwo.quillbox.data.local.dao.FolderDao
 import info.socrtwo.quillbox.data.local.dao.MessageDao
 import info.socrtwo.quillbox.data.local.entity.AccountEntity
+import info.socrtwo.quillbox.data.local.entity.AttachmentEntity
 import info.socrtwo.quillbox.data.local.entity.FolderEntity
 import info.socrtwo.quillbox.data.local.entity.MessageEntity
 import info.socrtwo.quillbox.data.mail.FetchedMessage
@@ -11,14 +15,17 @@ import info.socrtwo.quillbox.data.mail.MailClient
 import info.socrtwo.quillbox.data.mail.OutgoingAttachment
 import info.socrtwo.quillbox.data.rules.RulesEngine
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class MailRepository @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val accountDao: AccountDao,
     private val folderDao: FolderDao,
     private val messageDao: MessageDao,
+    private val attachmentDao: AttachmentDao,
     private val mailClient: MailClient,
     private val ruleRepository: RuleRepository,
     private val rulesEngine: RulesEngine
@@ -78,7 +85,7 @@ class MailRepository @Inject constructor(
                 ?.let { folderId(account.id, it) }
                 ?: inboxId
 
-            messageDao.insert(
+            val rowId = messageDao.insert(
                 MessageEntity(
                     accountId = account.id,
                     folderId = destFolderId,
@@ -95,10 +102,39 @@ class MailRepository @Inject constructor(
                     hasAttachments = msg.hasAttachments
                 )
             )
-            stored++
+            // rowId is -1 when the insert was ignored as a duplicate.
+            if (rowId > 0) {
+                storeAttachments(rowId, msg)
+                stored++
+            }
         }
         stored
     }
+
+    /** Writes a message's attachment bytes to private storage and records their metadata. */
+    private suspend fun storeAttachments(messageRowId: Long, msg: FetchedMessage) {
+        if (msg.attachments.isEmpty()) return
+        val dir = File(context.filesDir, "attachments/$messageRowId").apply { mkdirs() }
+        msg.attachments.forEachIndexed { index, att ->
+            runCatching {
+                val safeName = att.fileName.replace(Regex("[^A-Za-z0-9._-]"), "_").ifBlank { "file" }
+                val file = File(dir, "${index}_$safeName")
+                file.writeBytes(att.bytes)
+                attachmentDao.insert(
+                    AttachmentEntity(
+                        messageId = messageRowId,
+                        fileName = att.fileName,
+                        mimeType = att.mimeType,
+                        sizeBytes = att.bytes.size.toLong(),
+                        filePath = file.absolutePath
+                    )
+                )
+            }
+        }
+    }
+
+    fun observeAttachments(messageId: Long): Flow<List<AttachmentEntity>> =
+        attachmentDao.observeByMessage(messageId)
 
     /** Syncs the account that owns [folderId]. Convenience for the message-list screen. */
     suspend fun syncFolder(folderId: Long): Result<Int> {

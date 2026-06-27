@@ -11,7 +11,15 @@ data class FetchedMessage(
     val bodyHtml: String?,
     val sentDate: Long,
     val receivedDate: Long,
-    val hasAttachments: Boolean
+    val hasAttachments: Boolean,
+    val attachments: List<FetchedAttachment> = emptyList()
+)
+
+/** A file attachment pulled from a fetched message, with its decoded bytes. */
+data class FetchedAttachment(
+    val fileName: String,
+    val mimeType: String,
+    val bytes: ByteArray
 )
 
 /** An attachment selected by the user to send with an outgoing message. */
