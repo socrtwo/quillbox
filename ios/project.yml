@@ -1,6 +1,8 @@
 name: Quillbox
 options:
   bundleIdPrefix: info.socrtwo
+  # Emit a project format readable by Xcode 15.x runners (avoid the Xcode 16 "77" format).
+  objectVersion: 56
   deploymentTarget:
     iOS: "16.0"
 targets:
