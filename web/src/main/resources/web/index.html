@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quillbox</title>
+  <style>
+    :root { --blue: #2E5D9F; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; margin: 0; color: #1c1c1c; }
+    header { background: var(--blue); color: #fff; padding: 10px 16px; display: flex; align-items: center; gap: 12px; }
+    header h1 { font-size: 18px; margin: 0; flex: 1; }
+    button { background: var(--blue); color: #fff; border: 0; border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+    button.secondary { background: #e7eefb; color: var(--blue); }
+    input, textarea { width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #ccc; border-radius: 6px; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
+    .row { display: flex; gap: 16px; }
+    .list { width: 320px; border-right: 1px solid #eee; height: calc(100vh - 52px); overflow:auto; }
+    .item { padding: 10px 14px; border-bottom: 1px solid #eee; cursor: pointer; }
+    .item .from { font-weight: 600; }
+    .detail { flex: 1; padding: 16px; height: calc(100vh - 52px); overflow:auto; }
+    .muted { color: #777; font-size: 12px; }
+    dialog { width: min(560px, 92vw); border: 0; border-radius: 10px; padding: 16px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <!-- Account setup -->
+  <section id="setup" class="wrap">
+    <h2>Add Mail Account</h2>
+    <input id="displayName" placeholder="Display name" />
+    <input id="email" placeholder="Email address" />
+    <select id="protocol"><option value="IMAP">IMAP</option><option value="POP3">POP3</option></select>
+    <input id="incomingHost" placeholder="Incoming host (imap.example.com)" />
+    <input id="incomingPort" placeholder="Incoming port" value="993" />
+    <input id="smtpHost" placeholder="SMTP host (smtp.example.com)" />
+    <input id="smtpPort" placeholder="SMTP port" value="587" />
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="saveAccount()">Connect</button>
+    <p class="muted">Credentials are sent to this app's own backend, which talks to your mail server. Use over HTTPS.</p>
+  </section>
+
+  <!-- Mailbox -->
+  <div id="app" class="hidden">
+    <header>
+      <h1 id="title">Quillbox</h1>
+      <button onclick="refresh()">Refresh</button>
+      <button onclick="openCompose()">Compose</button>
+      <button class="secondary" onclick="signOut()">Sign out</button>
+    </header>
+    <div id="status" class="wrap muted"></div>
+    <div class="row">
+      <div id="list" class="list"></div>
+      <div id="detail" class="detail muted">Select a message</div>
+    </div>
+  </div>
+
+  <!-- Compose dialog -->
+  <dialog id="composeDialog">
+    <h3>New message</h3>
+    <input id="to" placeholder="To (comma-separated)" />
+    <input id="cc" placeholder="Cc" />
+    <input id="bcc" placeholder="Bcc" />
+    <input id="subject" placeholder="Subject" />
+    <textarea id="body" rows="8" placeholder="Message"></textarea>
+    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
+      <button class="secondary" onclick="closeCompose()">Cancel</button>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
