@@ -118,6 +118,36 @@ no keystore is committed. To produce a signed release build:
    The APK is written to `app/build/outputs/apk/release/app-release.apk`. If no keystore is
    configured the release `signingConfig` is simply left unset.
 
+### Automated signed builds in CI
+
+`.github/workflows/android.yml` can sign the release APK automatically when a keystore is
+provided via repository **Secrets** (the keystore is never committed). When the secrets are
+absent, the release step still runs but produces an *unsigned* APK.
+
+Set these four secrets under **Settings → Secrets and variables → Actions → New repository
+secret**:
+
+| Secret name        | Value                                                            |
+|--------------------|-----------------------------------------------------------------|
+| `KEYSTORE_BASE64`  | Base64 of your `.jks` file (see below)                          |
+| `KEYSTORE_PASSWORD`| The keystore password                                           |
+| `KEY_ALIAS`        | The key alias (e.g. `quillbox`)                                 |
+| `KEY_PASSWORD`     | The key password (same as the keystore password if you reused it)|
+
+Produce the base64 of the keystore (one line, no wrapping):
+
+```bash
+base64 -w 0 quillbox-release.jks > keystore.b64   # Linux / Termux
+# macOS: base64 -i quillbox-release.jks -o keystore.b64
+```
+
+Open `keystore.b64`, copy its entire contents, and paste it as the `KEYSTORE_BASE64` secret.
+
+Once the secrets are set, every build uploads a **signed** `app-release.apk` as the
+`quillbox-release-apk` artifact, ready to sideload — no manual signing needed. The decoded
+keystore lives only in the runner's temp dir for the duration of the build and is never
+written to the workspace or committed.
+
 ### Security note
 
 Credentials and downloaded mail are stored locally only and are transmitted solely to the
