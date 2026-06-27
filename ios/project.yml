@@ -1,0 +1,26 @@
+name: Quillbox
+options:
+  bundleIdPrefix: info.socrtwo
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  Quillbox:
+    type: application
+    platform: iOS
+    sources:
+      - Quillbox
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: info.socrtwo.quillbox
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: 1
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Quillbox
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+schemes:
+  Quillbox:
+    build:
+      targets:
+        Quillbox: all

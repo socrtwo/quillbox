@@ -148,8 +148,37 @@ Once the secrets are set, every build uploads a **signed** `app-release.apk` as 
 keystore lives only in the runner's temp dir for the duration of the build and is never
 written to the workspace or committed.
 
-### Security note
+## Other platforms
+
+Quillbox started as an Android app; sibling clients live in their own folders. Each is built
+by its own GitHub Actions workflow.
+
+| Folder      | Target                          | Stack                                              | Build artifact |
+|-------------|---------------------------------|----------------------------------------------------|----------------|
+| `app/`      | Android (and **ChromeOS**)      | Kotlin, Jetpack Compose, Room, Hilt, Jakarta Mail  | `.apk`         |
+| `desktop/`  | Windows / macOS / Linux         | Compose Multiplatform Desktop (JVM), Jakarta Mail  | app image + `.msi`/`.dmg`/`.deb` |
+| `web/`      | Browser                         | Ktor backend (JVM, Jakarta Mail) + static web UI   | server `.zip`  |
+| `ios/`      | iPhone / iPad                   | SwiftUI client calling the `web/` backend over REST | `.app` (simulator) |
+
+Notes on the architecture choices:
+
+- **ChromeOS** runs the Android APK directly — no separate build.
+- **Desktop** reuses the same Jakarta Mail protocol logic on the desktop JVM.
+  Run locally with `cd desktop && ./gradlew run`; package installers with
+  `./gradlew packageDistributionForCurrentOS`.
+- **Web**: browsers cannot open IMAP/SMTP sockets, so `web/` is a small backend that does the
+  mail work and serves a browser UI. Run with `cd web && ./gradlew run` (defaults to
+  `http://localhost:8080`).
+- **iOS**: Jakarta Mail is JVM-only, so the iPhone app is a thin SwiftUI client that talks to
+  the `web/` backend's REST API. Set the server URL on the setup screen. The Xcode project is
+  generated from `ios/project.yml` via [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+  (`cd ios && xcodegen generate && open Quillbox.xcodeproj`).
+
+These are scaffolds that share the protocol approach but not a single build; the Android client
+remains the most complete.
+
+## Security note
 
 Credentials and downloaded mail are stored locally only and are transmitted solely to the
-user's own mail servers. Use real credentials only on your own device; the repository ships
-with placeholder values only.
+user's own mail servers (on the web/iOS clients, via your own Quillbox backend). Use real
+credentials only on your own device; the repository ships with placeholder values only.
