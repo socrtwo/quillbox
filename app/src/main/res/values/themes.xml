@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme; the UI is driven by Compose Material 3, so this only needs to
+         provide a no-action-bar window and the launch background. -->
+    <style name="Theme.Quillbox" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/quillbox_background</item>
+        <item name="android:statusBarColor">@color/quillbox_primary</item>
+    </style>
+</resources>
