@@ -19,6 +19,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # The latest XcodeGen emits the Xcode 16 project format; select a matching Xcode.
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Install XcodeGen
         run: brew install xcodegen
 
