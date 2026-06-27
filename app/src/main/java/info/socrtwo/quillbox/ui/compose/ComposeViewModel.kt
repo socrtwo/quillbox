@@ -71,10 +71,10 @@ class ComposeViewModel @Inject constructor(
                 plainBody = plainBody,
                 attachments = s.attachments
             )
-            _state.update {
+            _state.update { st ->
                 result.fold(
-                    onSuccess = { it.copy(sending = false, sent = true) },
-                    onFailure = { e -> it.copy(sending = false, error = "Send failed: ${e.message}") }
+                    onSuccess = { st.copy(sending = false, sent = true) },
+                    onFailure = { e -> st.copy(sending = false, error = "Send failed: ${e.message}") }
                 )
             }
         }
