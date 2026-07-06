@@ -25,6 +25,10 @@ class AppPreferences @Inject constructor(
     private val _trustedImageSenders = MutableStateFlow(readTrustedSenders())
     val trustedImageSenders: StateFlow<Set<String>> = _trustedImageSenders.asStateFlow()
 
+    /** Optional VirusTotal API key used to scan links in messages. */
+    private val _virusTotalApiKey = MutableStateFlow(readVirusTotalApiKey())
+    val virusTotalApiKey: StateFlow<String?> = _virusTotalApiKey.asStateFlow()
+
     private fun readSelectedAccountId(): Long? =
         prefs.getLong(KEY_SELECTED_ACCOUNT, -1L).takeIf { it >= 0 }
 
@@ -42,8 +46,18 @@ class AppPreferences @Inject constructor(
         _trustedImageSenders.value = updated
     }
 
+    private fun readVirusTotalApiKey(): String? =
+        prefs.getString(KEY_VT_API_KEY, null)?.takeIf { it.isNotBlank() }
+
+    fun setVirusTotalApiKey(key: String) {
+        val trimmed = key.trim()
+        prefs.edit().putString(KEY_VT_API_KEY, trimmed).apply()
+        _virusTotalApiKey.value = trimmed.takeIf { it.isNotBlank() }
+    }
+
     companion object {
         private const val KEY_SELECTED_ACCOUNT = "selected_account_id"
         private const val KEY_TRUSTED_SENDERS = "trusted_image_senders"
+        private const val KEY_VT_API_KEY = "virustotal_api_key"
     }
 }

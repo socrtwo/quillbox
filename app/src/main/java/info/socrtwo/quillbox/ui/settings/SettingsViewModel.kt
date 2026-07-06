@@ -3,6 +3,7 @@ package info.socrtwo.quillbox.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import info.socrtwo.quillbox.data.local.AppPreferences
 import info.socrtwo.quillbox.data.local.entity.AccountEntity
 import info.socrtwo.quillbox.data.repository.AccountRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val appPreferences: AppPreferences
 ) : ViewModel() {
 
     val accounts: StateFlow<List<AccountEntity>> = accountRepository.observeAccounts()
@@ -22,9 +24,14 @@ class SettingsViewModel @Inject constructor(
     val selectedAccountId: StateFlow<Long?> = accountRepository.selectedAccountId
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
 
+    val virusTotalApiKey: StateFlow<String?> = appPreferences.virusTotalApiKey
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+
     fun selectAccount(id: Long) = accountRepository.selectAccount(id)
 
     fun deleteAccount(account: AccountEntity) {
         viewModelScope.launch { accountRepository.deleteAccount(account) }
     }
+
+    fun setVirusTotalApiKey(key: String) = appPreferences.setVirusTotalApiKey(key)
 }

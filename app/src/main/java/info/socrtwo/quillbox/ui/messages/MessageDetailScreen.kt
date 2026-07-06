@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Alignment
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,6 +21,7 @@ import androidx.compose.material.icons.filled.Report
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -26,10 +29,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -38,6 +46,8 @@ import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import info.socrtwo.quillbox.data.local.entity.AttachmentEntity
+import info.socrtwo.quillbox.data.security.SafetyReport
+import info.socrtwo.quillbox.data.security.VtVerdict
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
@@ -52,9 +62,21 @@ fun MessageDetailScreen(
     val message by viewModel.message.collectAsStateWithLifecycle()
     val attachments by viewModel.attachments.collectAsStateWithLifecycle()
     val imagesAllowed by viewModel.imagesAllowed.collectAsStateWithLifecycle()
+    val report by viewModel.report.collectAsStateWithLifecycle()
+    val scanning by viewModel.scanning.collectAsStateWithLifecycle()
+    val scanMessage by viewModel.scanMessage.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(scanMessage) {
+        scanMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.consumeScanMessage()
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             androidx.compose.material3.TopAppBar(
                 title = { Text("Message") },
@@ -114,6 +136,16 @@ fun MessageDetailScreen(
                 )
             }
 
+            report?.takeIf { it.links.isNotEmpty() }?.let { r ->
+                SecurityBar(
+                    report = r,
+                    scanning = scanning,
+                    onScan = { viewModel.scanLinks() },
+                    onSpam = { viewModel.moveToSpam(onBack) },
+                    onBlacklist = { viewModel.blacklistSender(onBack) }
+                )
+            }
+
             HorizontalDivider()
 
             // --- Body (fills remaining space, scrolls internally) ---
@@ -135,6 +167,59 @@ fun MessageDetailScreen(
                         msg.bodyText.ifBlank { "(no text content)" },
                         style = MaterialTheme.typography.bodyMedium
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SecurityBar(
+    report: SafetyReport,
+    scanning: Boolean,
+    onScan: () -> Unit,
+    onSpam: () -> Unit,
+    onBlacklist: () -> Unit
+) {
+    val danger = report.severity == SafetyReport.Severity.DANGER
+    val container = if (danger) MaterialTheme.colorScheme.errorContainer
+    else MaterialTheme.colorScheme.surfaceVariant
+    val onContainer = if (danger) MaterialTheme.colorScheme.onErrorContainer
+    else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val summary = when {
+        report.malicious ->
+            "⛔ VirusTotal flagged ${report.links.count { it.vt == VtVerdict.MALICIOUS }} malicious link(s) in this message."
+        report.suspicious ->
+            "⚠ VirusTotal flagged suspicious link(s) in this message."
+        report.mismatchedLinks.isNotEmpty() ->
+            "⚠ ${report.mismatchedLinks.size} link(s) point to a domain different from the sender (${report.senderDomain})."
+        report.scannedWithVt ->
+            "✓ VirusTotal found no issues with the ${report.links.size} link(s)."
+        else ->
+            "${report.links.size} link(s) found. Scan them with VirusTotal?"
+    }
+
+    Surface(color = container) {
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(summary, color = onContainer, style = MaterialTheme.typography.bodySmall)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (!report.scannedWithVt) {
+                    if (scanning) {
+                        CircularProgressIndicator(modifier = Modifier.size(20.dp))
+                    } else {
+                        TextButton(onClick = onScan) { Text("Scan links") }
+                    }
+                }
+                if (report.hasWarning) {
+                    OutlinedButton(onClick = onSpam) { Text("Spam") }
+                    Button(onClick = onBlacklist) { Text("Blacklist sender") }
                 }
             }
         }
