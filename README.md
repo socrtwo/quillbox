@@ -1,5 +1,8 @@
 # quillbox
-Android email client: downloads IMAP/POP3 mail, composes new messages with a standard formatting toolbar, and routes incoming mail into folders (e.g. Spam) via user-defined rules.
+Email client for Android, desktop, web and iOS: downloads IMAP/POP3 mail, composes with a
+formatting toolbar, and keeps junk out of the Inbox with open DNS blocklists, an offline
+brand-impersonation detector, a learning classifier and user rules. The web client is laid out
+like Microsoft 365 Outlook.
 
 ---
 
@@ -148,6 +151,90 @@ Once the secrets are set, every build uploads a **signed** `app-release.apk` as 
 keystore lives only in the runner's temp dir for the duration of the build and is never
 written to the workspace or committed.
 
+## Web client (Outlook-style, with built-in junk protection)
+
+`web/` is a self-hosted web mail client: a Ktor backend that talks IMAP/POP3/SMTP on your behalf,
+plus a browser front end laid out like Microsoft 365 Outlook (folder pane, message list, reading
+pane, command bar, keyboard shortcuts, dark mode, responsive down to phone width).
+
+### Run it
+
+```bash
+cd web
+./gradlew run            # http://localhost:8080
+```
+
+Environment variables: `PORT` (default 8080), `HOST` (default 0.0.0.0), `QUILLBOX_DATA_DIR`
+(default `~/.quillbox`; holds per-account rules, settings, the learned classifier and the
+analysis cache — **never passwords**).
+
+To try it without a real mailbox:
+
+```bash
+cd web
+./gradlew demo           # in-memory IMAP/SMTP seeded with genuine, spoofed and blacklisted mail
+```
+
+then sign in as `demo@quillbox.test` / `demo` and, under *Server settings*, use IMAP
+`127.0.0.1:3143` (security *None*) and SMTP `127.0.0.1:3025` (*None*).
+
+### Setting up an account
+
+Enter your name, address and password. The server looks the settings up for you (built-in
+provider table → Mozilla ISPDB → the domain's own autoconfig → MX record → port probe), shows
+which provider it found and any caveats (for example that Gmail, Yahoo, iCloud, AOL and
+Fastmail need an *app password*), and lets you test the connection before signing in. Tick
+*Keep me signed in* to store the account in the browser.
+
+### Junk protection (on by default)
+
+Every new message is analysed on the server and, when it is junk, moved to the Junk folder
+automatically (POP3 accounts get a local Junk view instead, since POP3 has no folders). Signals,
+all free and needing no API key:
+
+| Signal | What it does |
+|---|---|
+| **DNS blocklists** | The sending IPs from the `Received` chain are checked against Spamhaus ZEN, SpamCop, Barracuda and PSBL; the sender, Reply-To and link domains against Spamhaus DBL, SURBL and URIBL. Lists can be toggled, re-weighted and extended with your own zones in *Settings → Junk email*. Spamhaus refuses queries via public resolvers (8.8.8.8, 1.1.1.1); the UI shows *refused* when that happens. |
+| **Authentication results** | SPF / DKIM / DMARC verdicts recorded by your own mail provider. |
+| **Impersonation detector** | An offline dictionary of ~250 organisations and the domains they really send from. The sender's display name, address, subject and body signature are scanned for a claimed organisation and compared with the real sending domain; look-alike domains (`paypa1.com`, `arnazon.com`, `secure-paypal-login.net`, `paypal.com.verify.ru`) are caught with homoglyph normalisation and edit distance. A mismatch is shown as **"Claims to be PayPal — domain is not PayPal's"**. |
+| **Learned classifier** | A naive-Bayes model that trains on your *Junk* / *Not junk* clicks (seeded with a small built-in corpus, and deliberately weak until you have taught it). |
+| **Content heuristics** | Urgency and prize language, link-text/href mismatches, bare-IP links, shorteners, hidden text, dangerous attachment types, Reply-To on another domain, and so on. |
+| **Rules, safe and blocked senders** | Deterministic and always win. |
+
+Every verdict is explained: the reading pane shows the **sender's address in large bold type** with
+the domain underlined and coloured by verdict, badges for the claimed organisation and the
+authentication results, and a *Why?* list with the weight of each signal.
+
+Per-message buttons (toolbar, hover actions, context menu and keyboard):
+
+- **Junk** (`J`) moves the message to Junk and trains the classifier; **Not junk** (`Shift+J`)
+  restores it, trains the classifier and guarantees it is never auto-filed again. Both have *Undo*.
+- **Analyse & make rule** runs the full analysis and proposes a rule that would catch this message
+  and others like it (sender domain or exact address, spoofed display name, distinctive subject
+  phrase, scam phrase). Each condition explains why it was chosen. Edit it, *Preview matches*
+  against the current folder, then *Save rule* or *Save & apply to current mail* to file the
+  matching messages that are already in the folder.
+
+Optionally, a locally running open-source language model served by [Ollama](https://ollama.com)
+(*Settings → AI models*) adds a second opinion and extra rule conditions. Nothing is ever sent to
+a cloud service; the built-in engine needs no model at all.
+
+### Other features
+
+Reply / reply all / forward with quoting, rich-text compose with attachments (drag-and-drop or
+paste), drafts, flags, read/unread, move, archive, delete with undo, server-side search, remote
+image blocking with per-sender allow list, sanitised HTML rendering in a sandboxed frame,
+attachment download, message headers view, print, unsubscribe, three reading-pane layouts,
+compact/comfortable density, and Outlook-style shortcuts (`N`, `R`, `A`, `F`, `Del`, `E`, `J`,
+`U`, `S`, `/`, `?`).
+
+### API
+
+The backend exposes a JSON API (`/api/session`, `/api/folders`, `/api/messages`, `/api/message`,
+`/api/junk`, `/api/analyze`, `/api/rules/preview`, `/api/rules/apply`, `/api/settings`, …) with a
+bearer token from `/api/session`. The original stateless endpoints `/api/inbox` and `/api/send`
+are unchanged, so the iOS client keeps working.
+
 ## Other platforms
 
 Quillbox started as an Android app; sibling clients live in their own folders. Each is built
@@ -157,7 +244,7 @@ by its own GitHub Actions workflow.
 |-------------|---------------------------------|----------------------------------------------------|----------------|
 | `app/`      | Android (and **ChromeOS**)      | Kotlin, Jetpack Compose, Room, Hilt, Jakarta Mail  | `.apk`         |
 | `desktop/`  | Windows / macOS / Linux         | Compose Multiplatform Desktop (JVM), Jakarta Mail  | app image + `.msi`/`.dmg`/`.deb` |
-| `web/`      | Browser                         | Ktor backend (JVM, Jakarta Mail) + static web UI   | server `.zip`  |
+| `web/`      | Browser (self-hosted)           | Ktor backend (JVM, Jakarta Mail) + Outlook-style web UI, junk engine | server `.zip`  |
 | `ios/`      | iPhone / iPad                   | SwiftUI client calling the `web/` backend over REST | `.app` (simulator) |
 
 Notes on the architecture choices:
@@ -167,18 +254,19 @@ Notes on the architecture choices:
   Run locally with `cd desktop && ./gradlew run`; package installers with
   `./gradlew packageDistributionForCurrentOS`.
 - **Web**: browsers cannot open IMAP/SMTP sockets, so `web/` is a small backend that does the
-  mail work and serves a browser UI. Run with `cd web && ./gradlew run` (defaults to
-  `http://localhost:8080`).
+  mail work and serves a browser UI. See the section above.
 - **iOS**: Jakarta Mail is JVM-only, so the iPhone app is a thin SwiftUI client that talks to
   the `web/` backend's REST API. Set the server URL on the setup screen. The Xcode project is
   generated from `ios/project.yml` via [XcodeGen](https://github.com/yonaskolb/XcodeGen)
   (`cd ios && xcodegen generate && open Quillbox.xcodeproj`).
-
-These are scaffolds that share the protocol approach but not a single build; the Android client
-remains the most complete.
 
 ## Security note
 
 Credentials and downloaded mail are stored locally only and are transmitted solely to the
 user's own mail servers (on the web/iOS clients, via your own Quillbox backend). Use real
 credentials only on your own device; the repository ships with placeholder values only.
+
+The web backend keeps passwords in memory for the life of a session and writes only rules,
+settings and analysis results to disk. Put it behind HTTPS (a reverse proxy such as Caddy or
+nginx) whenever it is reachable from outside the machine it runs on. The junk engine's only
+outbound traffic is DNS: blocklist lookups for sending IPs and domains.
