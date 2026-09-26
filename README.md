@@ -265,9 +265,88 @@ Notes on the architecture choices:
 ## Releases
 
 Pushing a tag such as `v1.1.0` makes GitHub Actions build every target and attach the files
-to one GitHub Release: Android/ChromeOS APK, Windows `.msi`, macOS `.dmg`, Linux x64 and
-arm64 (Raspberry Pi OS) `.deb`, the web/JVM server zip, and an iOS simulator build. See
-[docs/RELEASING.md](docs/RELEASING.md) for the full procedure, including doing it from Termux.
+to one GitHub Release (`Releases → Quillbox v1.1.0`):
+
+| Target | Release file |
+|---|---|
+| Android, ChromeOS | `quillbox-v1.1.0.apk` (signed when the signing secrets exist, else `-unsigned`) |
+| Windows | `quillbox-desktop-v1.1.0-windows-x64.msi`, or the portable `.zip` |
+| macOS | `quillbox-desktop-v1.1.0-macos-arm64.dmg`, or the portable `.tar.gz` |
+| Linux x64 | `quillbox-desktop-v1.1.0-linux-x64.deb`, or the portable `.tar.gz` |
+| Raspberry Pi OS (64-bit) / Linux arm64 | `quillbox-desktop-v1.1.0-linux-arm64.deb`, or the portable `.tar.gz` |
+| Web / any OS with Java 17+ (servers, Termux, ChromeOS Linux) | `quillbox-web-v1.1.0-any-jvm.zip` → unzip, run `bin/quillbox-web` |
+| iOS | `Quillbox-iOS-simulator.app.zip` (unsigned simulator build; a device build needs an Apple Developer account) |
+
+### Making a release from Termux (Android)
+
+Windows, macOS and iOS packages can only be built on those systems, so from a phone the job
+is: build and test what the phone can (the web/JVM server), then push a tag and let GitHub
+Actions build all eight targets. Everything below is typed into Termux.
+
+One-time setup:
+
+```bash
+pkg update && pkg upgrade -y
+pkg install -y git openjdk-17 gh unzip
+termux-setup-storage                                  # optional: reach ~/storage/downloads
+git config --global user.name  "Your Name"
+git config --global user.email "you@example.com"
+gh auth login                                         # GitHub CLI login (HTTPS + browser/token)
+git clone https://github.com/socrtwo/quillbox.git
+cd quillbox
+mkdir -p ~/.gradle && printf 'org.gradle.jvmargs=-Xmx1536m\norg.gradle.daemon=false\n' >> ~/.gradle/gradle.properties
+```
+
+Build and test the web/JVM server on the phone (this is the same zip the release ships):
+
+```bash
+cd ~/quillbox/web
+chmod +x gradlew
+./gradlew build distZip --no-daemon                   # runs the junk-engine tests, writes build/distributions/quillbox-web-1.1.0.zip
+cd build/distributions && unzip -o quillbox-web-1.1.0.zip && cd quillbox-web-1.1.0
+PORT=8080 ./bin/quillbox-web                          # open http://localhost:8080 in the phone browser
+```
+
+Cut the release (all targets are built by GitHub Actions and attached to one GitHub Release):
+
+```bash
+cd ~/quillbox
+git checkout main && git pull
+# bump the version first if needed: app/build.gradle.kts (versionCode/versionName),
+#   web/build.gradle.kts (version), desktop/build.gradle.kts (version, packageVersion)
+git commit -am "Release v1.1.0"        # only if you changed something
+git push
+git tag -a v1.1.0 -m "Quillbox 1.1.0"
+git push origin v1.1.0                 # <- this triggers the Android, Desktop, Web and iOS release builds
+
+gh run list --limit 8                  # watch the four workflows
+gh run watch                           # follow one interactively
+gh release view v1.1.0                 # list the attached files when they are done
+gh release download v1.1.0 -D ~/storage/downloads/quillbox-v1.1.0
+```
+
+If the repository has no signing secrets, the APK arrives unsigned; sign it on the phone:
+
+```bash
+pkg install -y apksigner
+keytool -genkeypair -v -keystore ~/quillbox-release.jks -alias quillbox -keyalg RSA -keysize 2048 -validity 10000
+apksigner sign --ks ~/quillbox-release.jks --ks-key-alias quillbox \
+  --out quillbox-v1.1.0.apk ~/storage/downloads/quillbox-v1.1.0/quillbox-v1.1.0-unsigned.apk
+```
+
+To have CI sign it instead, add the secrets `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`
+and `KEY_PASSWORD` (see *Automated signed builds in CI* above):
+
+```bash
+base64 -w 0 ~/quillbox-release.jks | gh secret set KEYSTORE_BASE64
+gh secret set KEYSTORE_PASSWORD
+gh secret set KEY_ALIAS --body quillbox
+gh secret set KEY_PASSWORD
+```
+
+[docs/RELEASING.md](docs/RELEASING.md) has the longer version, including the unofficial way
+to build the APK inside Termux and what a phone cannot build (Windows/macOS installers,
+a signed iOS app).
 
 ## Security note
 
