@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import info.socrtwo.quillbox.data.local.entity.MessageEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -35,4 +36,10 @@ interface MessageDao {
 
     @Query("SELECT COUNT(*) FROM messages WHERE folderId = :folderId AND isRead = 0")
     fun observeUnreadCount(folderId: Long): Flow<Int>
+
+    @Update
+    suspend fun update(message: MessageEntity)
+
+    @Query("SELECT * FROM messages WHERE folderId = :folderId ORDER BY sentDate DESC")
+    suspend fun getByFolder(folderId: Long): List<MessageEntity>
 }

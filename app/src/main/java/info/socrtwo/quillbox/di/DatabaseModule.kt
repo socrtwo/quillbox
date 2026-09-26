@@ -46,9 +46,9 @@ object DatabaseModule {
                     )
                 }
             })
-            // The attachments table was added in v2. Recreate the local cache on schema
-            // change rather than ship a hand-written migration; accounts/rules are quick to
-            // re-add and mail can simply be re-synced from the server.
+            // The attachments table was added in v2 and the junk-verdict columns in v3.
+            // Recreate the local cache on schema change rather than ship a hand-written
+            // migration; accounts/rules are quick to re-add and mail can simply be re-synced.
             .fallbackToDestructiveMigration()
             .build()
 

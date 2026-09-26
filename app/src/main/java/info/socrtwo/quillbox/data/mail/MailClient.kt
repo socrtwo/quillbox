@@ -176,9 +176,15 @@ class MailClient @Inject constructor() {
     // --- Parsing ---------------------------------------------------------------
 
     private fun Message.toFetchedMessage(): FetchedMessage {
-        val from = (from?.firstOrNull() as? InternetAddress)?.let {
+        val fromAddr = from?.firstOrNull() as? InternetAddress
+        val from = fromAddr?.let {
             it.personal?.let { name -> "$name <${it.address}>" } ?: it.address
         } ?: (from?.firstOrNull()?.toString() ?: "")
+        val fromName = fromAddr?.personal?.let { runCatching { jakarta.mail.internet.MimeUtility.decodeText(it) }.getOrDefault(it) } ?: ""
+        val fromAddress = fromAddr?.address?.lowercase() ?: from.lowercase()
+        val replyToAddress = runCatching { (this.replyTo?.firstOrNull() as? InternetAddress)?.address?.lowercase() }.getOrNull()
+            ?.takeIf { it != fromAddress } ?: ""
+        fun header(name: String): List<String> = runCatching { getHeader(name)?.toList() }.getOrNull() ?: emptyList()
 
         val to = addressList(getRecipients(Message.RecipientType.TO))
         val cc = addressList(getRecipients(Message.RecipientType.CC))
@@ -200,7 +206,15 @@ class MailClient @Inject constructor() {
             sentDate = sentDate?.time ?: System.currentTimeMillis(),
             receivedDate = (this as? MimeMessage)?.receivedDate?.time ?: System.currentTimeMillis(),
             hasAttachments = parts.attachments.isNotEmpty(),
-            attachments = parts.attachments.toList()
+            attachments = parts.attachments.toList(),
+            fromName = fromName,
+            fromAddress = fromAddress,
+            replyTo = replyToAddress,
+            receivedHeaders = header("Received"),
+            authenticationResults = header("Authentication-Results") + header("ARC-Authentication-Results"),
+            originatingIp = header("X-Originating-IP").firstOrNull(),
+            listUnsubscribe = header("List-Unsubscribe").firstOrNull(),
+            precedence = header("Precedence").firstOrNull()
         )
     }
 
