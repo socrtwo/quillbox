@@ -11,6 +11,7 @@ import info.socrtwo.quillbox.data.local.entity.AccountEntity
 import info.socrtwo.quillbox.data.local.entity.AttachmentEntity
 import info.socrtwo.quillbox.data.local.entity.FolderEntity
 import info.socrtwo.quillbox.data.local.entity.MessageEntity
+import info.socrtwo.quillbox.data.local.entity.RuleEntity
 import info.socrtwo.quillbox.data.mail.FetchedMessage
 import info.socrtwo.quillbox.data.mail.MailClient
 import info.socrtwo.quillbox.data.mail.OutgoingAttachment
