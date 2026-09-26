@@ -1,0 +1,562 @@
+# Media, logistics, real estate, apparel, luxury, sports, conglomerates, government, non-profits
+Walt Disney Company	disney.com,disneyplus.com,go.com,espn.com,hulu.com,abc.com,marvel.com,pixar.com	Disney,ESPN,Hulu,ABC,Marvel	media
+Warner Bros. Discovery	wbd.com,warnerbros.com,hbo.com,max.com,cnn.com,discovery.com	Warner Bros,HBO,Max,CNN,Discovery	media
+Paramount Global	paramount.com,paramountplus.com,cbs.com,cbsnews.com,mtv.com,nick.com,pluto.tv	Paramount,CBS,MTV,Nickelodeon,Pluto TV	media
+NBCUniversal	nbcuni.com,nbc.com,nbcnews.com,universalpictures.com,peacocktv.com	NBC,Universal Pictures,Peacock	media
+Fox Corporation	fox.com,foxnews.com,foxbusiness.com,foxsports.com,tubi.tv	Fox,Fox News,Tubi	media
+Sony Pictures	sonypictures.com		media
+Lionsgate	lionsgate.com,starz.com	Starz	media
+AMC Networks	amcnetworks.com,amc.com	AMC	media
+AMC Theatres	amctheatres.com	AMC Entertainment	media
+Cinemark	cinemark.com		media
+Regal Cinemas	regmovies.com		media
+IMAX	imax.com		media
+Spotify Technology	spotify.com		media
+SiriusXM	siriusxm.com,pandora.com	Pandora	media
+iHeartMedia	iheartmedia.com,iheart.com	iHeartRadio	media
+Audacy	audacy.com		media
+Cumulus Media	cumulusmedia.com		media
+Deezer	deezer.com		media
+Tidal	tidal.com		media
+SoundCloud	soundcloud.com		media
+Bandcamp	bandcamp.com		media
+Audible Inc	audible.com		media
+Scribd	scribd.com,everand.com	Everand	media
+Kindle Direct Publishing	kdp.amazon.com		media
+New York Times	nytimes.com,nyt.com		media
+Washington Post	washingtonpost.com		media
+Wall Street Journal	wsj.com,dowjones.com	Dow Jones	media
+News Corp	newscorp.com,news.com.au	News Corporation	media
+Gannett	gannett.com,usatoday.com	USA Today	media
+Lee Enterprises	lee.net		media
+Hearst	hearst.com		media
+Conde Nast	condenast.com,newyorker.com,vogue.com,wired.com	The New Yorker,Vogue,Wired	media
+Meredith	meredith.com,dotdashmeredith.com	Dotdash Meredith	media
+Bloomberg	bloomberg.com,bloomberg.net		media
+Reuters	reuters.com,thomsonreuters.com	Thomson Reuters	media
+Associated Press	ap.org	AP	media
+BBC	bbc.co.uk,bbc.com		media
+The Guardian	theguardian.com,guardian.co.uk		media
+Daily Mail	dailymail.co.uk		media
+The Times	thetimes.co.uk,thetimes.com		media
+Financial Times	ft.com		media
+The Economist	economist.com		media
+Telegraph	telegraph.co.uk		media
+Reach plc	reachplc.com,mirror.co.uk	Daily Mirror	media
+ITV	itv.com		media
+Channel 4	channel4.com		media
+CBC	cbc.ca,radio-canada.ca	Radio-Canada	media
+Globe and Mail	theglobeandmail.com		media
+Toronto Star	thestar.com		media
+Postmedia	postmedia.com		media
+CTV	ctv.ca,bellmedia.ca	Bell Media	media
+Global News	globalnews.ca		media
+ABC Australia	abc.net.au		media
+Nine Entertainment	nine.com.au		media
+Seven West Media	sevenwestmedia.com.au		media
+Al Jazeera	aljazeera.com,aljazeera.net		media
+Axel Springer	axelspringer.com,bild.de	Bild	media
+Bertelsmann	bertelsmann.com,rtl.com,penguinrandomhouse.com	RTL,Penguin Random House	media
+Vivendi	vivendi.com,canalplus.com	Canal+	media
+HarperCollins	harpercollins.com		media
+Simon & Schuster	simonandschuster.com		media
+Hachette	hachette.com,hachettebookgroup.com		media
+Macmillan	macmillan.com		media
+Vox Media	voxmedia.com,vox.com,theverge.com	The Verge	media
+BuzzFeed	buzzfeed.com		media
+Vice Media	vice.com		media
+Politico	politico.com		media
+Axios	axios.com		media
+The Atlantic	theatlantic.com		media
+Forbes	forbes.com		media
+Fortune	fortune.com		media
+Business Insider	businessinsider.com,insider.com		media
+CNBC	cnbc.com		media
+MSNBC	msnbc.com		media
+NPR	npr.org		media
+PBS	pbs.org		media
+C-SPAN	c-span.org		media
+TechCrunch	techcrunch.com		media
+Engadget	engadget.com		media
+Ars Technica	arstechnica.com		media
+CNET	cnet.com		media
+ZDNet	zdnet.com		media
+Tom's Hardware	tomshardware.com		media
+PCMag	pcmag.com		media
+Mashable	mashable.com		media
+Gizmodo	gizmodo.com		media
+IGN	ign.com		media
+GameSpot	gamespot.com		media
+Ticketmaster Entertainment	ticketmaster.com,livenation.com	Live Nation	media
+StubHub Inc	stubhub.com		media
+SeatGeek	seatgeek.com		media
+Vivid Seats	vividseats.com		media
+AXS	axs.com		media
+Fandango	fandango.com		media
+Atom Tickets	atomtickets.com		media
+NFL	nfl.com		sports
+NBA	nba.com		sports
+MLB	mlb.com		sports
+NHL	nhl.com		sports
+MLS	mlssoccer.com		sports
+NASCAR	nascar.com		sports
+PGA Tour	pgatour.com		sports
+UFC	ufc.com		sports
+WWE	wwe.com		sports
+FIFA	fifa.com		sports
+UEFA	uefa.com		sports
+Premier League	premierleague.com		sports
+NCAA	ncaa.com,ncaa.org		sports
+ESPN Inc	espn.com		sports
+DraftKings	draftkings.com		sports
+FanDuel	fanduel.com		sports
+BetMGM	betmgm.com		sports
+Caesars Entertainment	caesars.com		travel
+MGM Resorts	mgmresorts.com		travel
+Wynn Resorts	wynnresorts.com,wynnlasvegas.com		travel
+Las Vegas Sands	sands.com		travel
+Penn Entertainment	pennentertainment.com		travel
+Hard Rock	hardrock.com		travel
+Adidas	adidas.com,adidas.co.uk,adidas.de		apparel
+Puma	puma.com		apparel
+Under Armour	underarmour.com		apparel
+Lululemon	lululemon.com		apparel
+VF Corporation	vfc.com,thenorthface.com,vans.com,timberland.com	The North Face,Vans,Timberland	apparel
+Levi Strauss	levi.com,levistrauss.com,levi.co.uk	Levi's	apparel
+PVH	pvh.com,calvinklein.com,tommy.com	Calvin Klein,Tommy Hilfiger	apparel
+Ralph Lauren	ralphlauren.com		apparel
+Tapestry	tapestry.com,coach.com,katespade.com	Coach,Kate Spade	apparel
+Capri Holdings	capriholdings.com,michaelkors.com,versace.com,jimmychoo.com	Michael Kors,Versace,Jimmy Choo	apparel
+Hanesbrands	hanes.com,hanesbrands.com	Hanes	apparel
+Carter's	carters.com,oshkosh.com	OshKosh B'gosh	apparel
+Children's Place	childrensplace.com		apparel
+Abercrombie & Fitch	abercrombie.com,hollisterco.com	Hollister	apparel
+American Eagle Outfitters	ae.com,aerie.com	American Eagle,Aerie	apparel
+Urban Outfitters	urbanoutfitters.com,urbn.com,anthropologie.com,freepeople.com	Anthropologie,Free People	apparel
+J.Crew	jcrew.com		apparel
+Express	express.com		apparel
+Chico's	chicos.com		apparel
+Ann Taylor	anntaylor.com,loft.com	LOFT	apparel
+Talbots	talbots.com		apparel
+Lands' End	landsend.com		apparel
+L.L.Bean	llbean.com		apparel
+Eddie Bauer	eddiebauer.com		apparel
+Columbia Sportswear	columbia.com		apparel
+Patagonia	patagonia.com		apparel
+Canada Goose	canadagoose.com		apparel
+Arc'teryx	arcteryx.com		apparel
+REI	rei.com		retail
+Bass Pro Shops	basspro.com,cabelas.com	Cabela's	retail
+Skechers	skechers.com		apparel
+Crocs	crocs.com		apparel
+Deckers Brands	deckers.com,ugg.com,hokaoneone.com	UGG,HOKA	apparel
+New Balance	newbalance.com		apparel
+Asics	asics.com		apparel
+On Running	on.com		apparel
+Allbirds	allbirds.com		apparel
+Dr. Martens	drmartens.com		apparel
+Clarks	clarks.com,clarks.co.uk		apparel
+Wolverine World Wide	wolverineworldwide.com		apparel
+Steve Madden	stevemadden.com		apparel
+DSW	dsw.com		retail
+Famous Footwear	famousfootwear.com		retail
+Zara	zara.com,inditex.com	Inditex	apparel
+H&M	hm.com		apparel
+Uniqlo	uniqlo.com,fastretailing.com	Fast Retailing	apparel
+Shein Group	shein.com		apparel
+Primark Stores	primark.com		apparel
+Next plc	next.co.uk	Next	apparel
+Marks & Spencer	marksandspencer.com,marks-and-spencer.com	M&S	retail
+ASOS	asos.com		apparel
+Boohoo	boohoo.com		apparel
+Zalando	zalando.com,zalando.de,zalando.co.uk		apparel
+Farfetch	farfetch.com		apparel
+Net-a-Porter	net-a-porter.com		apparel
+Nordstrom Rack	nordstromrack.com		retail
+Saks Fifth Avenue	saksfifthavenue.com,saks.com	Saks	retail
+Neiman Marcus	neimanmarcus.com		retail
+Bergdorf Goodman	bergdorfgoodman.com		retail
+Harrods	harrods.com		retail
+Selfridges	selfridges.com		retail
+John Lewis Partnership	johnlewis.com,waitrose.com	Waitrose	retail
+Galeries Lafayette	galerieslafayette.com		retail
+El Corte Ingles	elcorteingles.es		retail
+LVMH	lvmh.com,louisvuitton.com,dior.com,tiffany.com,sephora.com	Louis Vuitton,Dior,Tiffany & Co	luxury
+Kering	kering.com,gucci.com,ysl.com,balenciaga.com,bottegaveneta.com	Gucci,Saint Laurent,Balenciaga,Bottega Veneta	luxury
+Hermes	hermes.com		luxury
+Chanel	chanel.com		luxury
+Prada	prada.com,miumiu.com	Miu Miu	luxury
+Burberry	burberry.com		luxury
+Richemont	richemont.com,cartier.com,montblanc.com,iwc.com	Cartier,Montblanc,IWC	luxury
+Rolex	rolex.com		luxury
+Swatch Group	swatchgroup.com,swatch.com,omegawatches.com,longines.com,tissotwatches.com	Swatch,Omega,Longines,Tissot	luxury
+Patek Philippe	patek.com		luxury
+Audemars Piguet	audemarspiguet.com		luxury
+Tag Heuer	tagheuer.com		luxury
+Breitling	breitling.com		luxury
+Fossil	fossil.com		apparel
+Movado	movado.com		apparel
+Signet Jewelers	signetjewelers.com,kay.com,zales.com,jared.com	Kay Jewelers,Zales,Jared	retail
+Pandora Jewelry	pandora.net		retail
+Blue Nile	bluenile.com		retail
+Brilliant Earth	brilliantearth.com		retail
+Prologis	prologis.com		realestate
+Simon Property Group	simon.com		realestate
+Brookfield	brookfield.com		realestate
+Blackstone	blackstone.com		finance
+KKR	kkr.com		finance
+Carlyle Group	carlyle.com		finance
+Apollo Global Management	apollo.com		finance
+TPG	tpg.com		finance
+Bain Capital	baincapital.com		finance
+Realtor.com	realtor.com,move.com		realestate
+Zillow	zillow.com,trulia.com	Trulia	realestate
+Redfin	redfin.com		realestate
+Opendoor	opendoor.com		realestate
+Offerpad	offerpad.com		realestate
+Compass	compass.com		realestate
+eXp Realty	exprealty.com		realestate
+Keller Williams	kw.com		realestate
+RE/MAX	remax.com		realestate
+Coldwell Banker	coldwellbanker.com		realestate
+Century 21	century21.com		realestate
+Sotheby's International Realty	sothebysrealty.com		realestate
+Anywhere Real Estate	anywhere.re		realestate
+Douglas Elliman	elliman.com		realestate
+Howard Hanna	howardhanna.com		realestate
+Apartments.com	apartments.com,costar.com	CoStar	realestate
+Rent.com	rent.com		realestate
+Zumper	zumper.com		realestate
+Rightmove	rightmove.co.uk		realestate
+Zoopla	zoopla.co.uk		realestate
+Purplebricks	purplebricks.co.uk		realestate
+Foxtons	foxtons.co.uk		realestate
+Savills	savills.com		realestate
+Knight Frank	knightfrank.com		realestate
+JLL	jll.com	Jones Lang LaSalle	realestate
+Cushman & Wakefield	cushmanwakefield.com		realestate
+Colliers	colliers.com		realestate
+Greystar	greystar.com		realestate
+AvalonBay	avalonbay.com		realestate
+Equity Residential	equityapartments.com		realestate
+Invitation Homes	invitationhomes.com		realestate
+American Homes 4 Rent	amh.com		realestate
+Public Storage	publicstorage.com		realestate
+Extra Space Storage	extraspace.com		realestate
+CubeSmart	cubesmart.com		realestate
+U-Haul	uhaul.com		transport
+Penske	pensketruckrental.com,gopenske.com		transport
+Ryder	ryder.com		transport
+Budget Truck Rental	budgettruck.com		transport
+PODS	pods.com		transport
+Deutsche Post DHL	dhl.com,dpdhl.com,deutschepost.de	DHL Group,Deutsche Post	shipping
+DPD	dpd.com,dpd.co.uk		shipping
+GLS	gls-group.com		shipping
+Hermes Germany	myhermes.de		shipping
+Yodel	yodel.co.uk		shipping
+Parcelforce	parcelforce.com		shipping
+Australia Post	auspost.com.au		shipping
+NZ Post	nzpost.co.nz		shipping
+La Poste	laposte.fr		shipping
+PostNL	postnl.nl		shipping
+Bpost	bpost.be		shipping
+Poste Italiane	poste.it		shipping
+Correos	correos.es		shipping
+Japan Post	japanpost.jp,post.japanpost.jp		shipping
+Yamato Transport	kuronekoyamato.co.jp		shipping
+SF Express	sf-express.com		shipping
+Cainiao	cainiao.com		shipping
+Aramex	aramex.com		shipping
+OnTrac	ontrac.com		shipping
+LaserShip	lasership.com		shipping
+Pitney Bowes	pitneybowes.com		shipping
+Stamps.com	stamps.com		shipping
+ShipStation	shipstation.com		shipping
+Shippo	goshippo.com		shipping
+EasyPost	easypost.com		shipping
+XPO	xpo.com		transport
+GXO Logistics	gxo.com		transport
+RXO	rxo.com		transport
+J.B. Hunt	jbhunt.com		transport
+Schneider National	schneider.com		transport
+Knight-Swift	knight-swift.com		transport
+Werner Enterprises	werner.com		transport
+Old Dominion Freight Line	odfl.com		transport
+Saia	saia.com		transport
+Estes Express	estes-express.com		transport
+ArcBest	arcb.com		transport
+Landstar	landstar.com		transport
+C.H. Robinson	chrobinson.com		transport
+Expeditors	expeditors.com		transport
+Kuehne+Nagel	kuehne-nagel.com		transport
+DSV	dsv.com		transport
+DB Schenker	dbschenker.com		transport
+Maersk	maersk.com		transport
+MSC	msc.com		transport
+CMA CGM	cma-cgm.com		transport
+Hapag-Lloyd	hapag-lloyd.com		transport
+Evergreen Marine	evergreen-marine.com		transport
+COSCO Shipping	coscoshipping.com		transport
+Canadian National Railway	cn.ca	CN Rail	transport
+Canadian Pacific Kansas City	cpkcr.com	CPKC	transport
+BNSF Railway	bnsf.com	BNSF	transport
+Deutsche Bahn	bahn.de,deutschebahn.com	DB	transport
+SNCF	sncf.com,sncf-connect.com		transport
+Eurostar	eurostar.com		transport
+Trainline	thetrainline.com		transport
+National Rail	nationalrail.co.uk		transport
+Transport for London	tfl.gov.uk	TfL	transport
+VIA Rail	viarail.ca		transport
+JR East	jreast.co.jp		transport
+Indian Railways	indianrail.gov.in,irctc.co.in	IRCTC	transport
+FlixBus	flixbus.com		transport
+Megabus	megabus.com		transport
+Berkshire Hathaway Energy	brkenergy.com,pacificorp.com,midamericanenergy.com	PacifiCorp,MidAmerican Energy	utilities
+Koch Industries	kochinc.com,kochind.com		industrial
+Honeywell International	honeywell.com		industrial
+Danaher Corporation	danaher.com		healthcare
+Tata Group	tata.com		conglomerate
+Reliance Retail	relianceretail.com		retail
+Adani Group	adani.com		conglomerate
+Aditya Birla Group	adityabirla.com		conglomerate
+Mahindra Group	mahindra.com		conglomerate
+Samsung Group	samsung.com		conglomerate
+SK Group	sk.com		conglomerate
+LG Group	lg.co.kr		conglomerate
+Hyundai Motor Group	hyundaimotorgroup.com		conglomerate
+Lotte	lotte.co.kr		conglomerate
+Mitsubishi Corporation	mitsubishicorp.com		conglomerate
+Mitsui & Co	mitsui.com		conglomerate
+Sumitomo Corporation	sumitomocorp.com		conglomerate
+Itochu	itochu.co.jp		conglomerate
+Marubeni	marubeni.com		conglomerate
+SoftBank Group	group.softbank		conglomerate
+Alibaba Group	alibabagroup.com,alibaba.com,taobao.com,tmall.com,aliexpress.com	Alibaba,Taobao,Tmall,AliExpress	tech
+Jardine Matheson	jardines.com		conglomerate
+CK Hutchison	ckh.com.hk		conglomerate
+Swire	swire.com,swirepacific.com		conglomerate
+Sime Darby	simedarby.com		conglomerate
+Wesfarmers	wesfarmers.com.au,bunnings.com.au,kmart.com.au,officeworks.com.au	Bunnings,Kmart Australia,Officeworks	conglomerate
+Woolworths Group	woolworthsgroup.com.au,woolworths.com.au,bigw.com.au	Woolworths,Big W	retail
+Coles Group	colesgroup.com.au,coles.com.au	Coles	retail
+JB Hi-Fi	jbhifi.com.au		retail
+Harvey Norman	harveynorman.com.au		retail
+Myer	myer.com.au		retail
+David Jones	davidjones.com		retail
+Loblaw	loblaw.ca,loblaws.ca,pcfinancial.ca,shoppersdrugmart.ca	Loblaws,PC Financial,Shoppers Drug Mart	retail
+Sobeys	sobeys.com,empireco.ca	Empire Company	retail
+Metro Inc	metro.ca		retail
+Canadian Tire	canadiantire.ca		retail
+Hudson's Bay	thebay.com,hbc.com	The Bay	retail
+Dollarama	dollarama.com		retail
+Lululemon Athletica	lululemon.com		apparel
+Tesco plc	tesco.com	Tesco	retail
+J Sainsbury	sainsburys.co.uk,about.sainsburys.co.uk	Sainsbury's	retail
+Asda Group	asda.com	ASDA	retail
+Morrisons	morrisons.com		retail
+Aldi UK	aldi.co.uk		retail
+Waitrose & Partners	waitrose.com		retail
+Co-op	coop.co.uk		retail
+Iceland Foods	iceland.co.uk		retail
+Ocado	ocado.com		retail
+B&Q	diy.com	Kingfisher	retail
+Screwfix	screwfix.com		retail
+Wickes	wickes.co.uk		retail
+Argos Ltd	argos.co.uk		retail
+Currys plc	currys.co.uk		retail
+Boots UK	boots.com		retail
+Superdrug	superdrug.com		retail
+WHSmith	whsmith.co.uk		retail
+Halfords	halfords.com		retail
+Dunelm	dunelm.com		retail
+The Range	therange.co.uk		retail
+Very	very.co.uk		retail
+Carrefour	carrefour.com,carrefour.fr		retail
+Auchan	auchan.fr,auchan-retail.com		retail
+E.Leclerc	e.leclerc		retail
+Casino Group	groupe-casino.fr		retail
+Intermarche	intermarche.com		retail
+Fnac Darty	fnac.com,darty.com	Fnac,Darty	retail
+Cdiscount	cdiscount.com		retail
+Decathlon	decathlon.com,decathlon.fr		retail
+Leroy Merlin	leroymerlin.fr,leroymerlin.com		retail
+Rewe Group	rewe.de,rewe-group.com,penny.de	REWE,Penny	retail
+Edeka	edeka.de		retail
+Kaufland	kaufland.de,kaufland.com		retail
+dm-drogerie markt	dm.de		retail
+Rossmann	rossmann.de		retail
+Otto Group	otto.de,ottogroup.com		retail
+MediaMarkt	mediamarkt.de,mediamarktsaturn.com	Saturn	retail
+Douglas	douglas.de		retail
+Ahold Delhaize	aholddelhaize.com,ah.nl,stopandshop.com,giantfood.com,foodlion.com,hannaford.com	Albert Heijn,Stop & Shop,Giant Food,Food Lion,Hannaford	retail
+Jumbo	jumbo.com		retail
+Bol.com	bol.com		retail
+Coolblue	coolblue.nl		retail
+Colruyt	colruyt.be		retail
+Delhaize	delhaize.be		retail
+Migros	migros.ch		retail
+Coop Switzerland	coop.ch		retail
+Mercadona	mercadona.es		retail
+Esselunga	esselunga.it		retail
+Conad	conad.it		retail
+Coop Italia	coop.it		retail
+Jeronimo Martins	jeronimomartins.com,pingodoce.pt	Pingo Doce	retail
+Continente	continente.pt		retail
+ICA	ica.se		retail
+Coop Norway	coop.no		retail
+Kesko	kesko.fi		retail
+S Group	s-ryhma.fi		retail
+Biedronka	biedronka.pl		retail
+Allegro	allegro.pl		retail
+Ozon	ozon.ru		retail
+Wildberries	wildberries.ru		retail
+Magnit	magnit.com		retail
+X5 Group	x5.ru		retail
+Aeon	aeon.info,aeon.com		retail
+Seven & i Holdings	7andi.com,7-eleven.com	7-Eleven	retail
+FamilyMart	family.co.jp		retail
+Lawson	lawson.co.jp		retail
+Don Quijote	donki.com		retail
+Yodobashi Camera	yodobashi.com		retail
+Bic Camera	biccamera.com		retail
+Shinsegae	shinsegae.com,ssg.com	SSG	retail
+Emart	emart.com		retail
+Lotte Shopping	lotteshopping.com,lotteon.com		retail
+Coupang Inc	coupang.com		retail
+Suning	suning.com		retail
+Gome	gome.com.cn		retail
+Vipshop	vip.com		retail
+Dangdang	dangdang.com		retail
+Reliance Digital	reliancedigital.in		retail
+DMart	dmartindia.com	Avenue Supermarts	retail
+Big Bazaar	bigbazaar.com		retail
+Nykaa	nykaa.com		retail
+Meesho	meesho.com		retail
+Snapdeal	snapdeal.com		retail
+Shoprite	shoprite.co.za,shopriteholdings.co.za		retail
+Pick n Pay	pnp.co.za		retail
+Woolworths South Africa	woolworths.co.za		retail
+Takealot	takealot.com		retail
+Jumia	jumia.com		retail
+Noon	noon.com		retail
+Namshi	namshi.com		retail
+Carrefour UAE	carrefouruae.com,majidalfuttaim.com	Majid Al Futtaim	retail
+Falabella	falabella.com		retail
+Cencosud	cencosud.com		retail
+Magazine Luiza	magazineluiza.com.br	Magalu	retail
+Americanas	americanas.com.br		retail
+Casas Bahia	casasbahia.com.br		retail
+Mercado Libre	mercadolibre.com,mercadolivre.com.br,mercadolibre.com.ar,mercadolibre.com.mx	MercadoLibre,Mercado Livre	retail
+Liverpool	liverpool.com.mx		retail
+Soriana	soriana.com		retail
+Chedraui	chedraui.com.mx		retail
+OXXO	oxxo.com		retail
+Walmart de Mexico	walmartmexico.com,walmart.com.mx		retail
+Coppel	coppel.com		retail
+Elektra	elektra.mx		retail
+Internal Revenue Service	irs.gov		government
+Social Security Administration	ssa.gov		government
+U.S. Department of the Treasury	treasury.gov,fiscal.treasury.gov		government
+U.S. Postal Service	usps.com		government
+Department of Veterans Affairs	va.gov	VA	government
+Department of Homeland Security	dhs.gov		government
+U.S. Citizenship and Immigration Services	uscis.gov	USCIS	government
+Customs and Border Protection	cbp.gov	CBP	government
+TSA	tsa.gov		government
+FBI	fbi.gov		government
+Department of Justice	justice.gov	DOJ	government
+Department of State	state.gov,travel.state.gov		government
+Department of Education	ed.gov		government
+Department of Labor	dol.gov		government
+Department of Health and Human Services	hhs.gov	HHS	government
+Centers for Medicare & Medicaid Services	cms.gov,medicare.gov,healthcare.gov		government
+CDC	cdc.gov		government
+FDA	fda.gov		government
+NIH	nih.gov		government
+Federal Trade Commission	ftc.gov	FTC	government
+FCC	fcc.gov		government
+SEC	sec.gov	Securities and Exchange Commission	government
+Federal Reserve	federalreserve.gov		government
+FDIC	fdic.gov		government
+Small Business Administration	sba.gov	SBA	government
+FEMA	fema.gov		government
+NASA	nasa.gov		government
+USDA	usda.gov		government
+EPA	epa.gov		government
+Department of Defense	defense.gov		government
+U.S. Army	army.mil		government
+U.S. Navy	navy.mil		government
+U.S. Air Force	af.mil		government
+Login.gov	login.gov		government
+ID.me	id.me		government
+USA.gov	usa.gov		government
+California DMV	dmv.ca.gov		government
+Texas DPS	dps.texas.gov,txdmv.gov		government
+New York DMV	dmv.ny.gov		government
+Florida DHSMV	flhsmv.gov		government
+GOV.UK	gov.uk,service.gov.uk		government
+HM Revenue & Customs	hmrc.gov.uk		government
+DVLA UK	dvla.gov.uk		government
+DWP	dwp.gov.uk		government
+Companies House	companieshouse.gov.uk		government
+Canada Revenue Agency	canada.ca		government
+Service Canada	canada.ca		government
+Australian Taxation Office	ato.gov.au		government
+Services Australia	servicesaustralia.gov.au,my.gov.au	myGov,Centrelink	government
+Inland Revenue NZ	ird.govt.nz	IRD	government
+European Commission	europa.eu,ec.europa.eu		government
+Bundesagentur fur Arbeit	arbeitsagentur.de		government
+impots.gouv.fr	impots.gouv.fr		government
+Ameli	ameli.fr		government
+Agenzia delle Entrate	agenziaentrate.gov.it		government
+Agencia Tributaria	agenciatributaria.gob.es		government
+Belastingdienst	belastingdienst.nl		government
+United Nations	un.org		government
+World Health Organization	who.int	WHO	government
+Red Cross	redcross.org,icrc.org,ifrc.org		nonprofit
+UNICEF	unicef.org		nonprofit
+Salvation Army	salvationarmy.org,salvationarmyusa.org		nonprofit
+Goodwill	goodwill.org		nonprofit
+Habitat for Humanity	habitat.org		nonprofit
+St. Jude Children's Research Hospital	stjude.org		nonprofit
+American Cancer Society	cancer.org		nonprofit
+American Heart Association	heart.org		nonprofit
+Doctors Without Borders	doctorswithoutborders.org,msf.org	MSF	nonprofit
+World Wildlife Fund	worldwildlife.org,wwf.org	WWF	nonprofit
+Feeding America	feedingamerica.org		nonprofit
+United Way	unitedway.org		nonprofit
+AARP	aarp.org		nonprofit
+Better Business Bureau	bbb.org	BBB	nonprofit
+Consumer Reports	consumerreports.org		nonprofit
+Charity Navigator	charitynavigator.org		nonprofit
+Girl Scouts	girlscouts.org		nonprofit
+Boy Scouts	scouting.org		nonprofit
+YMCA	ymca.org		nonprofit
+Planned Parenthood	plannedparenthood.org		nonprofit
+ACLU	aclu.org		nonprofit
+Electronic Frontier Foundation	eff.org	EFF	nonprofit
+Amnesty International	amnesty.org		nonprofit
+Oxfam	oxfam.org		nonprofit
+Save the Children	savethechildren.org		nonprofit
+Harvard University	harvard.edu		education
+Stanford University	stanford.edu		education
+MIT	mit.edu		education
+Yale University	yale.edu		education
+Princeton University	princeton.edu		education
+Columbia University	columbia.edu		education
+University of Pennsylvania	upenn.edu		education
+University of California	universityofcalifornia.edu,berkeley.edu,ucla.edu		education
+University of Michigan	umich.edu		education
+University of Texas	utexas.edu		education
+Ohio State University	osu.edu		education
+Penn State	psu.edu		education
+University of Florida	ufl.edu		education
+Arizona State University	asu.edu		education
+University of Phoenix	phoenix.edu		education
+Southern New Hampshire University	snhu.edu		education
+Western Governors University	wgu.edu		education
+University of Oxford	ox.ac.uk		education
+University of Cambridge	cam.ac.uk		education
+University of Toronto	utoronto.ca		education
+McGill University	mcgill.ca		education
+University of Sydney	sydney.edu.au		education

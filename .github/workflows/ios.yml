@@ -40,4 +40,27 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath build \
             build
+
+      - name: Package simulator app
+        run: |
+          APP=$(find build/Build/Products -name "Quillbox.app" -type d | head -n 1)
+          test -n "$APP"
+          ditto -c -k --keepParent "$APP" "Quillbox-iOS-simulator.app.zip"
+
+      - name: Upload simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: quillbox-ios-simulator-app
+          path: ios/Quillbox-iOS-simulator.app.zip
+          if-no-files-found: error
+
+      # An App Store / TestFlight build needs an Apple Developer account and signing
+      # certificates; this unsigned simulator build is what can be produced without them.
+      - name: Publish to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Quillbox ${{ github.ref_name }}
+          files: ios/Quillbox-iOS-simulator.app.zip

@@ -105,16 +105,25 @@ object BrandDetector {
     private fun normalise(s: String): String =
         s.lowercase().replace(Regex("[\"'“”‘’®™©]"), " ").replace(Regex("\\s+"), " ").trim()
 
-    /** Finds the longest knowledge-base alias appearing as whole words in [text]. */
+    /**
+     * Finds the longest knowledge-base alias appearing as whole words in [text]. A one-word
+     * alias ("Dave", "Chase", "Next") only counts when it is the whole text or sits next to an
+     * organisation word ("Chase Alerts"), so a person called Dave is not mistaken for the bank.
+     */
     fun claimFromText(text: String, source: String, confidence: Int): Claim? {
         if (text.isBlank()) return null
         val norm = " " + normalise(text).replace(Regex("[^a-z0-9&+. ]"), " ").replace(Regex("\\s+"), " ") + " "
+        val words = norm.trim().split(' ').filter { it.isNotBlank() }
+        val hasOrgWord = words.any { it in BrandKnowledgeBase.organisationWords }
         for ((alias, brand) in BrandKnowledgeBase.aliasesLongestFirst) {
             if (alias.length < 3) continue
             val needle = " $alias "
-            if (norm.contains(needle)) return Claim(brand, alias, source, confidence)
-            // e.g. "paypal.com" or "amazon.com" typed as a word
-            if (alias.contains('.') && norm.contains(" $alias")) return Claim(brand, alias, source, confidence)
+            val hit = norm.contains(needle) || (alias.contains('.') && norm.contains(" $alias"))
+            if (!hit) continue
+            val singleWord = !alias.contains(' ')
+            val ambiguous = alias in BrandKnowledgeBase.ambiguousAliases || (alias.length <= 4 && brand.name !in BrandKnowledgeBase.coreBrandNames)
+            if (singleWord && ambiguous && norm.trim() != alias && !hasOrgWord) continue
+            return Claim(brand, alias, source, confidence)
         }
         return null
     }
@@ -205,9 +214,10 @@ object BrandDetector {
                 normApex.endsWith(label) && normApex.removeSuffix(label).let { it in decorations } -> score = 85
                 // 4) the brand is a sub-domain label of an unrelated domain: paypal.com.verify-account.ru
                 label in subLabels -> score = 80
-                // 5) one typo away, only for reasonably long brand names (paypal, wellsfargo, americanexpress)
-                label.length >= 6 && normApex.length >= label.length - 1 && levenshtein(normApex, label) == 1 -> score = 75
-                label.length >= 9 && normApex.length >= label.length - 2 && levenshtein(normApex, label) == 2 -> score = 70
+                // 5) one typo away, only for reasonably long, hand-curated brand names
+                //    (paypal, wellsfargo, americanexpress) — never for the 2,000-entry extended table
+                brand.name in BrandKnowledgeBase.coreBrandNames && label.length >= 6 && normApex.length >= label.length - 1 && levenshtein(normApex, label) == 1 -> score = 75
+                brand.name in BrandKnowledgeBase.coreBrandNames && label.length >= 9 && normApex.length >= label.length - 2 && levenshtein(normApex, label) == 2 -> score = 70
             }
             if (score > bestScore) { bestScore = score; best = brand to apex }
         }

@@ -196,7 +196,7 @@ all free and needing no API key:
 |---|---|
 | **DNS blocklists** | The sending IPs from the `Received` chain are checked against Spamhaus ZEN, SpamCop, Barracuda and PSBL; the sender, Reply-To and link domains against Spamhaus DBL, SURBL and URIBL. Lists can be toggled, re-weighted and extended with your own zones in *Settings → Junk email*. Spamhaus refuses queries via public resolvers (8.8.8.8, 1.1.1.1); the UI shows *refused* when that happens. |
 | **Authentication results** | SPF / DKIM / DMARC verdicts recorded by your own mail provider. |
-| **Impersonation detector** | An offline dictionary of ~250 organisations and the domains they really send from. The sender's display name, address, subject and body signature are scanned for a claimed organisation and compared with the real sending domain; look-alike domains (`paypa1.com`, `arnazon.com`, `secure-paypal-login.net`, `paypal.com.verify.ru`) are caught with homoglyph normalisation and edit distance. A mismatch is shown as **"Claims to be PayPal — domain is not PayPal's"**. |
+| **Impersonation detector** | An offline dictionary of ~2,500 organisations (Fortune/Global 500 companies, banks, insurers, retailers, carriers, government agencies, universities) and the domains they really send from; every domain was checked to resolve in DNS when the table was generated (`web/src/main/resources/brands/*.tsv`, regenerated with `scripts/gen-brands.py`). The sender's display name, address, subject and body signature are scanned for a claimed organisation and compared with the real sending domain; look-alike domains (`paypa1.com`, `arnazon.com`, `secure-paypal-login.net`, `paypal.com.verify.ru`) are caught with homoglyph normalisation and edit distance. A mismatch is shown as **"Claims to be PayPal — domain is not PayPal's"**. |
 | **Learned classifier** | A naive-Bayes model that trains on your *Junk* / *Not junk* clicks (seeded with a small built-in corpus, and deliberately weak until you have taught it). |
 | **Content heuristics** | Urgency and prize language, link-text/href mismatches, bare-IP links, shorteners, hidden text, dangerous attachment types, Reply-To on another domain, and so on. |
 | **Rules, safe and blocked senders** | Deterministic and always win. |
@@ -243,22 +243,31 @@ by its own GitHub Actions workflow.
 | Folder      | Target                          | Stack                                              | Build artifact |
 |-------------|---------------------------------|----------------------------------------------------|----------------|
 | `app/`      | Android (and **ChromeOS**)      | Kotlin, Jetpack Compose, Room, Hilt, Jakarta Mail  | `.apk`         |
-| `desktop/`  | Windows / macOS / Linux         | Compose Multiplatform Desktop (JVM), Jakarta Mail  | app image + `.msi`/`.dmg`/`.deb` |
+| `desktop/`  | Windows / macOS / Linux / Raspberry Pi OS | Native launcher (Compose Desktop) around the embedded web client | `.msi`/`.dmg`/`.deb` (x64 + arm64) + portable archives |
 | `web/`      | Browser (self-hosted)           | Ktor backend (JVM, Jakarta Mail) + Outlook-style web UI, junk engine | server `.zip`  |
 | `ios/`      | iPhone / iPad                   | SwiftUI client calling the `web/` backend over REST | `.app` (simulator) |
 
 Notes on the architecture choices:
 
 - **ChromeOS** runs the Android APK directly — no separate build.
-- **Desktop** reuses the same Jakarta Mail protocol logic on the desktop JVM.
-  Run locally with `cd desktop && ./gradlew run`; package installers with
-  `./gradlew packageDistributionForCurrentOS`.
+- **Desktop** is the web client packaged as a native app: it embeds the same backend and
+  Outlook-style UI (compiled straight from `web/`), starts it on `127.0.0.1` and opens it in
+  your browser, with a tray icon to reopen or quit. Run locally with `cd desktop && ./gradlew run`;
+  package installers with `./gradlew packageDistributionForCurrentOS` (.msi / .dmg / .deb, the
+  arm64 .deb being the Raspberry Pi OS package).
 - **Web**: browsers cannot open IMAP/SMTP sockets, so `web/` is a small backend that does the
   mail work and serves a browser UI. See the section above.
 - **iOS**: Jakarta Mail is JVM-only, so the iPhone app is a thin SwiftUI client that talks to
   the `web/` backend's REST API. Set the server URL on the setup screen. The Xcode project is
   generated from `ios/project.yml` via [XcodeGen](https://github.com/yonaskolb/XcodeGen)
   (`cd ios && xcodegen generate && open Quillbox.xcodeproj`).
+
+## Releases
+
+Pushing a tag such as `v1.1.0` makes GitHub Actions build every target and attach the files
+to one GitHub Release: Android/ChromeOS APK, Windows `.msi`, macOS `.dmg`, Linux x64 and
+arm64 (Raspberry Pi OS) `.deb`, the web/JVM server zip, and an iOS simulator build. See
+[docs/RELEASING.md](docs/RELEASING.md) for the full procedure, including doing it from Termux.
 
 ## Security note
 

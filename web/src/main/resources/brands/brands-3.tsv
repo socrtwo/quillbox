@@ -1,0 +1,446 @@
+# Technology, software, internet (global)
+Hewlett Packard Enterprise	hpe.com	HPE	tech
+HP Inc	hp.com	Hewlett-Packard	tech
+Lenovo Group	lenovo.com,motorola.com	Lenovo,Motorola	tech
+Samsung Electronics	samsung.com,samsungusa.com	Samsung	tech
+LG Electronics	lg.com,lge.com	LG	tech
+Sony Group	sony.com,sony.net,sony.co.jp,playstation.com	Sony,PlayStation	tech
+Panasonic	panasonic.com,panasonic.net,panasonic.jp		tech
+Toshiba	toshiba.com,toshiba.co.jp,global.toshiba		tech
+Hitachi	hitachi.com,hitachi.co.jp		industrial
+Fujitsu	fujitsu.com		tech
+NEC Corporation	nec.com	NEC	tech
+Sharp Corporation	sharp.co.jp,global.sharp,sharpusa.com	Sharp	tech
+Canon	canon.com,canon.co.jp,usa.canon.com,canon.co.uk		tech
+Nikon	nikon.com,nikonusa.com		tech
+Epson	epson.com,epson.co.jp,epson.co.uk		tech
+Brother Industries	brother.com,brother-usa.com,brother.co.uk	Brother	tech
+Ricoh	ricoh.com,ricoh-usa.com		tech
+Kyocera	kyocera.com,kyoceradocumentsolutions.com		tech
+Xerox	xerox.com		tech
+Lexmark	lexmark.com		tech
+Logitech	logitech.com,logi.com		tech
+Corsair	corsair.com		tech
+Razer	razer.com		tech
+Asus	asus.com		tech
+Acer	acer.com		tech
+MSI	msi.com		tech
+Gigabyte	gigabyte.com		tech
+Foxconn	foxconn.com,honhai.com	Hon Hai	tech
+Pegatron	pegatron.com		tech
+TSMC	tsmc.com	Taiwan Semiconductor	tech
+MediaTek	mediatek.com		tech
+Texas Instruments	ti.com		tech
+Analog Devices	analog.com		tech
+Microchip Technology	microchip.com		tech
+NXP Semiconductors	nxp.com		tech
+Infineon	infineon.com		tech
+STMicroelectronics	st.com		tech
+ON Semiconductor	onsemi.com		tech
+Marvell	marvell.com		tech
+Skyworks	skyworksinc.com		tech
+Qorvo	qorvo.com		tech
+Lam Research	lamresearch.com		tech
+KLA Corporation	kla.com	KLA	tech
+ASML	asml.com		tech
+Arm Holdings	arm.com	Arm	tech
+SK Hynix	skhynix.com		tech
+Western Digital	westerndigital.com,wdc.com	WD,SanDisk	tech
+Seagate	seagate.com		tech
+Kingston Technology	kingston.com		tech
+Super Micro Computer	supermicro.com	Supermicro	tech
+NetApp	netapp.com		tech
+Pure Storage	purestorage.com		tech
+Nutanix	nutanix.com		tech
+Juniper Networks	juniper.net		tech
+Arista Networks	arista.com		tech
+Extreme Networks	extremenetworks.com		tech
+Ubiquiti	ui.com,ubnt.com		tech
+Netgear	netgear.com		tech
+TP-Link	tp-link.com		tech
+D-Link	dlink.com		tech
+Belkin	belkin.com,linksys.com	Linksys	tech
+Eero	eero.com		tech
+Garmin	garmin.com		tech
+Fitbit	fitbit.com		tech
+GoPro	gopro.com		tech
+Sonos	sonos.com		tech
+Bose	bose.com		tech
+JBL	jbl.com,harman.com	Harman	tech
+Sennheiser	sennheiser.com		tech
+Beats	beatsbydre.com		tech
+Roku Inc	roku.com	Roku	media
+Vizio	vizio.com		tech
+TCL	tcl.com		tech
+Hisense	hisense.com,hisense-usa.com		tech
+Xiaomi	mi.com,xiaomi.com		tech
+Huawei	huawei.com		tech
+Oppo	oppo.com		tech
+Vivo	vivo.com		tech
+OnePlus	oneplus.com		tech
+Realme	realme.com		tech
+Honor	hihonor.com		tech
+ZTE	zte.com.cn		tech
+Nokia	nokia.com		tech
+Ericsson	ericsson.com		tech
+Motorola Solutions	motorolasolutions.com		tech
+BlackBerry	blackberry.com		tech
+Palantir	palantir.com		tech
+Snowflake	snowflake.com		tech
+Databricks	databricks.com		tech
+MongoDB	mongodb.com		tech
+Elastic	elastic.co		tech
+Confluent	confluent.io		tech
+HashiCorp	hashicorp.com		tech
+Datadog	datadoghq.com		tech
+Splunk	splunk.com		tech
+New Relic	newrelic.com		tech
+Dynatrace	dynatrace.com		tech
+PagerDuty	pagerduty.com		tech
+ServiceNow	servicenow.com		tech
+Zendesk	zendesk.com		tech
+Freshworks	freshworks.com		tech
+HubSpot	hubspot.com		tech
+Marketo	marketo.com		tech
+Mailchimp	mailchimp.com		tech
+Constant Contact	constantcontact.com		tech
+Klaviyo	klaviyo.com		tech
+Braze	braze.com		tech
+Twilio Inc	twilio.com,sendgrid.com	Twilio,SendGrid	tech
+Vonage	vonage.com		tech
+RingCentral	ringcentral.com		tech
+8x8	8x8.com		tech
+Five9	five9.com		tech
+Genesys	genesys.com		tech
+NICE	nice.com		tech
+Avaya	avaya.com		tech
+Mitel	mitel.com		tech
+Poly	poly.com		tech
+Zoom Video Communications	zoom.us,zoom.com	Zoom	tech
+Cisco Webex	webex.com		tech
+GoTo	goto.com,logmein.com	LogMeIn,GoToMeeting	tech
+TeamViewer	teamviewer.com		tech
+AnyDesk	anydesk.com		tech
+Splashtop	splashtop.com		tech
+Citrix	citrix.com,cloud.com		tech
+Okta	okta.com		tech
+Auth0	auth0.com		tech
+Ping Identity	pingidentity.com		tech
+CyberArk	cyberark.com		tech
+SailPoint	sailpoint.com		tech
+Duo Security	duo.com		tech
+Yubico	yubico.com		tech
+CrowdStrike	crowdstrike.com		security
+Palo Alto Networks	paloaltonetworks.com		security
+Fortinet	fortinet.com		security
+Check Point	checkpoint.com		security
+Zscaler	zscaler.com		security
+SentinelOne	sentinelone.com		security
+Sophos	sophos.com		security
+Trend Micro	trendmicro.com		security
+ESET	eset.com		security
+F-Secure	f-secure.com		security
+Webroot	webroot.com		security
+Proofpoint	proofpoint.com		security
+Mimecast	mimecast.com		security
+Barracuda Networks	barracuda.com		security
+Rapid7	rapid7.com		security
+Tenable	tenable.com		security
+Qualys	qualys.com		security
+Varonis	varonis.com		security
+KnowBe4	knowbe4.com		security
+Cloudflare Inc	cloudflare.com		tech
+Akamai	akamai.com		tech
+Fastly	fastly.com		tech
+DigitalOcean	digitalocean.com		tech
+Linode	linode.com		tech
+Vultr	vultr.com		tech
+Hetzner	hetzner.com,hetzner.de		tech
+OVHcloud	ovhcloud.com,ovh.com	OVH	tech
+Scaleway	scaleway.com		tech
+Rackspace	rackspace.com		tech
+Equinix	equinix.com		tech
+Digital Realty	digitalrealty.com		tech
+Oracle Cloud	oracle.com		tech
+Google Cloud	cloud.google.com,google.com		tech
+Amazon Web Services	aws.amazon.com,amazonaws.com	AWS	tech
+Microsoft Azure	azure.com,azure.microsoft.com	Azure	tech
+Alibaba Cloud	alibabacloud.com,aliyun.com	Aliyun	tech
+Tencent	tencent.com,qq.com,weixin.qq.com	WeChat,QQ	tech
+Baidu	baidu.com		tech
+ByteDance	bytedance.com,tiktok.com	TikTok	tech
+JD.com	jd.com		retail
+Pinduoduo	pinduoduo.com,temu.com	Temu	retail
+Meituan	meituan.com		tech
+Didi	didiglobal.com		tech
+NetEase	netease.com,163.com		tech
+Sina	sina.com.cn,weibo.com	Weibo	tech
+Kuaishou	kuaishou.com		tech
+Bilibili	bilibili.com		tech
+Naver Corporation	naver.com	Naver	tech
+Kakao	kakao.com,kakaocorp.com	KakaoTalk	tech
+Line Corporation	line.me,linecorp.com	LINE	tech
+Yahoo Japan	yahoo.co.jp		tech
+Mercari Inc	mercari.com,mercari.jp		retail
+Rakuten Group	rakuten.co.jp,rakuten.com	Rakuten	retail
+Grab	grab.com		tech
+Gojek	gojek.com,gotocompany.com	GoTo	tech
+Sea Limited	sea.com,shopee.com,garena.com	Shopee,Garena	tech
+Lazada	lazada.com,lazada.sg		retail
+Tokopedia	tokopedia.com		retail
+Flipkart	flipkart.com		retail
+Myntra	myntra.com		retail
+Swiggy	swiggy.com		tech
+Zomato	zomato.com		tech
+Ola	olacabs.com		tech
+Infosys	infosys.com		tech
+Tata Consultancy Services	tcs.com	TCS	tech
+Wipro	wipro.com		tech
+HCLTech	hcltech.com	HCL Technologies	tech
+Tech Mahindra	techmahindra.com		tech
+Cognizant	cognizant.com		tech
+Accenture	accenture.com		tech
+Capgemini	capgemini.com		tech
+Atos	atos.net		tech
+DXC Technology	dxc.com	DXC	tech
+Kyndryl	kyndryl.com		tech
+Leidos	leidos.com		tech
+SAIC	saic.com		tech
+Booz Allen Hamilton	boozallen.com		tech
+CACI	caci.com		tech
+ManTech	mantech.com		tech
+Deloitte	deloitte.com		consulting
+PwC	pwc.com	PricewaterhouseCoopers	consulting
+EY	ey.com	Ernst & Young	consulting
+KPMG	kpmg.com,kpmg.us		consulting
+McKinsey & Company	mckinsey.com	McKinsey	consulting
+Boston Consulting Group	bcg.com	BCG	consulting
+Bain & Company	bain.com	Bain	consulting
+Gartner	gartner.com		consulting
+Forrester	forrester.com		consulting
+IDC	idc.com		consulting
+Nielsen	nielsen.com		consulting
+SAP SE	sap.com,concur.com,successfactors.com,ariba.com	SAP,Concur,SuccessFactors,Ariba	tech
+Siemens	siemens.com,siemens-healthineers.com	Siemens Healthineers	industrial
+Software AG	softwareag.com		tech
+TeamViewer AG	teamviewer.com		tech
+Dassault Systemes	3ds.com	Dassault	tech
+Autodesk	autodesk.com		tech
+PTC	ptc.com		tech
+Ansys	ansys.com		tech
+Synopsys	synopsys.com		tech
+Cadence Design Systems	cadence.com		tech
+Bentley Systems	bentley.com		tech
+Trimble	trimble.com		tech
+Esri	esri.com		tech
+Unity Technologies	unity.com		tech
+Roblox	roblox.com		tech
+Electronic Arts	ea.com	EA	tech
+Activision Blizzard	activision.com,blizzard.com,battle.net	Blizzard,Battle.net	tech
+Take-Two Interactive	take2games.com,rockstargames.com,2k.com	Rockstar Games,2K	tech
+Ubisoft	ubisoft.com,ubi.com		tech
+Square Enix	square-enix.com,square-enix-games.com		tech
+Bandai Namco	bandainamcoent.com,bandainamco.com		tech
+Capcom	capcom.com		tech
+Sega	sega.com,sega.jp		tech
+Konami	konami.com		tech
+Nexon	nexon.com		tech
+NCSoft	ncsoft.com		tech
+Krafton	krafton.com		tech
+miHoYo	mihoyo.com,hoyoverse.com	HoYoverse	tech
+Supercell	supercell.com		tech
+King	king.com		tech
+Zynga	zynga.com		tech
+Playtika	playtika.com		tech
+Scopely	scopely.com		tech
+Niantic	nianticlabs.com		tech
+GOG	gog.com		tech
+Humble Bundle	humblebundle.com		tech
+itch.io	itch.io		tech
+Discord Inc	discord.com		tech
+Twitch Interactive	twitch.tv		media
+Reddit Inc	reddit.com,redditmail.com	Reddit	tech
+Pinterest Inc	pinterest.com	Pinterest	tech
+Snap Inc	snap.com,snapchat.com	Snapchat	tech
+Tumblr	tumblr.com		tech
+Quora	quora.com		tech
+Medium	medium.com		tech
+Substack Inc	substack.com	Substack	tech
+Patreon	patreon.com		tech
+Kickstarter	kickstarter.com		tech
+Indiegogo	indiegogo.com		tech
+GoFundMe	gofundme.com		tech
+Eventbrite	eventbrite.com		tech
+Meetup	meetup.com		tech
+Yelp	yelp.com		tech
+Angi	angi.com,angieslist.com,homeadvisor.com	Angie's List,HomeAdvisor	tech
+Thumbtack	thumbtack.com		tech
+TaskRabbit	taskrabbit.com		tech
+Fiverr	fiverr.com		tech
+Upwork	upwork.com		tech
+Freelancer	freelancer.com		tech
+Toptal	toptal.com		tech
+Wix.com	wix.com		tech
+Squarespace Inc	squarespace.com		tech
+GoDaddy Inc	godaddy.com,secureserver.net		tech
+Namecheap Inc	namecheap.com		tech
+Automattic	automattic.com,wordpress.com,tumblr.com,woocommerce.com	WooCommerce	tech
+Bluehost	bluehost.com		tech
+HostGator	hostgator.com		tech
+SiteGround	siteground.com		tech
+DreamHost	dreamhost.com		tech
+WP Engine	wpengine.com		tech
+Kinsta	kinsta.com		tech
+Cloudways	cloudways.com		tech
+Hostinger International	hostinger.com		tech
+IONOS SE	ionos.com,ionos.co.uk,ionos.de	1&1 IONOS	tech
+Strato	strato.de		tech
+Gandi	gandi.net		tech
+Network Solutions	networksolutions.com		tech
+Register.com	register.com		tech
+Tucows	tucows.com,hover.com	Hover	tech
+Dynadot	dynadot.com		tech
+Porkbun	porkbun.com		tech
+Google Domains	domains.google		tech
+Vercel	vercel.com		tech
+Netlify	netlify.com		tech
+Heroku	heroku.com		tech
+Render	render.com		tech
+Fly.io	fly.io		tech
+Railway	railway.app		tech
+Supabase	supabase.com		tech
+Firebase	firebase.google.com		tech
+Twilio Segment	segment.com		tech
+Amplitude	amplitude.com		tech
+Mixpanel	mixpanel.com		tech
+Hotjar	hotjar.com		tech
+Optimizely	optimizely.com		tech
+Contentful	contentful.com		tech
+Sanity	sanity.io		tech
+Algolia	algolia.com		tech
+Auth0 Inc	auth0.com		tech
+Postman	postman.com		tech
+JetBrains	jetbrains.com		tech
+GitLab	gitlab.com		tech
+Bitbucket	bitbucket.org		tech
+Docker Inc	docker.com,docker.io	Docker	tech
+Red Hat Inc	redhat.com		tech
+SUSE	suse.com		tech
+Canonical	canonical.com,ubuntu.com	Ubuntu	tech
+Linux Foundation	linuxfoundation.org		tech
+Apache Software Foundation	apache.org		tech
+Python Software Foundation	python.org		tech
+npm	npmjs.com		tech
+PyPI	pypi.org		tech
+Stack Overflow	stackoverflow.com,stackexchange.com		tech
+Wikipedia	wikipedia.org,wikimedia.org	Wikimedia Foundation	tech
+Internet Archive	archive.org		tech
+Mozilla Foundation	mozilla.org,mozilla.com		tech
+Brave Software	brave.com		tech
+DuckDuckGo	duckduckgo.com		tech
+Opera	opera.com		tech
+Vivaldi	vivaldi.com		tech
+Kagi	kagi.com		tech
+Bing	bing.com		tech
+Evernote Corporation	evernote.com		tech
+Notion Labs	notion.so		tech
+Asana	asana.com		tech
+Trello	trello.com		tech
+Monday.com	monday.com		tech
+ClickUp	clickup.com		tech
+Smartsheet	smartsheet.com		tech
+Airtable	airtable.com		tech
+Basecamp	basecamp.com,37signals.com,hey.com	HEY	tech
+Miro	miro.com		tech
+Figma Inc	figma.com	Figma	tech
+Canva Pty	canva.com	Canva	tech
+Adobe Inc	adobe.com	Adobe	tech
+Affinity	affinity.serif.com,serif.com	Serif	tech
+CorelDRAW	coreldraw.com,corel.com	Corel	tech
+Avid	avid.com		tech
+Blackmagic Design	blackmagicdesign.com		tech
+Steinberg	steinberg.net		tech
+Native Instruments	native-instruments.com		tech
+Ableton	ableton.com		tech
+Dropbox Inc	dropbox.com	Dropbox	tech
+Box Inc	box.com	Box	tech
+Egnyte	egnyte.com		tech
+Sync.com	sync.com		tech
+pCloud	pcloud.com		tech
+MEGA	mega.nz,mega.io		tech
+Backblaze	backblaze.com		tech
+Carbonite	carbonite.com		tech
+IDrive	idrive.com		tech
+Acronis	acronis.com		tech
+Veeam	veeam.com		tech
+Commvault	commvault.com		tech
+Veritas	veritas.com		tech
+Zoho Corporation	zoho.com		tech
+Freshdesk	freshdesk.com		tech
+Intercom	intercom.com		tech
+Drift	drift.com		tech
+LiveChat	livechat.com		tech
+Tidio	tidio.com		tech
+Calendly	calendly.com		tech
+Doodle	doodle.com		tech
+SurveyMonkey	surveymonkey.com		tech
+Typeform	typeform.com		tech
+Qualtrics	qualtrics.com		tech
+Medallia	medallia.com		tech
+Sprinklr	sprinklr.com		tech
+Hootsuite	hootsuite.com		tech
+Buffer	buffer.com		tech
+Sprout Social	sproutsocial.com		tech
+Semrush	semrush.com		tech
+Ahrefs	ahrefs.com		tech
+Moz	moz.com		tech
+Similarweb	similarweb.com		tech
+LastPass Inc	lastpass.com		security
+Dashlane	dashlane.com		security
+Bitwarden	bitwarden.com		security
+NordVPN	nordvpn.com,nordaccount.com	Nord Security	security
+ExpressVPN	expressvpn.com		security
+Surfshark	surfshark.com		security
+Proton AG	proton.me,protonmail.com,protonvpn.com	ProtonVPN	security
+Mullvad	mullvad.net		security
+Private Internet Access	privateinternetaccess.com		security
+CyberGhost	cyberghostvpn.com		security
+IPVanish	ipvanish.com		security
+Avira	avira.com		security
+AVG Technologies	avg.com		security
+Malwarebytes Inc	malwarebytes.com		security
+CCleaner	ccleaner.com		security
+Grammarly Inc	grammarly.com		tech
+Duolingo Inc	duolingo.com		education
+Babbel	babbel.com		education
+Rosetta Stone	rosettastone.com		education
+Coursera Inc	coursera.org		education
+edX	edx.org		education
+Udacity	udacity.com		education
+Udemy Inc	udemy.com		education
+Skillshare	skillshare.com		education
+MasterClass	masterclass.com		education
+Pluralsight	pluralsight.com		education
+LinkedIn Learning	linkedin.com		education
+Khan Academy	khanacademy.org		education
+Chegg	chegg.com		education
+Quizlet	quizlet.com		education
+Course Hero	coursehero.com		education
+Brainly	brainly.com		education
+Kahoot	kahoot.com,kahoot.it		education
+Blackboard	blackboard.com		education
+Canvas LMS	instructure.com	Instructure	education
+Moodle	moodle.org,moodle.com		education
+Pearson	pearson.com		education
+McGraw Hill	mheducation.com		education
+Cengage	cengage.com		education
+Scholastic	scholastic.com		education
+Wiley	wiley.com		education
+Elsevier	elsevier.com		education
+Springer Nature	springernature.com,springer.com		education
+College Board	collegeboard.org		education
+ACT	act.org		education
+ETS	ets.org		education
+Common App	commonapp.org		education
+FAFSA	studentaid.gov		government
+Handshake	joinhandshake.com		education

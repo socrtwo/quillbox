@@ -99,4 +99,13 @@ jobs:
         with:
           name: Quillbox ${{ github.ref_name }}
           generate_release_notes: true
+          body: |
+            Downloads (built by GitHub Actions from this tag; assets from the other workflows are attached as they finish):
+            - **Android / ChromeOS**: `quillbox-<tag>.apk` (signed when the repository has signing secrets, otherwise `-unsigned`) plus a debug APK.
+            - **Windows**: `quillbox-desktop-<tag>-windows-x64.msi`, or the portable zip.
+            - **macOS**: `quillbox-desktop-<tag>-macos-arm64.dmg` (unsigned: right-click → Open, or `xattr -dr com.apple.quarantine`).
+            - **Linux x64**: `quillbox-desktop-<tag>-linux-x64.deb`, or the portable tar.gz.
+            - **Raspberry Pi OS (64-bit) / Linux arm64**: `quillbox-desktop-<tag>-linux-arm64.deb`, or the portable tar.gz.
+            - **Web / any JVM (servers, Termux, ChromeOS Linux)**: `quillbox-web-<tag>-any-jvm.zip` — unzip and run `bin/quillbox-web`.
+            - **iOS**: `Quillbox-iOS-simulator.app.zip` (unsigned simulator build; a device build needs an Apple Developer account).
           files: release-assets/*.apk

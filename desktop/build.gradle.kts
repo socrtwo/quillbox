@@ -2,12 +2,13 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("jvm") version "2.0.21"
+    kotlin("plugin.serialization") version "2.0.21"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.21"
     id("org.jetbrains.compose") version "1.7.1"
 }
 
 group = "info.socrtwo.quillbox"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     google()
@@ -15,10 +16,30 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+// The desktop app is the web client packaged as a native application: it embeds the same
+// Ktor backend and Outlook-style UI (compiled straight from ../web) and opens it in the
+// system browser, so Windows, macOS, Linux and Raspberry Pi OS get every feature the web
+// client has without a second code base.
+sourceSets {
+    main {
+        kotlin.srcDir("../web/src/main/kotlin")
+        resources.srcDir("../web/src/main/resources")
+    }
+}
+
+val ktor = "3.0.3"
+
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.9.0")
+
+    implementation("io.ktor:ktor-server-core-jvm:$ktor")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor")
+    implementation("io.ktor:ktor-server-cors-jvm:$ktor")
+    implementation("ch.qos.logback:logback-classic:1.5.6")
 
     // Jakarta (Angus) Mail — IMAP/POP3/SMTP. Runs on the desktop JVM as-is.
     implementation("org.eclipse.angus:angus-mail:2.0.3")
@@ -39,11 +60,28 @@ compose.desktop {
     application {
         mainClass = "info.socrtwo.quillbox.desktop.MainKt"
         nativeDistributions {
-            // .dmg builds on macOS, .msi on Windows, .deb on Linux.
+            // .dmg builds on macOS, .msi on Windows, .deb on Linux (x64 and arm64 / Raspberry Pi OS).
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Quillbox"
-            packageVersion = "1.0.0"
-            description = "Quillbox desktop email client"
+            packageVersion = "1.1.0"
+            description = "Quillbox email client with junk protection"
+            vendor = "socrtwo"
+            // JDK modules the embedded server needs (Netty, JNDI DNS lookups, HttpClient, JDBC-free).
+            modules("java.naming", "java.net.http", "java.sql", "java.management", "java.instrument", "jdk.unsupported", "jdk.crypto.ec", "java.desktop")
+            linux {
+                packageName = "quillbox"
+                debMaintainer = "socrtwo@gmail.com"
+                menuGroup = "Network"
+            }
+            windows {
+                menuGroup = "Quillbox"
+                upgradeUuid = "6f0d2a8e-2f2e-4b7e-9a13-3f4d1a2b5c61"
+                shortcut = true
+                perUserInstall = true
+            }
+            macOS {
+                bundleID = "info.socrtwo.quillbox.desktop"
+            }
         }
     }
 }

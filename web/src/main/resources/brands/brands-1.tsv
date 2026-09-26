@@ -1,0 +1,306 @@
+# name	domains	aliases	category
+Walmart	walmart.com,walmartmoneycard.com,walmart.ca	Wal-Mart	retail
+Amazon.com Inc	amazon.com,amazon.co.uk,amazon.de,amazon.ca,amazon.in,amazon.co.jp	Amazon	retail
+Apple Inc	apple.com,icloud.com	Apple	tech
+UnitedHealth Group	unitedhealthgroup.com,uhc.com,optum.com	UnitedHealthcare,Optum	insurance
+CVS Health	cvshealth.com,cvs.com,caremark.com,aetna.com	CVS,CVS Caremark	retail
+Berkshire Hathaway	berkshirehathaway.com,brk.com		finance
+ExxonMobil	exxonmobil.com,exxon.com,mobil.com	Exxon,Mobil	energy
+Alphabet	abc.xyz,google.com	Google	tech
+McKesson	mckesson.com		healthcare
+Cencora	cencora.com,amerisourcebergen.com	AmerisourceBergen	healthcare
+Costco Wholesale	costco.com,costco.ca,costco.co.uk	Costco	retail
+JPMorgan Chase	jpmorganchase.com,jpmorgan.com,chase.com	JP Morgan,Chase	bank
+Microsoft Corporation	microsoft.com	Microsoft	tech
+Cardinal Health	cardinalhealth.com		healthcare
+Chevron	chevron.com,chevrontexacocards.com	Texaco	energy
+Cigna Group	cigna.com,evernorth.com,expressscripts.com	Cigna,Express Scripts	insurance
+Ford Motor Company	ford.com,fordcredit.com,lincoln.com	Ford,Lincoln	auto
+Bank of America Corporation	bankofamerica.com,bofa.com,merrilledge.com	Bank of America	bank
+General Motors	gm.com,chevrolet.com,gmc.com,cadillac.com,buick.com,onstar.com,gmfinancial.com	Chevrolet,Cadillac,Buick,GMC,GM Financial	auto
+Elevance Health	elevancehealth.com,anthem.com,carelon.com	Anthem,Carelon	insurance
+Citigroup	citigroup.com,citi.com,citibank.com	Citibank,Citi	bank
+Centene	centene.com,ambetterhealth.com,wellcare.com	Ambetter,WellCare	insurance
+Home Depot	homedepot.com		retail
+Marathon Petroleum	marathonpetroleum.com,speedway.com	Speedway	energy
+Kroger	kroger.com,ralphs.com,fredmeyer.com,kingsoopers.com,frysfood.com,smithsfoodanddrug.com,harristeeter.com	Ralphs,Fred Meyer,King Soopers,Fry's Food,Harris Teeter	retail
+Phillips 66	phillips66.com,conoco.com,76.com		energy
+Fannie Mae	fanniemae.com		finance
+Walgreens Boots Alliance	walgreensbootsalliance.com,walgreens.com,boots.com,duanereade.com	Walgreens,Boots	retail
+Valero Energy	valero.com	Valero	energy
+Meta Platforms	meta.com,facebook.com,fb.com,instagram.com,whatsapp.com,facebookmail.com	Meta,Facebook	tech
+Verizon Communications	verizon.com,verizonwireless.com,vzw.com	Verizon	telecom
+AT&T Inc	att.com,att.net	AT&T	telecom
+Comcast	comcast.com,xfinity.com,comcast.net,nbcuni.com,peacocktv.com	Xfinity,NBCUniversal	telecom
+Wells Fargo & Company	wellsfargo.com,wf.com	Wells Fargo	bank
+Goldman Sachs	goldmansachs.com,gs.com,marcus.com	Marcus by Goldman Sachs	bank
+Freddie Mac	freddiemac.com		finance
+Target Corporation	target.com	Target	retail
+Humana	humana.com		insurance
+State Farm	statefarm.com		insurance
+Tesla	tesla.com		auto
+Morgan Stanley	morganstanley.com,etrade.com	E*TRADE	bank
+Johnson & Johnson	jnj.com,janssen.com,kenvue.com	J&J,Janssen,Kenvue	pharma
+Archer Daniels Midland	adm.com	ADM	agriculture
+PepsiCo	pepsico.com,pepsi.com,fritolay.com,quakeroats.com,gatorade.com	Pepsi,Frito-Lay,Quaker Oats,Gatorade	consumer
+United Parcel Service	ups.com	UPS	shipping
+FedEx Corporation	fedex.com	FedEx	shipping
+Dell Technologies	dell.com,delltechnologies.com	Dell	tech
+MetLife	metlife.com		insurance
+Lowe's Companies	lowes.com	Lowe's	retail
+Energy Transfer	energytransfer.com		energy
+Boeing	boeing.com		aerospace
+Albertsons	albertsons.com,safeway.com,vons.com,jewelosco.com,acmemarkets.com,shaws.com	Safeway,Vons,Jewel-Osco,Acme Markets,Shaw's	retail
+Sysco	sysco.com		food
+RTX Corporation	rtx.com,raytheon.com,prattwhitney.com,collinsaerospace.com	Raytheon,Pratt & Whitney,Collins Aerospace	aerospace
+General Dynamics	gd.com,gdit.com,gulfstream.com	Gulfstream	aerospace
+Lockheed Martin	lockheedmartin.com,lmco.com		aerospace
+AbbVie	abbvie.com,allergan.com	Allergan	pharma
+Prudential Financial	prudential.com		insurance
+Caterpillar	caterpillar.com,cat.com		industrial
+Pfizer	pfizer.com		pharma
+Progressive Corporation	progressive.com	Progressive Insurance	insurance
+HCA Healthcare	hcahealthcare.com		healthcare
+IBM	ibm.com,redhat.com	International Business Machines,Red Hat	tech
+Deere & Company	deere.com,johndeere.com	John Deere	industrial
+Merck & Co	merck.com,msd.com	Merck,MSD	pharma
+Intel Corporation	intel.com	Intel	tech
+Nike	nike.com,converse.com,jordan.com	Converse	consumer
+Allstate	allstate.com,esurance.com	Esurance	insurance
+Publix	publix.com		retail
+TJX Companies	tjx.com,tjmaxx.com,marshalls.com,homegoods.com,sierra.com,winners.ca	TJ Maxx,Marshalls,HomeGoods	retail
+Enterprise Mobility	enterprise.com,enterpriseholdings.com,alamo.com,nationalcar.com	Enterprise Rent-A-Car,Alamo,National Car Rental	travel
+Tyson Foods	tyson.com,tysonfoods.com		food
+Nvidia	nvidia.com	NVIDIA	tech
+American Express Company	americanexpress.com,amex.com	American Express	bank
+Charter Communications	charter.com,spectrum.com,spectrum.net	Spectrum	telecom
+Oracle Corporation	oracle.com,netsuite.com	Oracle,NetSuite	tech
+Cisco Systems	cisco.com,webex.com,meraki.com	Cisco,Webex	tech
+Delta Air Lines	delta.com		travel
+American Airlines Group	aa.com	American Airlines	travel
+United Airlines Holdings	united.com	United Airlines	travel
+Nationwide Mutual	nationwide.com		insurance
+Coca-Cola Company	coca-cola.com,coca-colacompany.com,coke.com	Coca-Cola,Coke	consumer
+Liberty Mutual Insurance	libertymutual.com,safeco.com	Liberty Mutual,Safeco	insurance
+Best Buy	bestbuy.com,geeksquad.com	Geek Squad	retail
+Dow Inc	dow.com	Dow Chemical	chemicals
+ConocoPhillips	conocophillips.com		energy
+Northrop Grumman	northropgrumman.com,ngc.com		aerospace
+Abbott Laboratories	abbott.com	Abbott	healthcare
+Bristol Myers Squibb	bms.com		pharma
+Thermo Fisher Scientific	thermofisher.com		healthcare
+Honeywell	honeywell.com		industrial
+Qualcomm	qualcomm.com		tech
+Starbucks	starbucks.com		retail
+Travelers Companies	travelers.com	Travelers	insurance
+USAA	usaa.com		insurance
+3M	3m.com		industrial
+Capital One Financial	capitalone.com	Capital One	bank
+Broadcom	broadcom.com,vmware.com	VMware	tech
+Dollar General	dollargeneral.com,dg.com		retail
+Eli Lilly	lilly.com	Lilly	pharma
+Salesforce	salesforce.com,slack.com,tableau.com,mulesoft.com	Slack,Tableau	tech
+PayPal Holdings	paypal.com,venmo.com	PayPal,Venmo	finance
+Danaher	danaher.com		healthcare
+Dollar Tree	dollartree.com,familydollar.com	Family Dollar	retail
+Exelon	exeloncorp.com,comed.com,peco.com,bge.com	ComEd,PECO,BGE	utilities
+Duke Energy	duke-energy.com		utilities
+Southern Company	southerncompany.com,georgiapower.com,alabamapower.com	Georgia Power,Alabama Power	utilities
+Mondelez International	mondelezinternational.com,oreo.com	Mondelez,Oreo	consumer
+Kraft Heinz	kraftheinzcompany.com,kraftheinz.com	Kraft,Heinz	consumer
+Amgen	amgen.com		pharma
+CHS Inc	chsinc.com		agriculture
+Coupang	coupang.com		retail
+Applied Materials	appliedmaterials.com		tech
+Nucor	nucor.com		industrial
+Advanced Micro Devices	amd.com	AMD	tech
+Paccar	paccar.com,kenworth.com,peterbilt.com	Kenworth,Peterbilt	auto
+Lennar	lennar.com		construction
+D.R. Horton	drhorton.com		construction
+Uber Technologies	uber.com	Uber	tech
+Micron Technology	micron.com,crucial.com	Micron,Crucial	tech
+Arrow Electronics	arrow.com		tech
+Netflix Inc	netflix.com	Netflix	media
+Molina Healthcare	molinahealthcare.com		insurance
+Performance Food Group	pfgc.com		food
+US Foods	usfoods.com		food
+Tenet Healthcare	tenethealth.com		healthcare
+CBRE Group	cbre.com		realestate
+Cummins	cummins.com		industrial
+Jabil	jabil.com		tech
+Halliburton	halliburton.com		energy
+Occidental Petroleum	oxy.com	Occidental	energy
+Union Pacific	up.com	Union Pacific Railroad	transport
+CSX Corporation	csx.com	CSX	transport
+Norfolk Southern	nscorp.com		transport
+Macy's Inc	macys.com,bloomingdales.com	Macy's,Bloomingdale's	retail
+Nordstrom	nordstrom.com,nordstromrack.com		retail
+Gap Inc	gap.com,oldnavy.com,bananarepublic.com,athleta.com	Old Navy,Banana Republic,Athleta	retail
+Ross Stores	rossstores.com		retail
+Burlington Stores	burlington.com		retail
+Kohl's Corporation	kohls.com	Kohl's	retail
+Dick's Sporting Goods	dickssportinggoods.com	Dick's	retail
+AutoZone	autozone.com		retail
+O'Reilly Automotive	oreillyauto.com	O'Reilly Auto Parts	retail
+Advance Auto Parts	advanceautoparts.com		retail
+Genuine Parts Company	genpt.com,napaonline.com	NAPA Auto Parts	retail
+Tractor Supply	tractorsupply.com		retail
+Ulta Beauty	ulta.com		retail
+Bath & Body Works	bathandbodyworks.com		retail
+Victoria's Secret	victoriassecret.com		retail
+Williams-Sonoma	williams-sonoma.com,potterybarn.com,westelm.com	Pottery Barn,West Elm	retail
+RH	rh.com	Restoration Hardware	retail
+Wayfair Inc	wayfair.com	Wayfair	retail
+Chewy	chewy.com		retail
+Petco	petco.com		retail
+PetSmart	petsmart.com		retail
+Foot Locker	footlocker.com		retail
+Academy Sports	academy.com		retail
+Big Lots	biglots.com		retail
+Five Below	fivebelow.com		retail
+BJ's Wholesale Club	bjs.com		retail
+Sam's Club	samsclub.com		retail
+Meijer	meijer.com		retail
+H-E-B	heb.com		retail
+Wegmans	wegmans.com		retail
+Giant Eagle	gianteagle.com		retail
+Hy-Vee	hy-vee.com		retail
+WinCo Foods	wincofoods.com		retail
+Aldi US	aldi.us,aldi.com	ALDI	retail
+Lidl US	lidl.com,lidl.co.uk,lidl.de	Lidl	retail
+Trader Joe's	traderjoes.com		retail
+Whole Foods Market	wholefoodsmarket.com	Whole Foods	retail
+Sprouts Farmers Market	sprouts.com		retail
+Rite Aid	riteaid.com		retail
+Menards	menards.com		retail
+Ace Hardware	acehardware.com		retail
+Harbor Freight Tools	harborfreight.com		retail
+Michaels	michaels.com		retail
+Hobby Lobby	hobbylobby.com		retail
+JOANN	joann.com		retail
+Staples	staples.com		retail
+Office Depot	officedepot.com,odpcorp.com	OfficeMax	retail
+Barnes & Noble	barnesandnoble.com		retail
+GameStop	gamestop.com		retail
+Sephora	sephora.com		retail
+Nike Direct	nike.com		consumer
+QVC	qvc.com,qurateretail.com,hsn.com	HSN	retail
+Overstock	overstock.com,beyond.com	Bed Bath & Beyond	retail
+Newegg	newegg.com		retail
+Zappos	zappos.com		retail
+Poshmark	poshmark.com		retail
+Mercari	mercari.com		retail
+StockX	stockx.com		retail
+Rakuten	rakuten.com,rakuten.co.jp		retail
+Groupon	groupon.com		retail
+Instacart	instacart.com		tech
+DoorDash Inc	doordash.com	DoorDash	tech
+Grubhub	grubhub.com		tech
+Postmates	postmates.com		tech
+Lyft Inc	lyft.com	Lyft	tech
+Airbnb Inc	airbnb.com	Airbnb	travel
+Booking Holdings	bookingholdings.com,booking.com,priceline.com,kayak.com,agoda.com,opentable.com	Priceline,Kayak,Agoda,OpenTable	travel
+Expedia Group	expediagroup.com,expedia.com,hotels.com,vrbo.com,orbitz.com,travelocity.com	Orbitz,Travelocity	travel
+Tripadvisor	tripadvisor.com,viator.com	Viator	travel
+Marriott International	marriott.com,marriottbonvoy.com	Marriott	travel
+Hilton Worldwide	hilton.com,hiltonhonors.com	Hilton	travel
+Hyatt Hotels	hyatt.com	Hyatt	travel
+IHG Hotels & Resorts	ihg.com,holidayinn.com	IHG,Holiday Inn	travel
+Wyndham Hotels	wyndhamhotels.com,wyndham.com	Wyndham	travel
+Choice Hotels	choicehotels.com		travel
+Best Western	bestwestern.com		travel
+Accor	accor.com,all.accor.com	ALL Accor	travel
+Carnival Corporation	carnival.com,princess.com,hollandamerica.com	Carnival Cruise Line,Princess Cruises,Holland America	travel
+Royal Caribbean Group	royalcaribbean.com,celebritycruises.com	Royal Caribbean,Celebrity Cruises	travel
+Norwegian Cruise Line	ncl.com		travel
+Southwest Airlines Co	southwest.com	Southwest Airlines	travel
+JetBlue Airways	jetblue.com	JetBlue	travel
+Alaska Airlines	alaskaair.com		travel
+Spirit Airlines	spirit.com		travel
+Frontier Airlines	flyfrontier.com		travel
+Hawaiian Airlines	hawaiianairlines.com		travel
+Allegiant Air	allegiantair.com		travel
+Air Canada	aircanada.com		travel
+WestJet	westjet.com		travel
+British Airways	britishairways.com,ba.com		travel
+Lufthansa	lufthansa.com		travel
+Air France	airfrance.com,airfrance.fr		travel
+KLM	klm.com		travel
+Ryanair	ryanair.com		travel
+easyJet	easyjet.com		travel
+Emirates	emirates.com		travel
+Qatar Airways	qatarairways.com		travel
+Etihad Airways	etihad.com		travel
+Singapore Airlines	singaporeair.com		travel
+Cathay Pacific	cathaypacific.com		travel
+Qantas	qantas.com		travel
+Virgin Atlantic	virginatlantic.com		travel
+Turkish Airlines	turkishairlines.com		travel
+Aer Lingus	aerlingus.com		travel
+Iberia	iberia.com		travel
+Japan Airlines	jal.co.jp,jal.com	JAL	travel
+All Nippon Airways	ana.co.jp	ANA	travel
+Korean Air	koreanair.com		travel
+LATAM Airlines	latamairlines.com,latam.com	LATAM	travel
+Avianca	avianca.com		travel
+Aeromexico	aeromexico.com		travel
+Copa Airlines	copaair.com		travel
+Amtrak	amtrak.com		travel
+Greyhound	greyhound.com		travel
+Hertz	hertz.com,dollar.com,thrifty.com	Dollar Rent A Car,Thrifty	travel
+Avis Budget Group	avis.com,budget.com,avisbudgetgroup.com	Avis,Budget	travel
+Turo	turo.com		travel
+Sixt	sixt.com,sixt.de		travel
+Europcar	europcar.com		travel
+Verizon Business	verizon.com		telecom
+T-Mobile US	t-mobile.com,tmobile.com	T-Mobile	telecom
+Lumen Technologies	lumen.com,centurylink.com	CenturyLink	telecom
+Frontier Communications	frontier.com		telecom
+Altice USA	alticeusa.com,optimum.net,optimum.com	Optimum	telecom
+Cox Communications	cox.com,cox.net	Cox	telecom
+Dish Network	dish.com,boostmobile.com	Boost Mobile	telecom
+EchoStar	echostar.com,hughesnet.com	HughesNet	telecom
+Viasat	viasat.com		telecom
+US Cellular	uscellular.com		telecom
+Cricket Wireless	cricketwireless.com		telecom
+Mint Mobile	mintmobile.com		telecom
+Google Fi	fi.google.com,google.com		telecom
+Visible	visible.com		telecom
+Straight Talk	straighttalk.com		telecom
+Consumer Cellular	consumercellular.com		telecom
+Xfinity Mobile	xfinity.com		telecom
+Rogers Communications	rogers.com		telecom
+Bell Canada	bell.ca		telecom
+Telus	telus.com		telecom
+Shaw Communications	shaw.ca		telecom
+Videotron	videotron.com		telecom
+BT Group	bt.com,btinternet.com,ee.co.uk	EE	telecom
+Vodafone Group	vodafone.com,vodafone.co.uk,vodafone.de	Vodafone	telecom
+Virgin Media O2	virginmedia.com,o2.co.uk	Virgin Media,O2	telecom
+Sky Group	sky.com		telecom
+TalkTalk	talktalk.co.uk,talktalk.net		telecom
+Three UK	three.co.uk		telecom
+Orange S.A.	orange.com,orange.fr	Orange	telecom
+Deutsche Telekom	telekom.de,telekom.com,t-online.de	Telekom	telecom
+Telefonica	telefonica.com,movistar.es,movistar.com	Movistar	telecom
+Telecom Italia	tim.it,gruppotim.it	TIM	telecom
+Swisscom	swisscom.ch,swisscom.com		telecom
+KPN	kpn.com		telecom
+Proximus	proximus.be		telecom
+Telenor	telenor.com,telenor.no		telecom
+Telia	telia.se,teliacompany.com		telecom
+NTT	ntt.com,ntt.co.jp,nttdocomo.co.jp	NTT Docomo	telecom
+SoftBank	softbank.jp,softbank.co.jp		telecom
+KDDI	kddi.com,au.com	au	telecom
+China Mobile	chinamobile.com,10086.cn		telecom
+Telstra	telstra.com,telstra.com.au		telecom
+Optus	optus.com.au		telecom
+Spark New Zealand	spark.co.nz		telecom
+Reliance Jio	jio.com		telecom
+Bharti Airtel	airtel.in,airtel.com	Airtel	telecom
+Vodafone Idea	myvi.in	Vi	telecom
+Singtel	singtel.com		telecom
+America Movil	americamovil.com,telcel.com,claro.com	Telcel,Claro	telecom
+MTN Group	mtn.com		telecom
+Etisalat	etisalat.ae,eand.com	e&	telecom
+STC	stc.com.sa		telecom

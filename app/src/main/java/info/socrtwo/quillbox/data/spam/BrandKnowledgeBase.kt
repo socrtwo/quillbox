@@ -17,7 +17,8 @@ object BrandKnowledgeBase {
         category
     )
 
-    val brands: List<Brand> = listOf(
+    /** Hand-curated core entries; [BrandKnowledgeBaseExtra] adds ~2,000 more from a data table. */
+    private val coreBrands: List<Brand> = listOf(
         // Technology / accounts
         b("Microsoft", "microsoft.com|microsoftonline.com|office.com|office365.com|outlook.com|live.com|hotmail.com|msn.com|xbox.com|azure.com|azure.net|skype.com|linkedin.com|github.com|microsoftsupport.com|accountprotection.microsoft.com|email.microsoft.com", "microsoft 365|office 365|office365|outlook|onedrive|azure|microsoft account|windows|xbox|skype|msft", "tech"),
         b("Apple", "apple.com|icloud.com|me.com|mac.com|itunes.com|email.apple.com", "icloud|itunes|app store|apple id|apple pay|applecare|apple support", "tech"),
@@ -251,6 +252,23 @@ object BrandKnowledgeBase {
         b("N26", "n26.com", "", "bank")
     )
 
+    /**
+     * All known organisations: the core list first, then the extended table, skipping any
+     * extended entry whose name or domains are already covered by a core entry.
+     */
+    val brands: List<Brand> = buildList {
+        addAll(coreBrands)
+        val names = coreBrands.map { it.name.lowercase() }.toHashSet()
+        val domains = coreBrands.flatMap { it.domains }.toHashSet()
+        for (extra in BrandKnowledgeBaseExtra.brands) {
+            if (extra.name.lowercase() in names) continue
+            val fresh = extra.domains.filter { it !in domains }
+            if (fresh.isEmpty()) continue
+            add(if (fresh.size == extra.domains.size) extra else extra.copy(domains = fresh))
+            names += extra.name.lowercase(); domains += fresh
+        }
+    }
+
     /** Consumer webmail / freemail domains. A brand mailing from one of these is a red flag. */
     val freemailDomains: Set<String> = setOf(
         "gmail.com", "googlemail.com", "yahoo.com", "yahoo.co.uk", "yahoo.ca", "yahoo.fr", "yahoo.de", "ymail.com",
@@ -322,6 +340,33 @@ object BrandKnowledgeBase {
         "revenue", "agency", "postal", "service", "customs", "tax", "social", "security", "medicare", "internal", "gov"
     ).minus(setOf("apple", "amazon", "google", "microsoft"))   // these four are worth flagging even though they are words
 
+    /**
+     * One-word organisation names that are also ordinary words or first names. They only count
+     * as a claim when they are the whole display name or appear with an organisation word.
+     */
+    val ambiguousAliases: Set<String> = ambiguousLabels + setOf(
+        "act", "ana", "ap", "au", "box", "budget", "carrier", "coach", "compass", "constellation", "continental", "corona",
+        "current", "dave", "discovery", "dodge", "dover", "express", "fortune", "genesis", "gemini", "hermes", "hey", "honor",
+        "huntington", "jaguar", "jared", "jumbo", "king", "lincoln", "line", "marcus", "mars", "max", "medium", "mega",
+        "mini", "mosaic", "next", "nice", "noon", "nu", "omega", "opera", "orange", "pandora", "peacock", "penny", "prosper",
+        "purple", "railway", "ram", "ramp", "render", "sanity", "saturn", "seat", "sharp", "shell", "slack", "spectrum",
+        "square", "stash", "subway", "swift", "target", "tide", "total", "travelers", "vans", "very", "vi", "visible",
+        "vogue", "wired", "mit", "va", "who", "sec", "ets", "ird", "ee", "db", "ge", "tim", "eff", "ford", "drift", "buffer",
+        "hover", "ledger", "elastic", "plaid", "brave", "upstart", "affinity", "block", "clover", "paramount", "liverpool",
+        "providence", "general", "liberty", "national", "guardian", "principal", "equitable", "empower", "globe", "root",
+        "hippo", "lemonade", "casper", "weber", "stanley", "yeti", "cricket", "mint", "boost", "sky", "three", "virgin",
+        "bell", "rogers", "shaw", "spark", "origin", "aqua", "essential", "evergreen", "pioneer", "devon", "apache", "hess",
+        "williams", "plains", "enterprise", "alliance", "unity", "epic", "humble", "hero", "dash", "meta", "apple", "amazon",
+        "google", "microsoft", "chase", "discover", "progressive", "delta", "united", "monster", "indeed", "wise", "chime",
+        "affirm", "steam", "regions", "citizens", "windows", "office", "cash", "notion", "starling", "halifax", "ring",
+        "ally", "key", "wells", "first", "state", "farm", "home", "depot", "best", "buy", "family", "search", "book", "club",
+        "live", "me", "mac", "prime", "video", "play", "store", "pay", "hotels", "booking", "post", "revenue", "agency",
+        "postal", "service", "customs", "tax", "social", "security", "medicare", "internal", "gov", "mail", "email", "news",
+        "info", "accounts", "account", "login", "secure", "notification", "notifications", "cbs", "abc", "fox", "sun",
+        "tesco", "boots", "next", "iceland", "coop", "argos", "range", "very", "loft", "gap", "express", "carters",
+        "scholastic", "pearson", "wiley", "elsevier", "act", "college", "board", "common", "app", "canvas", "moodle"
+    )
+
     /** Words spammers bolt onto a brand name inside a domain ("paypal-secure-login"). */
     val decorationWords: Set<String> = setOf(
         "secure", "security", "login", "signin", "sign", "support", "service", "services", "help", "helpdesk", "billing",
@@ -335,6 +380,9 @@ object BrandKnowledgeBase {
         "limited", "restricted", "suspended", "unlock", "recovery", "recover", "reset", "password", "confirm", "confirmation",
         "us", "uk", "ca", "au", "eu", "com", "net", "org", "inc", "corp", "group", "global", "int", "intl", "en", "hd"
     )
+
+    /** Brands from the hand-curated core list (typo-squat detection is limited to these). */
+    val coreBrandNames: Set<String> = coreBrands.map { it.name }.toHashSet()
 
     /** Distinct labels used for look-alike detection ("paypal", "wellsfargo"…), longest first. */
     val brandLabels: List<Pair<String, Brand>> = buildList {

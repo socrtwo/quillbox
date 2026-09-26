@@ -323,3 +323,32 @@ class SpamEngineTest {
         assertNull(RuleProposer.subjectPhrase("Hi", null))
     }
 }
+
+class ExtendedBrandTableTest {
+    @Test
+    fun `extended table loads and merges`() {
+        assertTrue(BrandKnowledgeBaseExtra.brands.size > 2000, "extra=${BrandKnowledgeBaseExtra.brands.size}")
+        assertTrue(BrandKnowledgeBase.brands.size > 2000)
+        assertTrue(BrandKnowledgeBase.brands.map { it.name.lowercase() }.toSet().size == BrandKnowledgeBase.brands.size, "duplicate names")
+        assertTrue(BrandKnowledgeBase.brandsForDomain("boeing.com").any { it.name == "Boeing" })
+        assertTrue(BrandKnowledgeBase.brandsForDomain("mail.chase.com").isNotEmpty())
+    }
+
+    @Test
+    fun `one-word extended names do not turn people into brands`() {
+        val dave = BrandDetector.analyze(MessageFacts(messageId = "<d>", fromName = "Dave Miller", fromAddress = "dave.miller@gmail.com", subject = "Golf on Sunday?", bodyText = "Are we still on?"))
+        assertFalse(dave.mismatch, dave.explanation)
+        val next = BrandDetector.analyze(MessageFacts(messageId = "<n>", fromName = "Alice", fromAddress = "alice@example.org", subject = "Next steps for the project", bodyText = "Here are the next steps."))
+        assertFalse(next.mismatch, next.explanation)
+        val boeing = BrandDetector.analyze(MessageFacts(messageId = "<b>", fromName = "Boeing Careers", fromAddress = "hr-team@careers-portal.info", subject = "Job offer", bodyText = "Congratulations"))
+        assertTrue(boeing.mismatch); assertEquals("Boeing", boeing.claimedBrand)
+        val genuine = BrandDetector.analyze(MessageFacts(messageId = "<g>", fromName = "Delta Air Lines", fromAddress = "deltaairlines@e.delta.com", subject = "Your trip", bodyText = "Thanks for flying"))
+        assertTrue(genuine.verified, genuine.explanation)
+    }
+
+    @Test
+    fun `typo squats only apply to core brands`() {
+        assertNull(BrandDetector.lookalike("sender.net"))      // "render" is only in the extended table
+        assertEquals("PayPal", BrandDetector.lookalike("paypa1.com")?.first?.name)
+    }
+}
