@@ -23,6 +23,26 @@ dependencies {
 
     // Jakarta (Angus) Mail — the backend speaks IMAP/POP3/SMTP on behalf of the browser.
     implementation("org.eclipse.angus:angus-mail:2.0.3")
+
+    testImplementation(kotlin("test"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // In-memory IMAP/SMTP server used by the demo mailbox and integration tests.
+    testImplementation("com.icegreen:greenmail:2.1.0")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+// `./gradlew demo` starts a throw-away IMAP/SMTP server seeded with sample mail (including
+// spoofed and blacklisted messages) and then Quillbox itself, so the UI can be tried without
+// touching a real mailbox. Sign in with demo@quillbox.test / demo.
+tasks.register<JavaExec>("demo") {
+    group = "application"
+    description = "Run Quillbox against an in-memory demo mailbox (demo@quillbox.test / demo)."
+    classpath = sourceSets["test"].runtimeClasspath
+    mainClass.set("info.socrtwo.quillbox.web.demo.DemoServerKt")
 }
 
 kotlin {
