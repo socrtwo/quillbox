@@ -6,6 +6,15 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Publish a GitHub Release with this tag (e.g. v1.1.0). Leave empty for a plain build."
+        required: false
+        default: ""
+
+# Needed so the release step can create the GitHub Release and upload assets.
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -27,6 +36,17 @@ jobs:
 
       - name: Install XcodeGen
         run: brew install xcodegen
+      # A release is produced when a v* tag is pushed, or when this workflow is run
+      # manually with a release_tag input (used when tags cannot be pushed directly).
+      - name: Determine release tag
+        id: rel
+        shell: bash
+        run: |
+          TAG="${{ github.event.inputs.release_tag }}"
+          if [ -z "$TAG" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then TAG="${{ github.ref_name }}"; fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "Release tag: '${TAG:-<none>}'"
 
       - name: Generate Xcode project
         run: xcodegen generate
@@ -40,4 +60,32 @@ jobs:
             -configuration Debug \
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath build \
             build
+
+      - name: Package simulator app
+        run: |
+          APP=$(find build/Build/Products -name "Quillbox.app" -type d | head -n 1)
+          test -n "$APP"
+          ditto -c -k --keepParent "$APP" "Quillbox-iOS-simulator.app.zip"
+
+      - name: Upload simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: quillbox-ios-simulator-app
+          path: ios/Quillbox-iOS-simulator.app.zip
+          if-no-files-found: error
+
+      # An App Store / TestFlight build needs an Apple Developer account and signing
+      # certificates; this unsigned simulator build is what can be produced without them.
+      - name: Stage release asset
+        if: steps.rel.outputs.tag != ''
+        run: cp Quillbox-iOS-simulator.app.zip "Quillbox-iOS-simulator-${RELEASE_TAG}.app.zip"
+      - name: Publish to GitHub Release
+        if: steps.rel.outputs.tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.rel.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: Quillbox ${{ steps.rel.outputs.tag }}
+          files: ios/Quillbox-iOS-simulator-${{ steps.rel.outputs.tag }}.app.zip

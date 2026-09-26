@@ -6,6 +6,15 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Publish a GitHub Release with this tag (e.g. v1.1.0). Leave empty for a plain build."
+        required: false
+        default: ""
+
+# Needed so the release step can create the GitHub Release and upload assets.
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -16,10 +25,16 @@ jobs:
         include:
           - os: ubuntu-latest
             installer: deb
+            label: linux-x64
+          - os: ubuntu-24.04-arm
+            installer: deb
+            label: linux-arm64
           - os: windows-latest
             installer: msi
+            label: windows-x64
           - os: macos-latest
             installer: dmg
+            label: macos-arm64
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -37,12 +52,23 @@ jobs:
           java-version: "17"
 
       - name: Install Linux packaging tools
-        if: matrix.os == 'ubuntu-latest'
+        if: startsWith(matrix.os, 'ubuntu')
         run: sudo apt-get update && sudo apt-get install -y fakeroot binutils
         working-directory: .
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
+      # A release is produced when a v* tag is pushed, or when this workflow is run
+      # manually with a release_tag input (used when tags cannot be pushed directly).
+      - name: Determine release tag
+        id: rel
+        shell: bash
+        run: |
+          TAG="${{ github.event.inputs.release_tag }}"
+          if [ -z "$TAG" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then TAG="${{ github.ref_name }}"; fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "Release tag: '${TAG:-<none>}'"
 
       # Always produces a runnable app image; this is the real compile/build check.
       - name: Build runnable app image
@@ -51,7 +77,7 @@ jobs:
       - name: Upload app image
         uses: actions/upload-artifact@v4
         with:
-          name: quillbox-desktop-${{ matrix.os }}-app
+          name: quillbox-desktop-${{ matrix.label }}-app
           path: desktop/build/compose/binaries/main/app
           if-no-files-found: error
 
@@ -64,6 +90,31 @@ jobs:
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: quillbox-desktop-${{ matrix.installer }}
+          name: quillbox-desktop-${{ matrix.label }}-${{ matrix.installer }}
           path: desktop/build/compose/binaries/main/${{ matrix.installer }}/*
           if-no-files-found: ignore
+
+      # On a version tag, attach the installer (and a portable app-image archive) to the
+      # GitHub Release. The arm64 .deb is the Raspberry Pi OS (64-bit) package.
+      - name: Stage release assets
+        if: steps.rel.outputs.tag != ''
+        run: |
+          mkdir -p release-assets
+          for f in build/compose/binaries/main/${{ matrix.installer }}/*; do
+            [ -e "$f" ] || continue
+            cp "$f" "release-assets/quillbox-desktop-${RELEASE_TAG}-${{ matrix.label }}.${f##*.}"
+          done
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a -tzip "release-assets/quillbox-desktop-${RELEASE_TAG}-${{ matrix.label }}-portable.zip" ./build/compose/binaries/main/app/* > /dev/null
+          else
+            tar -C build/compose/binaries/main/app -czf "release-assets/quillbox-desktop-${RELEASE_TAG}-${{ matrix.label }}-portable.tar.gz" .
+          fi
+          ls -la release-assets
+      - name: Publish to GitHub Release
+        if: steps.rel.outputs.tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.rel.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: Quillbox ${{ steps.rel.outputs.tag }}
+          files: desktop/release-assets/*

@@ -22,7 +22,7 @@ import info.socrtwo.quillbox.data.local.entity.RuleEntity
         RuleEntity::class,
         AttachmentEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

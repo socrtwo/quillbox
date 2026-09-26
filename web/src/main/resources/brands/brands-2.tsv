@@ -1,0 +1,435 @@
+# Banks, finance, insurance, payments (global)
+U.S. Bancorp	usbank.com	US Bank	bank
+PNC Financial Services	pnc.com	PNC	bank
+Truist Financial	truist.com	Truist	bank
+TD Bank Group	td.com,tdbank.com	TD	bank
+Charles Schwab Corporation	schwab.com	Schwab	finance
+Fidelity Investments	fidelity.com,fmr.com	Fidelity	finance
+Vanguard Group	vanguard.com	Vanguard	finance
+BlackRock	blackrock.com,ishares.com	iShares	finance
+State Street	statestreet.com		finance
+BNY Mellon	bny.com,bnymellon.com,pershing.com	Bank of New York Mellon	bank
+Northern Trust	northerntrust.com		bank
+Ally Financial	ally.com		bank
+Discover Financial Services	discover.com		bank
+Synchrony Financial	synchrony.com,synchronybank.com,syf.com,mysynchrony.com	Synchrony	bank
+Citizens Financial Group	citizensbank.com		bank
+Fifth Third Bancorp	53.com	Fifth Third	bank
+KeyCorp	key.com	KeyBank	bank
+Regions Financial	regions.com		bank
+M&T Bank	mtb.com		bank
+Huntington Bancshares	huntington.com	Huntington	bank
+First Citizens BancShares	firstcitizens.com		bank
+Comerica	comerica.com		bank
+Zions Bancorporation	zionsbank.com,zionsbancorporation.com		bank
+Santander US	santanderbank.com,santanderconsumerusa.com		bank
+BMO Financial Group	bmo.com,bmoharris.com	BMO Harris	bank
+Webster Bank	websterbank.com		bank
+Western Alliance Bancorporation	westernalliancebancorporation.com		bank
+East West Bank	eastwestbank.com		bank
+Popular Inc	popular.com	Banco Popular	bank
+Frost Bank	frostbank.com		bank
+Valley National Bank	valley.com		bank
+Synovus	synovus.com		bank
+BOK Financial	bokf.com,bankofoklahoma.com	Bank of Oklahoma	bank
+Associated Bank	associatedbank.com		bank
+Old National Bank	oldnational.com		bank
+Wintrust	wintrust.com		bank
+Pinnacle Financial	pnfp.com		bank
+First Horizon	firsthorizon.com		bank
+Cullen/Frost	frostbank.com		bank
+Flagstar Bank	flagstar.com		bank
+New York Community Bancorp	mynycb.com		bank
+Arvest Bank	arvest.com		bank
+First National Bank of Omaha	fnbo.com		bank
+UMB Financial	umb.com		bank
+Commerce Bancshares	commercebank.com		bank
+Bank OZK	ozk.com		bank
+Navy Federal Credit Union	navyfederal.org		bank
+PenFed Credit Union	penfed.org	PenFed	bank
+State Employees' Credit Union	ncsecu.org	SECU	bank
+SchoolsFirst Federal Credit Union	schoolsfirstfcu.org		bank
+Golden 1 Credit Union	golden1.com		bank
+Alliant Credit Union	alliantcreditunion.org		bank
+BECU	becu.org		bank
+America First Credit Union	americafirst.com		bank
+Mountain America Credit Union	macu.com		bank
+Suncoast Credit Union	suncoastcreditunion.com		bank
+Marcus	marcus.com		bank
+Capital One 360	capitalone.com		bank
+Chime Financial	chime.com		finance
+Varo Bank	varomoney.com		bank
+Current	current.com		finance
+Dave	dave.com		finance
+MoneyLion	moneylion.com		finance
+Upstart	upstart.com		finance
+LendingClub	lendingclub.com		finance
+Prosper	prosper.com		finance
+Rocket Mortgage	rocketmortgage.com,quickenloans.com	Quicken Loans,Rocket Companies	finance
+loanDepot	loandepot.com		finance
+United Wholesale Mortgage	uwm.com	UWM	finance
+Mr. Cooper	mrcooper.com		finance
+PennyMac	pennymac.com		finance
+Freedom Mortgage	freedommortgage.com		finance
+Guild Mortgage	guildmortgage.com		finance
+NewRez	newrez.com		finance
+Caliber Home Loans	caliberhomeloans.com		finance
+Navient	navient.com		finance
+Nelnet	nelnet.com		finance
+Sallie Mae	salliemae.com		finance
+Mohela	mohela.com		finance
+Great Lakes	mygreatlakes.org		finance
+Aidvantage	aidvantage.com		finance
+Edfinancial	edfinancial.com		finance
+Federal Student Aid	studentaid.gov		government
+Mastercard	mastercard.com,mastercard.us		finance
+Visa Inc	visa.com	Visa	finance
+Fiserv	fiserv.com,clover.com	Clover	finance
+FIS	fisglobal.com,worldpay.com	Worldpay	finance
+Global Payments	globalpayments.com,tsys.com	TSYS	finance
+Block Inc	block.xyz,squareup.com,cash.app	Square,Cash App	finance
+Adyen	adyen.com		finance
+Checkout.com	checkout.com		finance
+Payoneer	payoneer.com		finance
+Wise plc	wise.com		finance
+Remitly	remitly.com		finance
+Xoom	xoom.com		finance
+WorldRemit	worldremit.com		finance
+Ria Money Transfer	riamoneytransfer.com		finance
+Green Dot	greendot.com		finance
+NetSpend	netspend.com		finance
+Bill.com	bill.com		finance
+Brex	brex.com		finance
+Ramp	ramp.com		finance
+Expensify	expensify.com		finance
+Plaid	plaid.com		finance
+Affirm Holdings	affirm.com		finance
+Afterpay	afterpay.com		finance
+Sezzle	sezzle.com		finance
+Zip Co	zip.co		finance
+Robinhood Markets	robinhood.com		finance
+Webull	webull.com		finance
+Interactive Brokers	interactivebrokers.com,ibkr.com	IBKR	finance
+TD Ameritrade	tdameritrade.com		finance
+Merrill Lynch	ml.com,merrill.com	Merrill	finance
+Edward Jones	edwardjones.com		finance
+Raymond James	raymondjames.com		finance
+Ameriprise Financial	ameriprise.com		finance
+LPL Financial	lpl.com		finance
+Stifel	stifel.com		finance
+Baird	rwbaird.com		finance
+Wealthfront	wealthfront.com		finance
+Betterment	betterment.com		finance
+Acorns	acorns.com		finance
+Stash	stash.com		finance
+Public.com	public.com		finance
+SoFi Technologies	sofi.com	SoFi	finance
+Empower	empower.com,empower-retirement.com	Empower Retirement	finance
+Principal Financial	principal.com		finance
+TIAA	tiaa.org		finance
+Voya Financial	voya.com		finance
+Lincoln Financial	lfg.com,lincolnfinancial.com		insurance
+Transamerica	transamerica.com		insurance
+John Hancock	johnhancock.com		insurance
+Guardian Life	guardianlife.com		insurance
+MassMutual	massmutual.com		insurance
+New York Life	newyorklife.com		insurance
+Northwestern Mutual	northwesternmutual.com		insurance
+Pacific Life	pacificlife.com		insurance
+Brighthouse Financial	brighthousefinancial.com		insurance
+Equitable	equitable.com		insurance
+Unum	unum.com		insurance
+Aflac	aflac.com		insurance
+Globe Life	globelifeinsurance.com		insurance
+Mutual of Omaha	mutualofomaha.com		insurance
+Colonial Penn	colonialpenn.com		insurance
+Primerica	primerica.com		insurance
+AIG	aig.com	American International Group	insurance
+Chubb	chubb.com		insurance
+Hartford Financial	thehartford.com	The Hartford	insurance
+Farmers Insurance	farmers.com		insurance
+American Family Insurance	amfam.com		insurance
+Erie Insurance	erieinsurance.com		insurance
+Auto-Owners Insurance	auto-owners.com		insurance
+Amica	amica.com		insurance
+The General	thegeneral.com		insurance
+Mercury Insurance	mercuryinsurance.com		insurance
+Kemper	kemper.com		insurance
+Root Insurance	joinroot.com		insurance
+Lemonade	lemonade.com		insurance
+Hippo	hippo.com		insurance
+Assurant	assurant.com		insurance
+Markel	markel.com		insurance
+CNA Financial	cna.com		insurance
+Zurich Insurance	zurich.com,zurichna.com	Zurich	insurance
+Allianz	allianz.com,allianzlife.com		insurance
+AXA	axa.com,axa.co.uk,axa.fr		insurance
+Generali	generali.com		insurance
+Munich Re	munichre.com		insurance
+Swiss Re	swissre.com		insurance
+Aviva	aviva.co.uk,aviva.com		insurance
+Legal & General	legalandgeneral.com		insurance
+Prudential plc	prudentialplc.com		insurance
+Admiral Group	admiral.com		insurance
+Direct Line	directline.com		insurance
+Manulife	manulife.com,manulife.ca		insurance
+Sun Life	sunlife.com,sunlife.ca		insurance
+Great-West Lifeco	greatwestlifeco.com,canadalife.com	Canada Life	insurance
+Intact Financial	intact.ca,intactfc.com		insurance
+Desjardins	desjardins.com		bank
+National Bank of Canada	nbc.ca		bank
+Tangerine	tangerine.ca		bank
+Simplii Financial	simplii.com		bank
+EQ Bank	eqbank.ca		bank
+ATB Financial	atb.com		bank
+Laurentian Bank	laurentianbank.ca		bank
+Lloyds Banking Group	lloydsbankinggroup.com,lloydsbank.com,halifax.co.uk,bankofscotland.co.uk	Bank of Scotland	bank
+NatWest Group	natwestgroup.com,natwest.com,rbs.co.uk,ulsterbank.co.uk	Ulster Bank	bank
+Barclays plc	barclays.com,barclays.co.uk,barclaycard.co.uk		bank
+HSBC Holdings	hsbc.com,hsbc.co.uk,us.hsbc.com,firstdirect.com	First Direct	bank
+Standard Chartered	sc.com		bank
+Nationwide Building Society	nationwide.co.uk		bank
+Virgin Money	virginmoney.com		bank
+TSB Bank	tsb.co.uk		bank
+Metro Bank	metrobankonline.co.uk		bank
+Co-operative Bank	co-operativebank.co.uk		bank
+Santander UK	santander.co.uk		bank
+Tesco Bank	tescobank.com		bank
+Sainsbury's Bank	sainsburysbank.co.uk		bank
+Atom Bank	atombank.co.uk		bank
+Chase UK	chase.co.uk		bank
+Zopa	zopa.com		bank
+Bank of Ireland	bankofireland.com		bank
+AIB	aib.ie	Allied Irish Banks	bank
+Permanent TSB	permanenttsb.ie		bank
+BNP Paribas	bnpparibas.com,bnpparibas.fr		bank
+Credit Agricole	credit-agricole.com,credit-agricole.fr		bank
+Societe Generale	societegenerale.com,societegenerale.fr		bank
+Groupe BPCE	bpce.fr,banquepopulaire.fr,caisse-epargne.fr	Banque Populaire,Caisse d'Epargne	bank
+Credit Mutuel	creditmutuel.fr,creditmutuel.com		bank
+La Banque Postale	labanquepostale.fr		bank
+Boursorama	boursorama.com,boursobank.com	BoursoBank	bank
+Commerzbank	commerzbank.de,commerzbank.com		bank
+DZ Bank	dzbank.de		bank
+Sparkasse	sparkasse.de		bank
+Volksbank	vr.de		bank
+Postbank	postbank.de		bank
+UniCredit	unicredit.it,unicreditgroup.eu,hypovereinsbank.de	HypoVereinsbank	bank
+Intesa Sanpaolo	intesasanpaolo.com		bank
+Banco Santander	santander.com,bancosantander.es		bank
+BBVA	bbva.com,bbva.es		bank
+CaixaBank	caixabank.com,caixabank.es		bank
+Banco Sabadell	bancsabadell.com		bank
+Bankinter	bankinter.com		bank
+ABN AMRO	abnamro.nl,abnamro.com		bank
+Rabobank	rabobank.nl,rabobank.com		bank
+Bunq	bunq.com		bank
+KBC	kbc.be,kbc.com		bank
+Belfius	belfius.be		bank
+UBS	ubs.com		bank
+Credit Suisse	credit-suisse.com		bank
+Raiffeisen	raiffeisen.ch,raiffeisen.at,rbinternational.com		bank
+Erste Group	erstegroup.com,erstebank.at,sparkasse.at		bank
+Nordea	nordea.com,nordea.se,nordea.dk,nordea.fi		bank
+Danske Bank	danskebank.com,danskebank.dk		bank
+DNB	dnb.no		bank
+SEB	seb.se,sebgroup.com		bank
+Swedbank	swedbank.se,swedbank.com		bank
+Handelsbanken	handelsbanken.se,handelsbanken.com		bank
+OP Financial Group	op.fi		bank
+PKO Bank Polski	pkobp.pl		bank
+mBank	mbank.pl		bank
+Sberbank	sberbank.ru,sber.ru	Sber	bank
+Tinkoff	tinkoff.ru,tbank.ru	T-Bank	bank
+Mitsubishi UFJ Financial	mufg.jp,bk.mufg.jp	MUFG	bank
+Sumitomo Mitsui Financial	smfg.co.jp,smbc.co.jp	SMBC	bank
+Mizuho Financial	mizuho-fg.com,mizuhobank.co.jp	Mizuho	bank
+Japan Post Bank	jp-bank.japanpost.jp		bank
+Nomura	nomura.com,nomura.co.jp		finance
+Rakuten Bank	rakuten-bank.co.jp		bank
+Industrial and Commercial Bank of China	icbc.com.cn	ICBC	bank
+China Construction Bank	ccb.com		bank
+Agricultural Bank of China	abchina.com		bank
+Bank of China	boc.cn,bankofchina.com		bank
+Bank of Communications	bankcomm.com		bank
+China Merchants Bank	cmbchina.com		bank
+Ping An	pingan.com,pingan.cn		insurance
+China Life	chinalife.com.cn,e-chinalife.com		insurance
+AIA Group	aia.com		insurance
+HSBC Hong Kong	hsbc.com.hk		bank
+Hang Seng Bank	hangseng.com		bank
+Bank of East Asia	hkbea.com		bank
+DBS Bank	dbs.com,dbs.com.sg	DBS	bank
+OCBC Bank	ocbc.com	OCBC	bank
+UOB	uob.com.sg,uobgroup.com	United Overseas Bank	bank
+Maybank	maybank.com,maybank2u.com.my		bank
+CIMB	cimb.com		bank
+Public Bank Berhad	pbebank.com		bank
+Bangkok Bank	bangkokbank.com		bank
+Kasikornbank	kasikornbank.com	KBank	bank
+Siam Commercial Bank	scb.co.th	SCB	bank
+Bank Central Asia	bca.co.id	BCA	bank
+Bank Mandiri	bankmandiri.co.id		bank
+Bank Rakyat Indonesia	bri.co.id	BRI	bank
+BDO Unibank	bdo.com.ph	BDO	bank
+BPI	bpi.com.ph	Bank of the Philippine Islands	bank
+Metrobank	metrobank.com.ph		bank
+State Bank of India	sbi.co.in,onlinesbi.sbi	SBI	bank
+HDFC Bank	hdfcbank.com		bank
+ICICI Bank	icicibank.com		bank
+Axis Bank	axisbank.com		bank
+Kotak Mahindra Bank	kotak.com		bank
+Punjab National Bank	pnbindia.in	PNB	bank
+Bank of Baroda	bankofbaroda.in		bank
+Yes Bank	yesbank.in		bank
+IndusInd Bank	indusind.com		bank
+Paytm	paytm.com		finance
+PhonePe	phonepe.com		finance
+Razorpay	razorpay.com		finance
+Commonwealth Bank of Australia	commbank.com.au	CommBank	bank
+Westpac Banking	westpac.com.au	Westpac	bank
+ANZ Group	anz.com,anz.com.au,anz.co.nz	ANZ	bank
+National Australia Bank	nab.com.au	NAB	bank
+Macquarie Group	macquarie.com,macquarie.com.au	Macquarie	bank
+Bendigo Bank	bendigobank.com.au		bank
+Bank of Queensland	boq.com.au	BOQ	bank
+Suncorp	suncorp.com.au		insurance
+ING Australia	ing.com.au		bank
+ASB Bank	asb.co.nz	ASB	bank
+Kiwibank	kiwibank.co.nz		bank
+BNZ	bnz.co.nz	Bank of New Zealand	bank
+Standard Bank	standardbank.co.za,standardbank.com		bank
+FirstRand	firstrand.co.za,fnb.co.za	FNB,First National Bank	bank
+Absa	absa.co.za,absa.africa		bank
+Nedbank	nedbank.co.za		bank
+Capitec	capitecbank.co.za		bank
+Investec	investec.com		bank
+Discovery Limited	discovery.co.za		insurance
+Sanlam	sanlam.co.za		insurance
+Old Mutual	oldmutual.com,oldmutual.co.za		insurance
+Emirates NBD	emiratesnbd.com		bank
+First Abu Dhabi Bank	bankfab.com	FAB	bank
+Abu Dhabi Commercial Bank	adcb.com	ADCB	bank
+Dubai Islamic Bank	dib.ae		bank
+Mashreq	mashreq.com,mashreqbank.com		bank
+Qatar National Bank	qnb.com	QNB	bank
+Al Rajhi Bank	alrajhibank.com.sa		bank
+Saudi National Bank	alahli.com	SNB	bank
+Riyad Bank	riyadbank.com		bank
+National Bank of Kuwait	nbk.com	NBK	bank
+Bank Leumi	leumi.co.il		bank
+Bank Hapoalim	bankhapoalim.co.il		bank
+Itau Unibanco	itau.com.br	Itau	bank
+Banco do Brasil	bb.com.br		bank
+Bradesco	bradesco.com.br		bank
+Caixa Economica Federal	caixa.gov.br	Caixa	bank
+Nubank	nubank.com.br,nu.com.br,nu.com	Nu	bank
+Banco Inter	bancointer.com.br		bank
+BTG Pactual	btgpactual.com		bank
+XP Inc	xpi.com.br		finance
+Mercado Pago	mercadopago.com,mercadopago.com.br,mercadopago.com.ar		finance
+Banorte	banorte.com		bank
+BBVA Mexico	bbva.mx		bank
+Citibanamex	banamex.com		bank
+Banco Azteca	bancoazteca.com.mx		bank
+Bancolombia	bancolombia.com		bank
+Banco de Chile	bancochile.cl		bank
+Banco Galicia	bancogalicia.com		bank
+Banco de Credito del Peru	viabcp.com	BCP	bank
+Klarna Bank	klarna.com		finance
+Revolut Ltd	revolut.com		bank
+N26 Bank	n26.com		bank
+Monzo Bank	monzo.com		bank
+Starling Bank Ltd	starlingbank.com		bank
+Qonto	qonto.com		bank
+Lydia	lydia-app.com		finance
+Trade Republic	traderepublic.com		finance
+eToro	etoro.com		finance
+IG Group	ig.com		finance
+Plus500	plus500.com		finance
+Saxo Bank	home.saxo		finance
+Hargreaves Lansdown	hl.co.uk		finance
+AJ Bell	ajbell.co.uk		finance
+Moneybox	moneyboxapp.com		finance
+Nutmeg	nutmeg.com		finance
+Interactive Investor	ii.co.uk		finance
+Bitcoin.com	bitcoin.com		finance
+Crypto.com	crypto.com		finance
+Gemini	gemini.com		finance
+Bitstamp	bitstamp.net		finance
+Bitfinex	bitfinex.com		finance
+KuCoin	kucoin.com		finance
+OKX	okx.com		finance
+Bybit	bybit.com		finance
+Ledger	ledger.com		finance
+Trezor	trezor.io		finance
+MetaMask	metamask.io		finance
+Uphold	uphold.com		finance
+BlockFi	blockfi.com		finance
+Equifax Inc	equifax.com		finance
+Experian plc	experian.com,experian.co.uk		finance
+TransUnion LLC	transunion.com		finance
+FICO	fico.com,myfico.com		finance
+Credit Karma	creditkarma.com		finance
+NerdWallet	nerdwallet.com		finance
+Bankrate	bankrate.com		finance
+LendingTree	lendingtree.com		finance
+Intuit Inc	intuit.com,turbotax.intuit.com,quickbooks.intuit.com	TurboTax,QuickBooks	finance
+H&R Block	hrblock.com		finance
+Jackson Hewitt	jacksonhewitt.com		finance
+TaxAct	taxact.com		finance
+Paychex	paychex.com		finance
+ADP LLC	adp.com	ADP	finance
+Paycom	paycom.com		finance
+Paylocity	paylocity.com		finance
+Gusto	gusto.com		finance
+Workday	workday.com		tech
+Ceridian	ceridian.com,dayforce.com	Dayforce	finance
+Aon	aon.com		insurance
+Marsh McLennan	marsh.com,mmc.com,mercer.com	Marsh,Mercer	insurance
+Willis Towers Watson	wtwco.com	WTW	insurance
+Arthur J. Gallagher	ajg.com	Gallagher	insurance
+Brown & Brown	bbinsurance.com		insurance
+Berkshire Hathaway GEICO	geico.com		insurance
+Berkshire Hathaway HomeServices	bhhs.com		realestate
+Moody's	moodys.com		finance
+S&P Global	spglobal.com		finance
+MSCI	msci.com		finance
+Nasdaq	nasdaq.com		finance
+Intercontinental Exchange	ice.com,nyse.com	NYSE	finance
+CME Group	cmegroup.com		finance
+Cboe	cboe.com		finance
+London Stock Exchange Group	lseg.com	LSEG	finance
+Deutsche Boerse	deutsche-boerse.com		finance
+Euronext	euronext.com		finance
+Broadridge	broadridge.com		finance
+Computershare	computershare.com		finance
+Equiniti	equiniti.com		finance
+DTCC	dtcc.com		finance
+SWIFT	swift.com		finance
+Western Union Company	westernunion.com		finance
+MoneyGram International	moneygram.com		finance
+Euronet	euronetworldwide.com		finance
+Cardtronics	cardtronics.com		finance
+NCR Voyix	ncr.com,ncrvoyix.com	NCR	tech
+Diebold Nixdorf	dieboldnixdorf.com		tech
+Jack Henry	jackhenry.com		tech
+Q2	q2.com		tech
+nCino	ncino.com		tech
+Temenos	temenos.com		tech
+Finastra	finastra.com		tech
+Guidewire	guidewire.com		tech
+Duck Creek	duckcreek.com		tech
+Verisk	verisk.com		finance
+CoreLogic	corelogic.com		finance
+Black Knight	blackknightinc.com		finance
+First American Financial	firstam.com		insurance
+Fidelity National Financial	fnf.com		insurance
+Stewart Title	stewart.com		insurance
+Old Republic	oldrepublic.com		insurance
+Radian	radian.com		insurance
+MGIC	mgic.com		insurance
+Genworth	genworth.com		insurance
+Enact	enactmi.com		insurance
+Assured Guaranty	assuredguaranty.com		insurance
+Ambac	ambac.com		insurance

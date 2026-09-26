@@ -1,75 +1,339 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quillbox</title>
-  <style>
-    :root { --blue: #2E5D9F; }
-    * { box-sizing: border-box; }
-    body { font-family: system-ui, sans-serif; margin: 0; color: #1c1c1c; }
-    header { background: var(--blue); color: #fff; padding: 10px 16px; display: flex; align-items: center; gap: 12px; }
-    header h1 { font-size: 18px; margin: 0; flex: 1; }
-    button { background: var(--blue); color: #fff; border: 0; border-radius: 6px; padding: 8px 12px; cursor: pointer; }
-    button.secondary { background: #e7eefb; color: var(--blue); }
-    input, textarea { width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #ccc; border-radius: 6px; }
-    .wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
-    .row { display: flex; gap: 16px; }
-    .list { width: 320px; border-right: 1px solid #eee; height: calc(100vh - 52px); overflow:auto; }
-    .item { padding: 10px 14px; border-bottom: 1px solid #eee; cursor: pointer; }
-    .item .from { font-weight: 600; }
-    .detail { flex: 1; padding: 16px; height: calc(100vh - 52px); overflow:auto; }
-    .muted { color: #777; font-size: 12px; }
-    dialog { width: min(560px, 92vw); border: 0; border-radius: 10px; padding: 16px; }
-    .hidden { display: none; }
-  </style>
+  <meta name="color-scheme" content="light dark" />
+  <title>Quillbox Mail</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f6cbd' stroke-width='2'%3E%3Cpath d='M3 6h18v12H3z'/%3E%3Cpath d='m3 7 9 6 9-6'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Account setup -->
-  <section id="setup" class="wrap">
-    <h2>Add Mail Account</h2>
-    <input id="displayName" placeholder="Display name" />
-    <input id="email" placeholder="Email address" />
-    <select id="protocol"><option value="IMAP">IMAP</option><option value="POP3">POP3</option></select>
-    <input id="incomingHost" placeholder="Incoming host (imap.example.com)" />
-    <input id="incomingPort" placeholder="Incoming port" value="993" />
-    <input id="smtpHost" placeholder="SMTP host (smtp.example.com)" />
-    <input id="smtpPort" placeholder="SMTP port" value="587" />
-    <input id="username" placeholder="Username" />
-    <input id="password" type="password" placeholder="Password" />
-    <button onclick="saveAccount()">Connect</button>
-    <p class="muted">Credentials are sent to this app's own backend, which talks to your mail server. Use over HTTPS.</p>
-  </section>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 14h4l2 3h4l2-3h4"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4z"/></symbol>
+    <symbol id="i-drafts" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-junk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6" fill="currentColor"/></symbol>
+    <symbol id="i-shield-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-shield-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="m9.5 9.5 5 5m0-5-5 5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v12h14V8"/><path d="M10 12h4"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-compose" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <symbol id="i-reply" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17 4 12l5-5"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></symbol>
+    <symbol id="i-reply-all" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 2 12l5-5"/><path d="m12 17-5-5 5-5"/><path d="M22 18v-2a4 4 0 0 0-4-4H7"/></symbol>
+    <symbol id="i-forward" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 17 5-5-5-5"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4"/><path d="M4 4h12l-2 4 2 4H4"/></symbol>
+    <symbol id="i-flag-fill" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22V4"/><path d="M4 4h12l-2 4 2 4H4"/></symbol>
+    <symbol id="i-unread" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/><circle cx="19" cy="6" r="3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-6 9 6v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 9 9 6 9-6"/></symbol>
+    <symbol id="i-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="m9 14 3 3 3-3"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M12 7c0 2.8 2.2 5 5 5-2.8 0-5 2.2-5 5 0-2.8-2.2-5-5-5 2.8 0 5-2.2 5-5z" fill="currentColor"/><path d="M19 3v2M18 4h2M5 19v2M4 20h2"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></symbol>
+    <symbol id="i-attach" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 11.5-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2L10 17.3a1.8 1.8 0 0 1-2.6-2.6L15 7.2"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></symbol>
+    <symbol id="i-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20z"/><path d="M12 9v5"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".6" fill="currentColor"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-bold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h7a4 4 0 0 1 0 8H7z"/><path d="M7 12h8a4 4 0 0 1 0 8H7z"/></symbol>
+    <symbol id="i-italic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 4h-9M14 20H5M15 4 9 20"/></symbol>
+    <symbol id="i-underline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><path d="M4 20h16"/></symbol>
+    <symbol id="i-strike" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 6a4 4 0 0 0-4-2 4 4 0 0 0-4 4c0 2 2 3 4 4"/><path d="M8 18a4 4 0 0 0 4 2 4 4 0 0 0 4-4"/><path d="M4 12h16"/></symbol>
+    <symbol id="i-ul" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-ol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 5h1v3M4 11h2l-2 2h2M4 17h2v2H4v2h2"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></symbol>
+    <symbol id="i-clear-fmt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3"/><path d="M9 20h6M12 4v16"/><path d="m3 21 18-18" stroke-width="1.5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-8 9"/></symbol>
+    <symbol id="i-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="m5.5 5.5 13 13"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 13v7H4V6h7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-rules" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h6"/><path d="m16 15 2 2 4-4"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-signout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M13 3h6v18h-6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-select" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/><path d="m7 15 3-3M17 15l-3-3"/></symbol>
+  </defs>
+</svg>
 
-  <!-- Mailbox -->
-  <div id="app" class="hidden">
-    <header>
-      <h1 id="title">Quillbox</h1>
-      <button onclick="refresh()">Refresh</button>
-      <button onclick="openCompose()">Compose</button>
-      <button class="secondary" onclick="signOut()">Sign out</button>
-    </header>
-    <div id="status" class="wrap muted"></div>
-    <div class="row">
-      <div id="list" class="list"></div>
-      <div id="detail" class="detail muted">Select a message</div>
+<!-- ============================ Setup wizard ============================ -->
+<div id="setup" class="setup hidden">
+  <div class="setup-card">
+    <div class="logo"><svg><use href="#i-mail"/></svg> Quillbox</div>
+    <div class="steps"><i id="step1" class="done"></i><i id="step2"></i></div>
+
+    <div id="setupStep1">
+      <h2>Add your email account</h2>
+      <p class="lead">Enter your address and password. Quillbox finds the server settings for you, the same way Outlook does.</p>
+      <div id="suError" class="error-box hidden"></div>
+      <div class="field"><label for="suName">Your name</label><input id="suName" type="text" placeholder="Shown on messages you send" autocomplete="name" /></div>
+      <div class="field"><label for="suEmail">Email address</label><input id="suEmail" type="email" placeholder="you@example.com" autocomplete="username" /></div>
+      <div class="field"><label for="suPassword">Password</label><input id="suPassword" type="password" placeholder="Mail or app password" autocomplete="current-password" /><span class="hint">Gmail, Yahoo, iCloud, AOL and Fastmail require an <em>app password</em> rather than your normal password.</span></div>
+      <label class="check"><input id="suRemember" type="checkbox" /><span>Keep me signed in on this device<br /><span class="desc">Stores the account, including the password, in this browser. Only tick this on a device you own.</span></span></label>
+      <div class="btn-row end" style="margin-top:12px"><button id="suContinue" class="btn primary">Continue</button></div>
+      <p class="small muted" style="margin-top:14px">Your credentials go only to this Quillbox server (<span id="suOrigin"></span>) and from there to your own mail provider. Use HTTPS when the server is not on your own machine.</p>
+    </div>
+
+    <div id="setupStep2" class="hidden">
+      <h2>Review server settings</h2>
+      <p class="lead" id="suLead">We found settings for your provider.</p>
+      <div id="suError2" class="error-box hidden"></div>
+      <div id="suProvider" class="provider-box hidden"></div>
+      <details id="suAdvanced" class="advanced">
+        <summary>Server settings</summary>
+        <div class="grid-2">
+          <div class="field"><label for="suProtocol">Incoming type</label><select id="suProtocol"><option value="IMAP">IMAP (recommended)</option><option value="POP3">POP3</option></select></div>
+          <div class="field"><label for="suIncomingSecurity">Incoming security</label><select id="suIncomingSecurity"><option value="SSL_TLS">SSL/TLS</option><option value="STARTTLS">STARTTLS</option><option value="NONE">None</option></select></div>
+          <div class="field"><label for="suIncomingHost">Incoming server</label><input id="suIncomingHost" type="text" placeholder="imap.example.com" /></div>
+          <div class="field"><label for="suIncomingPort">Incoming port</label><input id="suIncomingPort" type="number" value="993" /></div>
+          <div class="field"><label for="suSmtpHost">Outgoing (SMTP) server</label><input id="suSmtpHost" type="text" placeholder="smtp.example.com" /></div>
+          <div class="field"><label for="suSmtpPort">SMTP port</label><input id="suSmtpPort" type="number" value="587" /></div>
+          <div class="field"><label for="suSmtpSecurity">SMTP security</label><select id="suSmtpSecurity"><option value="STARTTLS">STARTTLS</option><option value="SSL_TLS">SSL/TLS</option><option value="NONE">None</option></select></div>
+          <div class="field"><label for="suUsername">User name</label><input id="suUsername" type="text" placeholder="Usually your full email address" /></div>
+        </div>
+      </details>
+      <div class="btn-row" style="margin-top:14px">
+        <button id="suBack" class="btn">Back</button>
+        <span class="grow" style="flex:1"></span>
+        <button id="suVerify" class="btn">Test connection</button>
+        <button id="suSignIn" class="btn primary">Sign in</button>
+      </div>
+      <p id="suStatus" class="small muted" style="margin-top:12px"></p>
     </div>
   </div>
+</div>
 
-  <!-- Compose dialog -->
-  <dialog id="composeDialog">
-    <h3>New message</h3>
-    <input id="to" placeholder="To (comma-separated)" />
-    <input id="cc" placeholder="Cc" />
-    <input id="bcc" placeholder="Bcc" />
-    <input id="subject" placeholder="Subject" />
-    <textarea id="body" rows="8" placeholder="Message"></textarea>
-    <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">
-      <button class="secondary" onclick="closeCompose()">Cancel</button>
-      <button onclick="sendMessage()">Send</button>
+<!-- ============================ Application ============================ -->
+<div id="app" class="app hidden">
+  <header class="topbar">
+    <button id="navToggle" class="icon-btn" title="Toggle folder pane"><svg><use href="#i-menu"/></svg></button>
+    <div class="brand"><svg><use href="#i-mail"/></svg><span>Quillbox</span></div>
+    <div class="search">
+      <svg><use href="#i-search"/></svg>
+      <input id="searchInput" type="search" placeholder="Search mail (press /)" autocomplete="off" />
+      <button id="searchClear" class="icon-btn clear hidden" title="Clear search"><svg><use href="#i-close"/></svg></button>
     </div>
-  </dialog>
+    <div class="topbar-right">
+      <button id="btnRefresh" class="icon-btn" title="Refresh (F5)"><svg><use href="#i-refresh"/></svg></button>
+      <button id="btnTheme" class="icon-btn" title="Toggle dark mode"><svg><use href="#i-moon"/></svg></button>
+      <button id="btnShortcuts" class="icon-btn" title="Keyboard shortcuts (?)"><svg><use href="#i-keyboard"/></svg></button>
+      <button id="btnSettings" class="icon-btn" title="Settings"><svg><use href="#i-settings"/></svg></button>
+      <div id="accountAvatar" class="avatar" title="Account"></div>
+    </div>
+  </header>
 
-  <script src="app.js"></script>
+  <div id="workspace" class="workspace">
+    <nav class="folders" id="folderPane">
+      <button id="btnNewMail" class="btn primary new-mail"><svg><use href="#i-compose"/></svg> New mail</button>
+      <div class="account-name"><svg width="14" height="14"><use href="#i-user"/></svg><span id="accountLabel"></span></div>
+      <ul id="folderList" class="folder-list"></ul>
+      <div class="nav-footer">
+        <div class="status-line"><span id="junkDot" class="dot"></span><span id="junkStatus">Junk protection on</span></div>
+        <div id="bayesStatus" class="status-line small"></div>
+      </div>
+    </nav>
+
+    <section class="list-pane" id="listPane">
+      <div class="cmdbar" id="cmdbar">
+        <button id="cmdSelectAll" class="icon-btn" title="Select all"><svg><use href="#i-select"/></svg></button>
+        <span class="sep"></span>
+        <button id="cmdDelete" class="btn subtle" title="Delete (Del)"><svg><use href="#i-trash"/></svg>Delete</button>
+        <button id="cmdArchive" class="btn subtle" title="Archive (E)"><svg><use href="#i-archive"/></svg>Archive</button>
+        <button id="cmdJunk" class="btn subtle" title="Report junk (J)"><svg><use href="#i-junk"/></svg>Junk</button>
+        <button id="cmdNotJunk" class="btn subtle hidden" title="Not junk (Shift+J)"><svg><use href="#i-shield-ok"/></svg>Not junk</button>
+        <button id="cmdMove" class="btn subtle" title="Move to…"><svg><use href="#i-move"/></svg>Move</button>
+        <button id="cmdRead" class="btn subtle" title="Mark read / unread"><svg><use href="#i-read"/></svg>Read</button>
+        <button id="cmdFlag" class="btn subtle" title="Flag"><svg><use href="#i-flag"/></svg>Flag</button>
+        <span class="grow"></span>
+        <button id="cmdRescan" class="icon-btn" title="Re-scan this folder for junk"><svg><use href="#i-junk"/></svg></button>
+      </div>
+      <div class="list-header">
+        <h2 id="folderTitle">Inbox</h2>
+        <div class="filters">
+          <button data-filter="all" class="active">All</button>
+          <button data-filter="unread">Unread</button>
+          <button data-filter="flagged">Flagged</button>
+          <button data-filter="suspicious" title="Messages the junk filter considers suspicious or spam">Suspicious</button>
+        </div>
+      </div>
+      <div id="analysisBanner" class="banner hidden"><span class="spinner"></span><span id="analysisText">Scanning new mail for junk…</span></div>
+      <div id="listBanner" class="banner hidden"></div>
+      <div id="messageList" class="message-list" tabindex="0"></div>
+      <div class="list-footer"><span id="listStatus"></span><button id="btnLoadMore" class="btn sm hidden">Load more</button></div>
+    </section>
+
+    <section class="reading-pane" id="readingPane">
+      <div id="readingEmpty" class="reading-empty">
+        <svg><use href="#i-empty"/></svg>
+        <div>Select an item to read</div>
+        <div class="small">Nothing is selected</div>
+      </div>
+      <article id="reading" class="reading hidden">
+        <div class="reading-toolbar">
+          <button id="rdBack" class="icon-btn mobile-only" title="Back to list"><svg><use href="#i-back"/></svg></button>
+          <button id="rdReply" class="btn subtle" title="Reply (R)"><svg><use href="#i-reply"/></svg>Reply</button>
+          <button id="rdReplyAll" class="btn subtle" title="Reply all (A)"><svg><use href="#i-reply-all"/></svg>Reply all</button>
+          <button id="rdForward" class="btn subtle" title="Forward (F)"><svg><use href="#i-forward"/></svg>Forward</button>
+          <span class="sep"></span>
+          <button id="rdDelete" class="icon-btn" title="Delete (Del)"><svg><use href="#i-trash"/></svg></button>
+          <button id="rdArchive" class="icon-btn" title="Archive (E)"><svg><use href="#i-archive"/></svg></button>
+          <button id="rdMove" class="icon-btn" title="Move to…"><svg><use href="#i-move"/></svg></button>
+          <button id="rdFlag" class="icon-btn" title="Flag"><svg><use href="#i-flag"/></svg></button>
+          <button id="rdUnread" class="icon-btn" title="Mark as unread (U)"><svg><use href="#i-unread"/></svg></button>
+          <span class="sep"></span>
+          <button id="rdJunk" class="btn subtle" title="Move this message to Junk and learn from it (J)"><svg><use href="#i-junk"/></svg>Junk</button>
+          <button id="rdNotJunk" class="btn subtle hidden" title="Move back to the Inbox and learn from it (Shift+J)"><svg><use href="#i-shield-ok"/></svg>Not junk</button>
+          <button id="rdAnalyze" class="btn ai" title="Analyse this message with the built-in AI and propose a rule that files similar mail as junk"><svg><use href="#i-sparkle"/></svg>Analyse &amp; make rule</button>
+          <span class="grow" style="flex:1"></span>
+          <button id="rdMore" class="icon-btn" title="More actions"><svg><use href="#i-more"/></svg></button>
+        </div>
+        <div class="reading-scroll" id="readingScroll">
+          <div class="reading-head">
+            <h1 id="rdSubject"></h1>
+            <div id="rdVerdict"></div>
+            <div class="sender-card">
+              <div id="rdAvatar" class="avatar big"></div>
+              <div class="sender-lines">
+                <div id="rdFromName" class="sender-name"></div>
+                <div id="rdFromAddress" class="sender-address"></div>
+                <div id="rdMeta" class="sender-meta"></div>
+                <div id="rdBadges" class="sender-badges"></div>
+              </div>
+              <div id="rdDate" class="sender-date"></div>
+            </div>
+          </div>
+          <div id="rdImagesBanner" class="banner images-banner hidden">
+            <svg width="16" height="16"><use href="#i-image"/></svg>
+            <span class="grow">Remote images are blocked to protect your privacy.</span>
+            <button id="rdShowImages" class="btn sm">Show images</button>
+            <button id="rdAlwaysImages" class="btn sm">Always from this sender</button>
+          </div>
+          <div id="rdAttachments" class="attachments"></div>
+          <div class="body-wrap">
+            <iframe id="rdFrame" class="body-frame hidden" sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox" title="Message body"></iframe>
+            <pre id="rdText" class="body-text hidden"></pre>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>
+
+<!-- ============================ Compose ============================ -->
+<dialog id="composeDialog" class="compose wide">
+  <div class="dlg-head"><h3 id="cTitle">New message</h3><button id="cClose" class="icon-btn" title="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div class="dlg-body">
+    <div class="compose-row"><label>To</label><input id="cTo" type="text" placeholder="Recipients, separated by commas" /><button id="cShowCc" class="link">Cc</button><button id="cShowBcc" class="link">Bcc</button></div>
+    <div class="compose-row hidden" id="cCcRow"><label>Cc</label><input id="cCc" type="text" /></div>
+    <div class="compose-row hidden" id="cBccRow"><label>Bcc</label><input id="cBcc" type="text" /></div>
+    <div class="compose-row"><label>Subject</label><input id="cSubject" type="text" placeholder="Add a subject" /></div>
+    <div class="fmt-bar">
+      <button class="icon-btn" data-cmd="bold" title="Bold (Ctrl+B)"><svg><use href="#i-bold"/></svg></button>
+      <button class="icon-btn" data-cmd="italic" title="Italic (Ctrl+I)"><svg><use href="#i-italic"/></svg></button>
+      <button class="icon-btn" data-cmd="underline" title="Underline (Ctrl+U)"><svg><use href="#i-underline"/></svg></button>
+      <button class="icon-btn" data-cmd="strikeThrough" title="Strikethrough"><svg><use href="#i-strike"/></svg></button>
+      <span class="sep" style="width:1px;height:18px;background:var(--border);margin:0 4px"></span>
+      <button class="icon-btn" data-cmd="insertUnorderedList" title="Bulleted list"><svg><use href="#i-ul"/></svg></button>
+      <button class="icon-btn" data-cmd="insertOrderedList" title="Numbered list"><svg><use href="#i-ol"/></svg></button>
+      <button class="icon-btn" data-cmd="formatBlock" data-arg="blockquote" title="Quote">&#8220;</button>
+      <span class="sep" style="width:1px;height:18px;background:var(--border);margin:0 4px"></span>
+      <select id="cFontSize" title="Font size"><option value="">Size</option><option value="1">Small</option><option value="3">Normal</option><option value="5">Large</option><option value="6">Huge</option></select>
+      <input id="cColor" type="color" value="#0f6cbd" title="Text colour" />
+      <button id="cLink" class="icon-btn" title="Insert link"><svg><use href="#i-link"/></svg></button>
+      <button class="icon-btn" data-cmd="removeFormat" title="Clear formatting"><svg><use href="#i-clear-fmt"/></svg></button>
+      <span class="sep" style="width:1px;height:18px;background:var(--border);margin:0 4px"></span>
+      <button id="cAttach" class="icon-btn" title="Attach files"><svg><use href="#i-attach"/></svg></button>
+      <input id="cAttachInput" type="file" multiple class="hidden" />
+      <button id="cSignature" class="btn subtle sm" title="Insert signature">Signature</button>
+    </div>
+    <div id="cEditor" class="editor" contenteditable="true" spellcheck="true"></div>
+    <div id="cAtts" class="compose-atts"></div>
+  </div>
+  <div class="dlg-foot">
+    <span id="cStatus" class="small muted grow"></span>
+    <button id="cDiscard" class="btn danger">Discard</button>
+    <button id="cSaveDraft" class="btn">Save draft</button>
+    <button id="cSend" class="btn primary"><svg><use href="#i-send"/></svg>Send <span class="small" style="font-weight:400;opacity:.8">Ctrl+Enter</span></button>
+  </div>
+</dialog>
+
+<!-- ============================ Analysis / rule proposal ============================ -->
+<dialog id="analysisDialog" class="wide">
+  <div class="dlg-head"><svg width="20" height="20" style="color:var(--accent)"><use href="#i-sparkle"/></svg><h3>AI analysis &amp; rule proposal</h3><button class="icon-btn" data-close="analysisDialog" title="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div class="dlg-body" id="anBody"></div>
+  <div class="dlg-foot" id="anFoot"></div>
+</dialog>
+
+<!-- ============================ Rule editor ============================ -->
+<dialog id="ruleDialog">
+  <div class="dlg-head"><h3 id="ruleTitle">Rule</h3><button class="icon-btn" data-close="ruleDialog" title="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div class="dlg-body" id="ruleBody"></div>
+  <div class="dlg-foot" id="ruleFoot"></div>
+</dialog>
+
+<!-- ============================ Settings ============================ -->
+<dialog id="settingsDialog" class="wide">
+  <div class="dlg-head"><h3>Settings</h3><button class="icon-btn" data-close="settingsDialog" title="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div class="settings">
+    <div class="settings-nav" id="stNav">
+      <button data-tab="general" class="active"><svg><use href="#i-settings"/></svg>General</button>
+      <button data-tab="junk"><svg><use href="#i-junk"/></svg>Junk email</button>
+      <button data-tab="rules"><svg><use href="#i-rules"/></svg>Rules</button>
+      <button data-tab="senders"><svg><use href="#i-list"/></svg>Safe &amp; blocked</button>
+      <button data-tab="ai"><svg><use href="#i-sparkle"/></svg>AI models</button>
+      <button data-tab="account"><svg><use href="#i-user"/></svg>Account</button>
+    </div>
+    <div class="settings-body" id="stBody"></div>
+  </div>
+</dialog>
+
+<!-- ============================ Move to folder ============================ -->
+<dialog id="moveDialog" class="narrow">
+  <div class="dlg-head"><h3>Move to</h3><button class="icon-btn" data-close="moveDialog" title="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div class="dlg-body"><ul id="mvList" class="folder-list" style="padding:0"></ul></div>
+</dialog>
+
+<!-- ============================ Shortcuts ============================ -->
+<dialog id="shortcutsDialog" class="narrow">
+  <div class="dlg-head"><h3>Keyboard shortcuts</h3><button class="icon-btn" data-close="shortcutsDialog" title="Close"><svg><use href="#i-close"/></svg></button></div>
+  <div class="dlg-body">
+    <div class="shortcuts">
+      <kbd>N</kbd><span>New message</span>
+      <kbd>R</kbd><span>Reply</span>
+      <kbd>A</kbd><span>Reply all</span>
+      <kbd>F</kbd><span>Forward</span>
+      <kbd>Del</kbd><span>Delete</span>
+      <kbd>E</kbd><span>Archive</span>
+      <kbd>J</kbd><span>Move to Junk (and learn)</span>
+      <kbd>Shift+J</kbd><span>Not junk (and learn)</span>
+      <kbd>U</kbd><span>Mark unread</span>
+      <kbd>S</kbd><span>Flag / unflag</span>
+      <kbd>X</kbd><span>Select / deselect</span>
+      <kbd>↑ ↓</kbd><span>Previous / next message</span>
+      <kbd>Ctrl+Enter</kbd><span>Send</span>
+      <kbd>/</kbd><span>Search</span>
+      <kbd>Esc</kbd><span>Close / clear</span>
+      <kbd>?</kbd><span>This list</span>
+    </div>
+  </div>
+</dialog>
+
+<div id="toasts" class="toast-host"></div>
+<div id="ctxMenu" class="ctx-menu hidden"></div>
+
+<script src="app.js"></script>
 </body>
 </html>

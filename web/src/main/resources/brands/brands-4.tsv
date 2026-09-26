@@ -1,0 +1,500 @@
+# Healthcare, pharma, energy, industrial, autos, consumer goods, food
+Roche	roche.com,genentech.com	Genentech	pharma
+Novartis	novartis.com,sandoz.com	Sandoz	pharma
+AstraZeneca	astrazeneca.com		pharma
+GSK	gsk.com,haleon.com	GlaxoSmithKline,Haleon	pharma
+Sanofi	sanofi.com,sanofi.us		pharma
+Bayer	bayer.com,bayer.us		pharma
+Novo Nordisk	novonordisk.com		pharma
+Boehringer Ingelheim	boehringer-ingelheim.com		pharma
+Takeda	takeda.com		pharma
+Astellas	astellas.com		pharma
+Daiichi Sankyo	daiichisankyo.com		pharma
+Eisai	eisai.com		pharma
+Otsuka	otsuka.com,otsuka-us.com		pharma
+Gilead Sciences	gilead.com		pharma
+Regeneron	regeneron.com		pharma
+Vertex Pharmaceuticals	vrtx.com		pharma
+Moderna	modernatx.com		pharma
+BioNTech	biontech.de,biontech.com		pharma
+Biogen	biogen.com		pharma
+Zoetis	zoetis.com		pharma
+Viatris	viatris.com,mylan.com	Mylan	pharma
+Teva	tevapharm.com,tevausa.com		pharma
+Sun Pharma	sunpharma.com		pharma
+Dr. Reddy's	drreddys.com		pharma
+Cipla	cipla.com		pharma
+Lupin	lupin.com		pharma
+Perrigo	perrigo.com		pharma
+Bausch Health	bauschhealth.com,bausch.com	Bausch + Lomb	pharma
+Organon	organon.com		pharma
+Jazz Pharmaceuticals	jazzpharma.com		pharma
+Alnylam	alnylam.com		pharma
+Incyte	incyte.com		pharma
+BeiGene	beigene.com		pharma
+CSL	csl.com,cslbehring.com	CSL Behring	pharma
+Grifols	grifols.com		pharma
+Medtronic	medtronic.com		healthcare
+Stryker	stryker.com		healthcare
+Boston Scientific	bostonscientific.com		healthcare
+Becton Dickinson	bd.com	BD	healthcare
+Baxter	baxter.com		healthcare
+Zimmer Biomet	zimmerbiomet.com		healthcare
+Edwards Lifesciences	edwards.com		healthcare
+Intuitive Surgical	intuitive.com		healthcare
+Dexcom	dexcom.com		healthcare
+Insulet	insulet.com,omnipod.com	Omnipod	healthcare
+Tandem Diabetes	tandemdiabetes.com		healthcare
+ResMed	resmed.com		healthcare
+Philips	philips.com,usa.philips.com		healthcare
+GE HealthCare	gehealthcare.com		healthcare
+Fresenius	fresenius.com,freseniusmedicalcare.com,freseniuskidneycare.com	Fresenius Medical Care	healthcare
+DaVita	davita.com		healthcare
+Hologic	hologic.com		healthcare
+Illumina	illumina.com		healthcare
+Agilent	agilent.com		healthcare
+Waters Corporation	waters.com		healthcare
+PerkinElmer	perkinelmer.com,revvity.com	Revvity	healthcare
+Bio-Rad	bio-rad.com		healthcare
+Quest Diagnostics	questdiagnostics.com		healthcare
+Labcorp	labcorp.com		healthcare
+IQVIA	iqvia.com		healthcare
+Charles River Laboratories	criver.com		healthcare
+Catalent	catalent.com		healthcare
+West Pharmaceutical	westpharma.com		healthcare
+Cooper Companies	coopercos.com,coopervision.com	CooperVision	healthcare
+Align Technology	aligntech.com,invisalign.com	Invisalign	healthcare
+Dentsply Sirona	dentsplysirona.com		healthcare
+Henry Schein	henryschein.com		healthcare
+Patterson Companies	pattersoncompanies.com		healthcare
+Owens & Minor	owens-minor.com		healthcare
+Medline	medline.com		healthcare
+Steris	steris.com		healthcare
+Teleflex	teleflex.com		healthcare
+Masimo	masimo.com		healthcare
+Omron	omron.com,omronhealthcare.com		healthcare
+Kaiser Foundation	kp.org		healthcare
+Mayo Clinic	mayoclinic.org,mayo.edu		healthcare
+Cleveland Clinic	clevelandclinic.org,ccf.org		healthcare
+Johns Hopkins Medicine	hopkinsmedicine.org,jhu.edu		healthcare
+Mass General Brigham	massgeneralbrigham.org,mgh.harvard.edu		healthcare
+NewYork-Presbyterian	nyp.org		healthcare
+Mount Sinai Health	mountsinai.org		healthcare
+NYU Langone	nyulangone.org		healthcare
+Cedars-Sinai	cedars-sinai.org		healthcare
+UCLA Health	uclahealth.org		healthcare
+UCSF Health	ucsfhealth.org		healthcare
+Stanford Health Care	stanfordhealthcare.org		healthcare
+Northwell Health	northwell.edu		healthcare
+Ascension	ascension.org		healthcare
+CommonSpirit Health	commonspirit.org		healthcare
+Providence	providence.org		healthcare
+Advocate Health	advocatehealth.org,aah.org		healthcare
+Intermountain Health	intermountainhealthcare.org		healthcare
+Banner Health	bannerhealth.com		healthcare
+Sutter Health	sutterhealth.org		healthcare
+Trinity Health	trinity-health.org		healthcare
+Universal Health Services	uhs.com,uhsinc.com		healthcare
+Community Health Systems	chs.net		healthcare
+Encompass Health	encompasshealth.com		healthcare
+Teladoc	teladochealth.com		healthcare
+Hims & Hers	hims.com,forhers.com	Hims,Hers	healthcare
+GoodRx	goodrx.com		healthcare
+Zocdoc	zocdoc.com		healthcare
+WebMD	webmd.com		healthcare
+Healthline	healthline.com		healthcare
+Epic Systems	epic.com,mychart.com	MyChart	healthcare
+Oracle Health	oracle.com,cerner.com	Cerner	healthcare
+athenahealth	athenahealth.com		healthcare
+Veeva Systems	veeva.com		healthcare
+Change Healthcare	changehealthcare.com		healthcare
+Availity	availity.com		healthcare
+Blue Cross Blue Shield Association	bcbs.com		insurance
+Blue Shield of California	blueshieldca.com		insurance
+Anthem Blue Cross	anthem.com		insurance
+Health Care Service Corporation	hcsc.com,bcbsil.com,bcbstx.com	BCBS Illinois,BCBS Texas	insurance
+Highmark	highmark.com		insurance
+Independence Blue Cross	ibx.com		insurance
+Florida Blue	floridablue.com		insurance
+Horizon BCBS	horizonblue.com		insurance
+Premera	premera.com		insurance
+Regence	regence.com		insurance
+Oscar Health	hioscar.com		insurance
+Bright Health	brighthealthcare.com		insurance
+Clover Health	cloverhealth.com		insurance
+Alignment Healthcare	alignmenthealth.com		insurance
+WellCare	wellcare.com		insurance
+Delta Dental	deltadental.com		insurance
+MetLife Dental	metlife.com		insurance
+VSP Vision Care	vsp.com		insurance
+EyeMed	eyemed.com		insurance
+Shell plc	shell.com,shell.us	Shell	energy
+BP	bp.com		energy
+TotalEnergies	totalenergies.com,total.com	Total	energy
+Eni	eni.com		energy
+Equinor	equinor.com		energy
+Repsol	repsol.com		energy
+OMV	omv.com		energy
+Saudi Aramco	aramco.com	Aramco	energy
+ADNOC	adnoc.ae		energy
+QatarEnergy	qatarenergy.qa		energy
+Petrobras	petrobras.com.br		energy
+Pemex	pemex.com		energy
+Ecopetrol	ecopetrol.com.co		energy
+PetroChina	petrochina.com.cn		energy
+Sinopec	sinopec.com		energy
+CNOOC	cnooc.com.cn		energy
+Gazprom	gazprom.com,gazprom.ru		energy
+Rosneft	rosneft.com,rosneft.ru		energy
+Lukoil	lukoil.com,lukoil.ru		energy
+Reliance Industries	ril.com,reliance.com		energy
+Indian Oil	iocl.com		energy
+Bharat Petroleum	bharatpetroleum.in		energy
+Hindustan Petroleum	hindustanpetroleum.com		energy
+ONGC	ongcindia.com		energy
+Petronas	petronas.com		energy
+PTT	pttplc.com		energy
+Pertamina	pertamina.com		energy
+Woodside Energy	woodside.com		energy
+Santos	santos.com		energy
+Suncor Energy	suncor.com,petro-canada.ca	Petro-Canada	energy
+Canadian Natural Resources	cnrl.com		energy
+Cenovus	cenovus.com		energy
+Imperial Oil	imperialoil.ca,esso.ca	Esso	energy
+Enbridge	enbridge.com		energy
+TC Energy	tcenergy.com		energy
+Kinder Morgan	kindermorgan.com		energy
+Williams Companies	williams.com		energy
+Enterprise Products	enterpriseproducts.com		energy
+Plains All American	plains.com		energy
+MPLX	mplx.com		energy
+Cheniere	cheniere.com		energy
+EOG Resources	eogresources.com		energy
+Pioneer Natural Resources	pxd.com		energy
+Devon Energy	devonenergy.com		energy
+Diamondback Energy	diamondbackenergy.com		energy
+Hess	hess.com		energy
+Marathon Oil	marathonoil.com		energy
+APA Corporation	apacorp.com	Apache	energy
+Coterra	coterra.com		energy
+Chesapeake Energy	chk.com		energy
+Expand Energy	expandenergy.com		energy
+Baker Hughes	bakerhughes.com		energy
+SLB	slb.com	Schlumberger	energy
+NOV	nov.com		energy
+Transocean	deepwater.com		energy
+Peabody Energy	peabodyenergy.com		energy
+Arch Resources	archrsc.com		energy
+NextEra Energy	nexteraenergy.com,fpl.com	Florida Power & Light,FPL	utilities
+Dominion Energy	dominionenergy.com		utilities
+American Electric Power	aep.com	AEP	utilities
+Xcel Energy	xcelenergy.com		utilities
+Consolidated Edison	coned.com	Con Edison	utilities
+PG&E	pge.com	Pacific Gas and Electric	utilities
+Edison International	edison.com,sce.com	Southern California Edison	utilities
+Sempra	sempra.com,sdge.com,socalgas.com	SDG&E,SoCalGas	utilities
+Entergy	entergy.com		utilities
+FirstEnergy	firstenergycorp.com		utilities
+PPL Corporation	pplweb.com,pplelectric.com	PPL Electric	utilities
+Eversource	eversource.com		utilities
+National Grid	nationalgrid.com,nationalgridus.com		utilities
+Ameren	ameren.com		utilities
+CenterPoint Energy	centerpointenergy.com		utilities
+DTE Energy	dteenergy.com		utilities
+CMS Energy	cmsenergy.com,consumersenergy.com	Consumers Energy	utilities
+WEC Energy	wecenergygroup.com,we-energies.com	We Energies	utilities
+Evergy	evergy.com		utilities
+Alliant Energy	alliantenergy.com		utilities
+NiSource	nisource.com,nipsco.com	NIPSCO	utilities
+Atmos Energy	atmosenergy.com		utilities
+Pinnacle West	pinnaclewest.com,aps.com	Arizona Public Service,APS	utilities
+Portland General Electric	portlandgeneral.com		utilities
+Puget Sound Energy	pse.com		utilities
+Hawaiian Electric	hawaiianelectric.com		utilities
+Tennessee Valley Authority	tva.com,tva.gov	TVA	utilities
+Salt River Project	srpnet.com	SRP	utilities
+LADWP	ladwp.com		utilities
+Austin Energy	austinenergy.com		utilities
+CPS Energy	cpsenergy.com		utilities
+JEA	jea.com		utilities
+American Water Works	amwater.com	American Water	utilities
+Essential Utilities	essential.co,aquaamerica.com	Aqua	utilities
+Waste Management	wm.com	WM	utilities
+Republic Services	republicservices.com		utilities
+Waste Connections	wasteconnections.com		utilities
+Constellation Energy	constellationenergy.com,constellation.com	Constellation	utilities
+Vistra	vistracorp.com,txu.com	TXU Energy	utilities
+NRG Energy	nrg.com,reliant.com	Reliant	utilities
+Direct Energy	directenergy.com		utilities
+Just Energy	justenergy.com		utilities
+EDF	edf.fr,edfenergy.com	EDF Energy	utilities
+Engie	engie.com		utilities
+Enel	enel.com,enel.it,enelgreenpower.com		utilities
+Iberdrola	iberdrola.com,iberdrola.es,scottishpower.co.uk	Scottish Power	utilities
+E.ON	eon.com,eonenergy.com,eon.de		utilities
+RWE	rwe.com		utilities
+Uniper	uniper.energy		utilities
+Vattenfall	vattenfall.com,vattenfall.se		utilities
+Orsted	orsted.com		utilities
+Fortum	fortum.com		utilities
+Centrica	centrica.com,britishgas.co.uk	British Gas	utilities
+SSE	sse.com,sseenergyservices.com,ovoenergy.com	OVO Energy	utilities
+Octopus Energy	octopus.energy		utilities
+EDP	edp.com,edp.pt		utilities
+Naturgy	naturgy.com		utilities
+Endesa	endesa.com		utilities
+A2A	a2a.eu		utilities
+Hydro One	hydroone.com		utilities
+Ontario Power Generation	opg.com		utilities
+Hydro-Quebec	hydroquebec.com		utilities
+BC Hydro	bchydro.com		utilities
+Fortis Inc	fortisinc.com,fortisbc.com		utilities
+Emera	emera.com,novascotiapower.ca	Nova Scotia Power	utilities
+AGL Energy	agl.com.au		utilities
+Origin Energy	originenergy.com.au		utilities
+EnergyAustralia	energyaustralia.com.au		utilities
+Ausgrid	ausgrid.com.au		utilities
+Tokyo Electric Power	tepco.co.jp	TEPCO	utilities
+Kansai Electric	kepco.co.jp		utilities
+Korea Electric Power	kepco.co.kr	KEPCO	utilities
+State Grid	sgcc.com.cn		utilities
+General Electric	ge.com,geaerospace.com,gevernova.com	GE,GE Aerospace,GE Vernova	industrial
+Emerson Electric	emerson.com		industrial
+Eaton	eaton.com		industrial
+Parker Hannifin	parker.com		industrial
+Illinois Tool Works	itw.com	ITW	industrial
+Rockwell Automation	rockwellautomation.com		industrial
+Johnson Controls	johnsoncontrols.com		industrial
+Carrier	carrier.com		industrial
+Trane Technologies	tranetechnologies.com,trane.com	Trane	industrial
+Lennox	lennox.com		industrial
+Otis	otis.com		industrial
+Schindler	schindler.com		industrial
+Kone	kone.com		industrial
+ThyssenKrupp	thyssenkrupp.com		industrial
+ABB	abb.com		industrial
+Schneider Electric	se.com,schneider-electric.com,apc.com	APC	industrial
+Legrand	legrand.com,legrand.us		industrial
+Hubbell	hubbell.com		industrial
+Ametek	ametek.com		industrial
+Roper Technologies	ropertech.com		industrial
+Dover	dovercorporation.com		industrial
+Fortive	fortive.com,fluke.com	Fluke	industrial
+Xylem	xylem.com		industrial
+Pentair	pentair.com		industrial
+Ingersoll Rand	irco.com		industrial
+Stanley Black & Decker	stanleyblackanddecker.com,dewalt.com,craftsman.com	DeWalt,Craftsman	industrial
+Snap-on	snapon.com		industrial
+Techtronic Industries	ttigroup.com,milwaukeetool.com,ryobitools.com	Milwaukee Tool,Ryobi	industrial
+Makita	makita.com,makitatools.com		industrial
+Bosch	bosch.com,boschtools.com,bosch-home.com	Robert Bosch	industrial
+Hilti	hilti.com		industrial
+Husqvarna	husqvarna.com		industrial
+Toro	thetorocompany.com,toro.com		industrial
+Briggs & Stratton	briggsandstratton.com		industrial
+Generac	generac.com		industrial
+Whirlpool	whirlpool.com,whirlpoolcorp.com,maytag.com,kitchenaid.com	Maytag,KitchenAid	consumer
+Electrolux	electrolux.com,frigidaire.com	Frigidaire	consumer
+Haier	haier.com,geappliances.com	GE Appliances	consumer
+Miele	miele.com,miele.de		consumer
+Dyson	dyson.com,dyson.co.uk		consumer
+SharkNinja	sharkninja.com,sharkclean.com,ninjakitchen.com	Shark,Ninja	consumer
+iRobot	irobot.com		consumer
+Breville	breville.com		consumer
+Cuisinart	cuisinart.com		consumer
+Keurig Dr Pepper	keurigdrpepper.com,keurig.com,drpepper.com	Keurig,Dr Pepper	consumer
+Nespresso	nespresso.com		consumer
+Weber	weber.com		consumer
+Traeger	traeger.com		consumer
+Yeti	yeti.com		consumer
+Stanley 1913	stanley1913.com		consumer
+Peloton	onepeloton.com		consumer
+NordicTrack	nordictrack.com,ifit.com	iFIT	consumer
+Bowflex	bowflex.com		consumer
+Tempur Sealy	tempursealy.com,tempurpedic.com,sealy.com	Tempur-Pedic,Sealy	consumer
+Sleep Number	sleepnumber.com		consumer
+Purple	purple.com		consumer
+Casper	casper.com		consumer
+La-Z-Boy	la-z-boy.com		consumer
+Ashley Furniture	ashleyfurniture.com		consumer
+IKEA	ikea.com,ikea.us,ikea.co.uk		retail
+Wayfair LLC	wayfair.com		retail
+Crate & Barrel	crateandbarrel.com,cb2.com	CB2	retail
+Bed Bath & Beyond	bedbathandbeyond.com		retail
+HomeGoods	homegoods.com		retail
+At Home	athome.com		retail
+Kirkland's	kirklands.com		retail
+Pier 1	pier1.com		retail
+Procter & Gamble	pg.com,pampers.com,tide.com,gillette.com	P&G,Pampers,Tide,Gillette	consumer
+Unilever	unilever.com,dove.com		consumer
+Colgate-Palmolive	colgatepalmolive.com,colgate.com		consumer
+Kimberly-Clark	kimberly-clark.com,huggies.com,kleenex.com	Huggies,Kleenex	consumer
+Clorox	thecloroxcompany.com,clorox.com		consumer
+Church & Dwight	churchdwight.com,armandhammer.com	Arm & Hammer	consumer
+Reckitt	reckitt.com		consumer
+Henkel	henkel.com		consumer
+L'Oreal	loreal.com,lorealparisusa.com		consumer
+Estee Lauder	esteelauder.com,elcompanies.com,clinique.com,maccosmetics.com	Clinique,MAC Cosmetics	consumer
+Coty	coty.com		consumer
+Shiseido	shiseido.com		consumer
+Revlon	revlon.com		consumer
+e.l.f. Beauty	elfcosmetics.com,elfbeauty.com	e.l.f. Cosmetics	consumer
+Bath & Body Works Inc	bathandbodyworks.com		consumer
+Nestle	nestle.com,nestleusa.com,purina.com	Purina	food
+Danone	danone.com		food
+Kellanova	kellanova.com,kelloggs.com	Kellogg's	food
+WK Kellogg	wkkellogg.com		food
+General Mills	generalmills.com		food
+Campbell's	campbellsoupcompany.com,campbells.com	Campbell Soup	food
+Conagra Brands	conagrabrands.com	Conagra	food
+J.M. Smucker	jmsmucker.com,smucker.com	Smucker's	food
+Hershey	thehersheycompany.com,hersheys.com		food
+Mars Inc	mars.com	Mars	food
+Ferrero	ferrero.com		food
+Hormel Foods	hormelfoods.com		food
+McCormick	mccormick.com,mccormickcorporation.com		food
+Land O'Lakes	landolakes.com,landolakesinc.com		food
+Dean Foods	deanfoods.com		food
+Lactalis	lactalis.com		food
+Kerry Group	kerry.com		food
+Associated British Foods	abf.co.uk,primark.com	Primark	food
+Cargill	cargill.com		agriculture
+Bunge	bunge.com		agriculture
+Corteva	corteva.com		agriculture
+Nutrien	nutrien.com		agriculture
+Mosaic	mosaicco.com		agriculture
+CF Industries	cfindustries.com		agriculture
+Scotts Miracle-Gro	scottsmiraclegro.com,scotts.com		consumer
+Tractor Supply Company	tractorsupply.com		retail
+Anheuser-Busch InBev	ab-inbev.com,anheuser-busch.com,budweiser.com	Anheuser-Busch,Budweiser	consumer
+Molson Coors	molsoncoors.com,coors.com	Coors	consumer
+Heineken	heineken.com,theheinekencompany.com		consumer
+Carlsberg	carlsberggroup.com,carlsberg.com		consumer
+Diageo	diageo.com		consumer
+Pernod Ricard	pernod-ricard.com		consumer
+Constellation Brands	cbrands.com,coronausa.com	Corona	consumer
+Brown-Forman	brown-forman.com,jackdaniels.com	Jack Daniel's	consumer
+Bacardi	bacardilimited.com,bacardi.com		consumer
+Boston Beer	bostonbeer.com,samueladams.com	Samuel Adams	consumer
+Monster Beverage	monsterbevcorp.com,monsterenergy.com	Monster Energy	consumer
+Red Bull	redbull.com		consumer
+Celsius	celsius.com		consumer
+Philip Morris International	pmi.com		consumer
+Altria	altria.com		consumer
+British American Tobacco	bat.com	BAT	consumer
+Imperial Brands	imperialbrandsplc.com		consumer
+Japan Tobacco	jt.com		consumer
+McDonald's Corporation	mcdonalds.com		food
+Yum Brands	yum.com,kfc.com,tacobell.com,pizzahut.com	KFC,Taco Bell,Pizza Hut	food
+Restaurant Brands International	rbi.com,bk.com,timhortons.com,popeyes.com	Burger King,Tim Hortons,Popeyes	food
+Wendy's	wendys.com		food
+Chipotle	chipotle.com		food
+Domino's	dominos.com		food
+Papa John's	papajohns.com		food
+Subway	subway.com		food
+Darden Restaurants	darden.com,olivegarden.com,longhornsteakhouse.com	Olive Garden,LongHorn Steakhouse	food
+Texas Roadhouse	texasroadhouse.com		food
+Bloomin' Brands	bloominbrands.com,outback.com	Outback Steakhouse	food
+Brinker	brinker.com,chilis.com	Chili's	food
+Cracker Barrel	crackerbarrel.com		food
+Denny's	dennys.com		food
+IHOP	ihop.com,dinebrands.com	Dine Brands,Applebee's	food
+Dutch Bros	dutchbros.com		food
+Panera Bread	panerabread.com		food
+Sonic Drive-In	sonicdrivein.com		food
+Jack in the Box	jackinthebox.com		food
+Arby's	arbys.com,inspirebrands.com	Inspire Brands	food
+Dairy Queen	dairyqueen.com		food
+Wingstop	wingstop.com		food
+Raising Cane's	raisingcanes.com		food
+Shake Shack	shakeshack.com		food
+Five Guys	fiveguys.com		food
+In-N-Out Burger	in-n-out.com		food
+Whataburger	whataburger.com		food
+Culver's	culvers.com		food
+Zaxby's	zaxbys.com		food
+Bojangles	bojangles.com		food
+Krispy Kreme	krispykreme.com		food
+Tim Hortons Inc	timhortons.com,timhortons.ca		food
+Toyota Motor	toyota.com,toyota.jp,global.toyota,lexus.com,toyotafinancial.com	Toyota,Lexus,Toyota Financial Services	auto
+Honda Motor	honda.com,global.honda,acura.com,hondafinancialservices.com	Honda,Acura	auto
+Nissan Motor	nissan-global.com,nissanusa.com,nissan.co.uk,infinitiusa.com	Nissan,Infiniti	auto
+Subaru	subaru.com,subaru.jp		auto
+Mazda	mazda.com,mazdausa.com		auto
+Mitsubishi Motors	mitsubishi-motors.com,mitsubishicars.com		auto
+Suzuki	globalsuzuki.com,suzuki.co.jp		auto
+Hyundai Motor	hyundai.com,hyundaiusa.com,genesis.com	Hyundai,Genesis	auto
+Kia	kia.com,kia.us		auto
+Volkswagen Group	volkswagen.com,vw.com,vwgroup.com,volkswagen.de,audi.com,audiusa.com,porsche.com,skoda-auto.com,seat.com,bentleymotors.com,lamborghini.com	Volkswagen,VW,Audi,Porsche,Skoda,SEAT,Bentley,Lamborghini	auto
+Mercedes-Benz	mercedes-benz.com,mbusa.com,mercedes-benz.de	Mercedes	auto
+BMW Group	bmw.com,bmwusa.com,bmwgroup.com,mini.com,rolls-roycemotorcars.com	BMW,MINI,Rolls-Royce Motor Cars	auto
+Stellantis	stellantis.com,jeep.com,ram.com,dodge.com,chrysler.com,fiat.com,peugeot.com,citroen.com,opel.com,alfaromeo.com,maserati.com	Jeep,Ram,Dodge,Chrysler,Fiat,Peugeot,Citroen,Opel,Alfa Romeo,Maserati	auto
+Renault	renault.com,renaultgroup.com,dacia.com	Dacia	auto
+Volvo Cars	volvocars.com		auto
+Volvo Group	volvogroup.com,volvotrucks.com,mack.com	Volvo Trucks,Mack Trucks	auto
+Polestar	polestar.com		auto
+Jaguar Land Rover	jaguarlandrover.com,jaguar.com,landrover.com	Jaguar,Land Rover	auto
+Aston Martin	astonmartin.com		auto
+McLaren	mclaren.com		auto
+Ferrari	ferrari.com		auto
+Rivian	rivian.com		auto
+Lucid Motors	lucidmotors.com		auto
+Fisker	fisker.com		auto
+BYD	byd.com,bydglobal.com		auto
+Geely	geely.com,zeekrglobal.com	Zeekr	auto
+NIO	nio.com		auto
+XPeng	xpeng.com		auto
+Li Auto	lixiang.com		auto
+Great Wall Motor	gwm-global.com		auto
+Tata Motors	tatamotors.com		auto
+Mahindra	mahindra.com		auto
+Maruti Suzuki	marutisuzuki.com		auto
+Harley-Davidson	harley-davidson.com		auto
+Polaris	polaris.com		auto
+BRP	brp.com		auto
+Yamaha Motor	yamaha-motor.com		auto
+Kawasaki	kawasaki.com		auto
+Ducati	ducati.com		auto
+Triumph Motorcycles	triumphmotorcycles.com		auto
+CarMax	carmax.com		auto
+Carvana Co	carvana.com		auto
+AutoNation	autonation.com		auto
+Penske Automotive	penskeautomotive.com		auto
+Lithia Motors	lithia.com		auto
+Group 1 Automotive	group1auto.com		auto
+Sonic Automotive	sonicautomotive.com		auto
+Cars.com	cars.com		auto
+Autotrader Inc	autotrader.com		auto
+Kelley Blue Book	kbb.com		auto
+Edmunds	edmunds.com		auto
+TrueCar	truecar.com		auto
+CarGurus	cargurus.com		auto
+Copart	copart.com		auto
+IAA	iaai.com		auto
+Manheim	manheim.com		auto
+Cox Automotive	coxautoinc.com		auto
+Michelin	michelin.com		auto
+Bridgestone	bridgestone.com,bridgestoneamericas.com,firestone.com	Firestone	auto
+Goodyear	goodyear.com		auto
+Continental AG	continental.com,continental-tires.com	Continental	auto
+Pirelli	pirelli.com		auto
+Discount Tire	discounttire.com		auto
+Les Schwab	lesschwab.com		auto
+Pep Boys	pepboys.com		auto
+Jiffy Lube	jiffylube.com		auto
+Valvoline	valvoline.com		auto
+Midas	midas.com		auto
+Firestone Complete Auto Care	firestonecompleteautocare.com		auto
+Safelite	safelite.com		auto
+Aptiv	aptiv.com		auto
+Magna International	magna.com		auto
+Lear Corporation	lear.com		auto
+BorgWarner	borgwarner.com		auto
+Denso	denso.com		auto
+Aisin	aisin.com		auto
+ZF	zf.com		auto
+Valeo	valeo.com		auto
+Autoliv	autoliv.com		auto
+Gentex	gentex.com		auto
+Garrett Motion	garrettmotion.com		auto
+LKQ	lkqcorp.com		auto

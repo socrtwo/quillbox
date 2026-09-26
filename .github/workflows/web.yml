@@ -6,6 +6,15 @@ on:
     tags: ["v*"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Publish a GitHub Release with this tag (e.g. v1.1.0). Leave empty for a plain build."
+        required: false
+        default: ""
+
+# Needed so the release step can create the GitHub Release and upload assets.
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -27,6 +36,17 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
+      # A release is produced when a v* tag is pushed, or when this workflow is run
+      # manually with a release_tag input (used when tags cannot be pushed directly).
+      - name: Determine release tag
+        id: rel
+        shell: bash
+        run: |
+          TAG="${{ github.event.inputs.release_tag }}"
+          if [ -z "$TAG" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then TAG="${{ github.ref_name }}"; fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+          echo "Release tag: '${TAG:-<none>}'"
 
       # Compiles the Ktor backend and produces a runnable server distribution.
       - name: Build distribution
@@ -38,3 +58,20 @@ jobs:
           name: quillbox-web-server
           path: web/build/distributions/*.zip
           if-no-files-found: error
+
+      # On a version tag, attach the server bundle to the GitHub Release. It is a plain
+      # JVM application: the same zip runs on Windows, macOS, Linux, ChromeOS (Linux
+      # container), Raspberry Pi OS and in Termux on Android — anything with Java 17+.
+      - name: Stage release asset
+        if: steps.rel.outputs.tag != ''
+        run: |
+          mkdir -p release-assets
+          cp build/distributions/*.zip "release-assets/quillbox-web-${RELEASE_TAG}-any-jvm.zip"
+      - name: Publish to GitHub Release
+        if: steps.rel.outputs.tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.rel.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: Quillbox ${{ steps.rel.outputs.tag }}
+          files: web/release-assets/*

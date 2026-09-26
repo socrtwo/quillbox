@@ -1,7 +1,9 @@
 package info.socrtwo.quillbox.ui.messages
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -106,19 +109,48 @@ fun MessageListScreen(
 @Composable
 private fun MessageRow(message: MessageEntity, onClick: () -> Unit) {
     val weight = if (message.isRead) FontWeight.Normal else FontWeight.Bold
+    val isSpam = message.spamLevel == "SPAM"
+    val isSuspicious = message.spamLevel == "SUSPICIOUS"
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        Text(
-            text = message.fromAddress.ifBlank { "(unknown sender)" },
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = weight,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = message.senderName.ifBlank { message.senderEmail.ifBlank { message.fromAddress } }.ifBlank { "(unknown sender)" },
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = weight,
+                color = if (isSpam) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false)
+            )
+            if (message.brandMismatch && message.claimedBrand != null) {
+                Text(
+                    "Impersonates ${message.claimedBrand}",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else if (isSpam) {
+                Text("Junk", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+            } else if (isSuspicious) {
+                Text("Suspicious", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.tertiary)
+            }
+        }
+        if (message.senderEmail.isNotBlank()) {
+            Text(
+                text = message.senderEmail,
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.SemiBold,
+                color = if (isSpam) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
         Text(
             text = message.subject,
             style = MaterialTheme.typography.bodyMedium,

@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -43,6 +44,10 @@ fun SettingsScreen(
 ) {
     val accounts by viewModel.accounts.collectAsStateWithLifecycle()
     val selectedId by viewModel.selectedAccountId.collectAsStateWithLifecycle()
+    val spamEnabled by viewModel.spamEnabled.collectAsStateWithLifecycle()
+    val autoMoveSpam by viewModel.autoMoveSpam.collectAsStateWithLifecycle()
+    val safeSenders by viewModel.safeSenders.collectAsStateWithLifecycle()
+    val blockedSenders by viewModel.blockedSenders.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -78,6 +83,30 @@ fun SettingsScreen(
                 }
             }
 
+            Text(
+                "Junk protection",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp)
+            )
+            ListItem(
+                headlineContent = { Text("Check incoming mail for junk") },
+                supportingContent = {
+                    Text("Open DNS blocklists, sender authentication, brand-impersonation detection and a classifier that learns from Junk / Not junk. Only DNS queries leave the device.")
+                },
+                trailingContent = { Switch(checked = spamEnabled, onCheckedChange = { viewModel.setSpamEnabled(it) }) }
+            )
+            ListItem(
+                headlineContent = { Text("Move junk to Spam automatically") },
+                supportingContent = {
+                    Text(
+                        if (safeSenders.isEmpty() && blockedSenders.isEmpty()) "When off, junk is only labelled in the Inbox."
+                        else "${safeSenders.size} safe sender(s), ${blockedSenders.size} blocked sender(s)."
+                    )
+                },
+                trailingContent = { Switch(checked = autoMoveSpam, enabled = spamEnabled, onCheckedChange = { viewModel.setAutoMoveSpam(it) }) }
+            )
+            HorizontalDivider()
             ListItem(
                 headlineContent = { Text("Add mail account") },
                 leadingContent = { Icon(Icons.Filled.Add, contentDescription = null) },

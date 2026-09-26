@@ -25,6 +25,50 @@ class AppPreferences @Inject constructor(
     private val _trustedImageSenders = MutableStateFlow(readTrustedSenders())
     val trustedImageSenders: StateFlow<Set<String>> = _trustedImageSenders.asStateFlow()
 
+    // --- Junk protection settings -------------------------------------------------------
+
+    private val _spamEnabled = MutableStateFlow(prefs.getBoolean(KEY_SPAM_ENABLED, true))
+    /** Analyse incoming mail with the junk engine. */
+    val spamEnabled: StateFlow<Boolean> = _spamEnabled.asStateFlow()
+
+    private val _autoMoveSpam = MutableStateFlow(prefs.getBoolean(KEY_AUTO_MOVE_SPAM, true))
+    /** Move messages classified as junk to the Spam folder automatically. */
+    val autoMoveSpam: StateFlow<Boolean> = _autoMoveSpam.asStateFlow()
+
+    private val _safeSenders = MutableStateFlow(readSet(KEY_SAFE_SENDERS))
+    val safeSenders: StateFlow<Set<String>> = _safeSenders.asStateFlow()
+
+    private val _blockedSenders = MutableStateFlow(readSet(KEY_BLOCKED_SENDERS))
+    val blockedSenders: StateFlow<Set<String>> = _blockedSenders.asStateFlow()
+
+    fun setSpamEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_SPAM_ENABLED, enabled).apply()
+        _spamEnabled.value = enabled
+    }
+
+    fun setAutoMoveSpam(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_AUTO_MOVE_SPAM, enabled).apply()
+        _autoMoveSpam.value = enabled
+    }
+
+    fun addSafeSender(sender: String) {
+        val s = sender.lowercase().trim()
+        val safe = readSet(KEY_SAFE_SENDERS) + s
+        val blocked = readSet(KEY_BLOCKED_SENDERS) - s
+        prefs.edit().putStringSet(KEY_SAFE_SENDERS, safe).putStringSet(KEY_BLOCKED_SENDERS, blocked).apply()
+        _safeSenders.value = safe; _blockedSenders.value = blocked
+    }
+
+    fun addBlockedSender(sender: String) {
+        val s = sender.lowercase().trim()
+        val blocked = readSet(KEY_BLOCKED_SENDERS) + s
+        val safe = readSet(KEY_SAFE_SENDERS) - s
+        prefs.edit().putStringSet(KEY_SAFE_SENDERS, safe).putStringSet(KEY_BLOCKED_SENDERS, blocked).apply()
+        _safeSenders.value = safe; _blockedSenders.value = blocked
+    }
+
+    private fun readSet(key: String): Set<String> = prefs.getStringSet(key, emptySet())?.toSet() ?: emptySet()
+
     private fun readSelectedAccountId(): Long? =
         prefs.getLong(KEY_SELECTED_ACCOUNT, -1L).takeIf { it >= 0 }
 
@@ -45,5 +89,9 @@ class AppPreferences @Inject constructor(
     companion object {
         private const val KEY_SELECTED_ACCOUNT = "selected_account_id"
         private const val KEY_TRUSTED_SENDERS = "trusted_image_senders"
+        private const val KEY_SPAM_ENABLED = "spam_enabled"
+        private const val KEY_AUTO_MOVE_SPAM = "spam_auto_move"
+        private const val KEY_SAFE_SENDERS = "spam_safe_senders"
+        private const val KEY_BLOCKED_SENDERS = "spam_blocked_senders"
     }
 }
