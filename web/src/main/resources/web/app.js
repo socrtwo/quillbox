@@ -699,7 +699,7 @@ const reading = {
     const a = $("rdFromAddress");
     a.innerHTML = "";
     const at = addr.lastIndexOf("@");
-    if (at > 0) { a.appendChild(document.createTextNode(addr.slice(0, at + 1))); a.appendChild(el("span", { class: "domain", text: addr.slice(at + 1) })); }
+    if (at > 0) { a.appendChild(document.createTextNode(addr.slice(0, at + 1))); a.appendChild(el("wbr")); a.appendChild(el("span", { class: "domain", text: addr.slice(at + 1) })); }
     else a.textContent = addr || "(no address)";
     a.className = "sender-address";
     if (v) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Matches the web UI's light palette (styles.css): --accent-pressed and --bg-elev. -->
+    <!-- Matches the web UI's light palette (styles.css): the accent-pressed and bg-elev tokens. -->
     <color name="quillbox_primary">#0F6CBD</color>
     <color name="quillbox_topbar">#0C3B5E</color>
     <color name="quillbox_background">#FFFFFF</color>
