@@ -1,5 +1,12 @@
 import SwiftUI
 
+/// Quillbox for iPhone and iPad.
+///
+/// Jakarta Mail (the IMAP/SMTP engine) is JVM-only, so the iOS app cannot run the backend
+/// itself. Instead it shows the very same Outlook-style web client — served by a Quillbox
+/// server you run at home, on a Raspberry Pi, a NAS or a VPS (`quillbox-web` zip or the
+/// desktop app) — full-screen in a WebKit view, with printing, attachment saving, external
+/// links and mailto: handled natively. Every feature of the web/desktop version is present.
 @main
 struct QuillboxApp: App {
     @StateObject private var state = AppState()
@@ -14,46 +21,44 @@ struct QuillboxApp: App {
 
 @MainActor
 final class AppState: ObservableObject {
-    /// Base URL of the Quillbox web backend (the Ktor server under /web).
-    @Published var serverURL: String = "https://your-quillbox-server.example.com"
-    @Published var account: Account? = nil
-    @Published var messages: [Message] = []
-    @Published var status: String? = nil
-    @Published var loading: Bool = false
+    /// Base URL of the Quillbox server, e.g. `http://192.168.1.20:8080`. Persisted across launches.
+    @Published var serverURL: String {
+        didSet { UserDefaults.standard.set(serverURL, forKey: "serverURL") }
+    }
+    /// True while the user is on the "which server?" screen.
+    @Published var choosingServer: Bool
+    /// Set when the page could not be loaded; shown with a retry button.
+    @Published var loadError: String? = nil
+    /// Incremented to force the web view to reload.
+    @Published var reloadToken: Int = 0
 
-    private var api: MailAPI { MailAPI(baseURL: serverURL) }
-
-    func connect(_ account: Account) {
-        self.account = account
-        Task { await refresh() }
+    init() {
+        let saved = UserDefaults.standard.string(forKey: "serverURL") ?? ""
+        serverURL = saved
+        choosingServer = saved.isEmpty
     }
 
-    func signOut() {
-        account = nil
-        messages = []
-        status = nil
+    var serverBase: URL? {
+        var s = serverURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        if s.isEmpty { return nil }
+        if !s.lowercased().hasPrefix("http://") && !s.lowercased().hasPrefix("https://") { s = "http://" + s }
+        while s.hasSuffix("/") { s.removeLast() }
+        return URL(string: s + "/")
     }
 
-    func refresh() async {
-        guard let account else { return }
-        loading = true
-        status = nil
-        do {
-            messages = try await api.inbox(account: account)
-            status = "\(messages.count) message(s)"
-        } catch {
-            status = "Sync failed: \(error.localizedDescription)"
-        }
-        loading = false
+    func useServer(_ url: String) {
+        serverURL = url
+        loadError = nil
+        choosingServer = false
+        reloadToken += 1
     }
 
-    func send(to: [String], cc: [String], bcc: [String], subject: String, body: String) async -> String? {
-        guard let account else { return "No account" }
-        do {
-            try await api.send(SendRequest(account: account, to: to, cc: cc, bcc: bcc, subject: subject, body: body))
-            return nil
-        } catch {
-            return error.localizedDescription
-        }
+    func changeServer() {
+        choosingServer = true
+    }
+
+    func retry() {
+        loadError = nil
+        reloadToken += 1
     }
 }

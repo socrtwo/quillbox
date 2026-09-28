@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme: same structure as values/themes.xml with the dark palette of the web UI. -->
+    <style name="Theme.Quillbox" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/quillbox_background</item>
+    </style>
+</resources>

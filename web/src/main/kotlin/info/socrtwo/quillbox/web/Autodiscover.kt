@@ -2,13 +2,6 @@ package info.socrtwo.quillbox.web
 
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.time.Duration
-import java.util.Hashtable
-import javax.naming.directory.InitialDirContext
 
 /**
  * Finds mail server settings from just an email address — the way Outlook's "add account"
@@ -113,8 +106,6 @@ object Autodiscover {
         Triple(listOf("mimecast.com", "pphosted.com", "barracudanetworks.com"), "Corporate mail gateway", Provider(emptyList(), "Corporate", "", 993, "SSL_TLS", "", 587, "STARTTLS", listOf("This domain sits behind a corporate mail gateway; ask your IT department for the IMAP/SMTP host names.")))
     )
 
-    private val http: HttpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(4)).followRedirects(HttpClient.Redirect.NORMAL).build()
-
     fun discover(email: String): AutodiscoverResponse {
         val addr = email.trim().lowercase()
         val domain = addr.substringAfterLast('@', "")
@@ -154,10 +145,9 @@ object Autodiscover {
             ?: fetchAutoconfig("https://$domain/.well-known/autoconfig/mail/config-v1.1.xml", email, domain, "domain autoconfig")
 
     private fun fetchAutoconfig(url: String, email: String, domain: String, source: String): AutodiscoverResponse? = runCatching {
-        val req = HttpRequest.newBuilder(URI(url)).timeout(Duration.ofSeconds(5)).GET().build()
-        val res = http.send(req, HttpResponse.BodyHandlers.ofString())
-        if (res.statusCode() != 200) return null
-        parseAutoconfig(res.body(), email, domain, source)
+        val res = Http.get(url, timeoutMs = 5000)
+        if (res.status != 200) return null
+        parseAutoconfig(res.body, email, domain, source)
     }.getOrNull()
 
     internal fun parseAutoconfig(xml: String, email: String, domain: String, source: String): AutodiscoverResponse? {
@@ -195,16 +185,8 @@ object Autodiscover {
 
     // --- MX & probing ------------------------------------------------------------------
 
-    fun mxLookup(domain: String): List<String>? = runCatching {
-        val env = Hashtable<String, String>()
-        env["java.naming.factory.initial"] = "com.sun.jndi.dns.DnsContextFactory"
-        env["com.sun.jndi.dns.timeout.initial"] = "2000"
-        env["com.sun.jndi.dns.timeout.retries"] = "1"
-        val ctx = InitialDirContext(env)
-        val attrs = ctx.getAttributes(domain, arrayOf("MX"))
-        val mx = attrs.get("MX") ?: return null
-        (0 until mx.size()).map { i -> mx.get(i).toString().substringAfter(' ').trim().trimEnd('.').lowercase() }
-    }.getOrNull()
+    /** MX hosts for [domain] (lowest preference first) via the built-in DNS client; null on failure. */
+    fun mxLookup(domain: String): List<String>? = runCatching { Dns.mx(domain) }.getOrNull()?.takeIf { it.isNotEmpty() }
 
     private fun probe(email: String, domain: String): AutodiscoverResponse? {
         val imapCandidates = listOf(

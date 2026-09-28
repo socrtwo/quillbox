@@ -301,7 +301,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--accent); width: 16
 .sender-card { display: flex; gap: 14px; align-items: flex-start; padding: 4px 0 14px; border-bottom: 1px solid var(--border); }
 .sender-lines { flex: 1; min-width: 0; }
 .sender-name { font-weight: 600; font-size: 14px; color: var(--text-2); }
-.sender-address { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; word-break: break-all; margin: 2px 0 4px; color: var(--text); }
+.sender-address { font-size: 24px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; overflow-wrap: anywhere; word-break: normal; margin: 2px 0 4px; color: var(--text); }
 .sender-address.danger { color: var(--danger); }
 .sender-address.warn { color: var(--warn); }
 .sender-address.ok { color: var(--ok); }
@@ -434,7 +434,10 @@ dialog.narrow { max-width: 480px; }
 .ctx-menu button.danger { color: var(--danger); }
 .shortcuts { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 13px; }
 
+.popup-frame { min-height: 300px; }
+
 /* ---------- responsive ---------- */
+/* Tablets and small windows: the reading pane replaces the list (Outlook's phone/tablet behaviour). */
 .mobile-only { display: none; }
 @media (max-width: 1000px) {
   .workspace, .workspace.pane-bottom, .workspace.pane-off { grid-template-columns: 200px 1fr; grid-template-rows: 1fr; }
@@ -442,24 +445,74 @@ dialog.narrow { max-width: 480px; }
   .workspace.show-reading .list-pane { display: none; }
   .workspace.show-reading .reading-pane { display: flex; }
   .mobile-only { display: inline-flex; }
+  .reading-toolbar .btn:not(.ai) { font-size: 0; gap: 0; padding: 0 7px; }
+  .reading-toolbar .btn svg { width: 18px; height: 18px; }
 }
+/* Phones: one pane at a time, the folder pane becomes a drawer, dialogs go full screen. */
 @media (max-width: 700px) {
   .workspace, .workspace.pane-bottom, .workspace.pane-off { grid-template-columns: 1fr; }
-  .folders { display: none; position: fixed; left: 0; top: 48px; bottom: 0; width: 260px; z-index: 50; box-shadow: var(--shadow-4); }
+  .folders { display: none; position: fixed; left: 0; top: 48px; bottom: 0; width: min(300px, 84vw); z-index: 50; box-shadow: var(--shadow-4); }
   .workspace.nav-open .folders { display: flex; }
+  .workspace.nav-open::after { content: ""; position: fixed; left: 0; right: 0; top: 48px; bottom: 0; background: rgba(0,0,0,.35); z-index: 49; }
+  .topbar { gap: 4px; padding: 0 6px; }
   .search { max-width: none; }
+  .brand { margin-right: 0; }
   .brand span { display: none; }
+  #btnShortcuts, #btnTheme { display: none; }
+  .list-header { padding: 6px 10px 2px; flex-wrap: wrap; }
+  .list-header .filters { overflow-x: auto; max-width: 100%; }
+  .cmdbar { padding: 4px 4px; }
+  .reading-toolbar { padding: 6px 6px; gap: 0; }
+  .reading-toolbar .sep { margin: 0 2px; }
+  .reading-toolbar .ai { order: 10; }
+  .reading-toolbar #rdMore { order: 11; margin-left: auto; }
+  .reading-toolbar .grow { display: none; }
   .reading-head { padding: 12px 14px 0; }
-  .body-wrap, .attachments { padding-left: 14px; padding-right: 14px; }
+  .reading-head h1 { font-size: 18px; }
+  .sender-card { flex-wrap: wrap; gap: 10px; }
+  .sender-date { width: 100%; text-align: left; order: 3; }
+  .body-wrap, .attachments { padding-left: 10px; padding-right: 10px; }
+  .images-banner { margin: 12px 10px 0; }
   .sender-address { font-size: 19px; }
-  .settings { grid-template-columns: 1fr; height: auto; }
-  .settings-nav { flex-direction: row; overflow: auto; border-right: 0; border-bottom: 1px solid var(--border); }
+  .verdict { padding: 10px 12px; }
+  dialog.wide, dialog.compose { width: 100vw; max-width: 100vw; height: 100vh; height: 100dvh; max-height: 100vh; max-height: 100dvh; margin: 0; border-radius: 0; }
+  dialog.wide[open] { display: flex; flex-direction: column; }
+  dialog.wide .dlg-body { flex: 1; max-height: none; }
+  .compose[open] { height: 100vh; height: 100dvh; }
+  .compose-row label { width: 34px; }
+  .dlg-head { padding: 10px 14px; }
+  .dlg-body { padding: 12px 14px; }
+  .dlg-foot { padding: 10px 14px; }
+  .dlg-foot .check { flex-basis: 100%; }
+  .settings { display: flex; flex-direction: column; height: auto; flex: 1; min-height: 0; }
+  .settings-nav { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--border); padding: 6px; gap: 4px; flex: none; }
+  .settings-nav button { flex: none; height: 32px; padding: 0 10px; }
+  .settings-body { flex: 1; overflow: auto; padding: 14px; }
+  .analysis-grid { grid-template-columns: 1fr; }
   .crit { grid-template-columns: 1fr 1fr; }
   .crit input[type=text] { grid-column: 1 / 2; }
   .grid-2 { grid-template-columns: 1fr; }
-  .setup-card { padding: 22px 18px; }
+  .setup { padding: 0; align-items: stretch; }
+  .setup-card { max-width: none; border-radius: 0; min-height: 100%; padding: 22px 18px; box-shadow: none; }
+  .toast-host { bottom: 12px; left: 8px; right: 8px; transform: none; }
+  .toast { max-width: none; width: 100%; }
 }
-@media print {
+/* Touch screens: bigger targets, no hover-only affordances. */
+@media (pointer: coarse) {
+  :root { --row-h: 82px; }
+  :root[data-density="compact"] { --row-h: 58px; }
+  .icon-btn { width: 38px; height: 38px; }
+  .btn { height: 36px; }
+  .btn.sm { height: 30px; }
+  .folder-list li { height: 42px; }
+  .msg .cb { opacity: 1; }
+  .msg .msg-hover, .msg:hover .msg-hover { display: none; }
+  .list-header .filters button { height: 32px; }
+  .ctx-menu button { height: 40px; }
+  .settings-nav button { height: 40px; }
+  input[type=text], input[type=email], input[type=password], input[type=number], input[type=url], input[type=search], select { height: 38px; font-size: 16px; }
+  .search input { height: 36px; }
+}@media print {
   .topbar, .folders, .list-pane, .reading-toolbar, .verdict .v-actions { display: none !important; }
   .workspace { display: block; }
   body { overflow: auto; }

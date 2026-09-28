@@ -28,11 +28,13 @@ data class AnalysisCache(
 
 /**
  * On-disk persistence for per-account settings, the learned Bayes model and the analysis
- * cache. Everything lives under `$QUILLBOX_DATA_DIR` (default `~/.quillbox`). Passwords are
- * never written here — they only ever live in the browser and in the server's memory.
+ * cache. Everything lives under the `quillbox.dataDir` system property (set by the Android
+ * and desktop shells), else `$QUILLBOX_DATA_DIR`, else `~/.quillbox`. Passwords are never
+ * written here — they only ever live in the browser and in the server's memory.
  */
 class DataStore(rootDir: File? = null) {
     val root: File = rootDir
+        ?: System.getProperty("quillbox.dataDir")?.takeIf { it.isNotBlank() }?.let { File(it) }
         ?: System.getenv("QUILLBOX_DATA_DIR")?.takeIf { it.isNotBlank() }?.let { File(it) }
         ?: File(System.getProperty("user.home"), ".quillbox")
 

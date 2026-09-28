@@ -9,14 +9,36 @@ targets:
     platform: iOS
     sources:
       - Quillbox
+    info:
+      path: Quillbox/Info.plist
+      properties:
+        CFBundleDisplayName: Quillbox
+        CFBundleShortVersionString: "1.2.0"
+        CFBundleVersion: "3"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIViewControllerBasedStatusBarAppearance: true
+        ITSAppUsesNonExemptEncryption: false
+        # The app talks to the user's own Quillbox server, which on a home network is often
+        # plain http://192.168.x.y:8080. Allow that; HTTPS still works and is recommended
+        # for servers reachable from the internet.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+          NSAllowsLocalNetworking: true
+        NSLocalNetworkUsageDescription: Quillbox connects to the Quillbox server on your own network to show your mail.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: info.socrtwo.quillbox
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: 1
-        GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
-        INFOPLIST_KEY_CFBundleDisplayName: Quillbox
+        MARKETING_VERSION: "1.2.0"
+        CURRENT_PROJECT_VERSION: 3
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_VERSION: "5.0"
 schemes:

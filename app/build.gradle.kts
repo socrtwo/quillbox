@@ -4,9 +4,7 @@ import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 // Load signing properties from local.properties (never committed) or environment
@@ -30,11 +28,21 @@ android {
         applicationId = "info.socrtwo.quillbox"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.1.0"
+        versionCode = 3
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
+    }
+
+    // The Android app is the web client packaged as an app: the very same Ktor backend and
+    // Outlook-style UI as ../web are compiled into the APK, started on 127.0.0.1 inside the
+    // app process and shown full-screen in a WebView. One code base, identical features.
+    sourceSets {
+        getByName("main") {
+            java.srcDir("../web/src/main/kotlin")
+            resources.srcDir("../web/src/main/resources")
+        }
     }
 
     signingConfigs {
@@ -78,14 +86,13 @@ android {
     }
 
     buildFeatures {
-        compose = true
         buildConfig = true
     }
 
     packaging {
         resources {
-            // Jakarta/Angus Mail ships duplicate metadata across its jars; keep one copy
-            // of each so the mail providers still resolve on Android.
+            // Jakarta/Angus Mail, Ktor and kotlinx ship duplicate metadata across their jars;
+            // keep one copy of each so the mail providers still resolve on Android.
             excludes += setOf(
                 "META-INF/DEPENDENCIES",
                 "META-INF/LICENSE",
@@ -94,7 +101,13 @@ android {
                 "META-INF/NOTICE",
                 "META-INF/NOTICE.txt",
                 "META-INF/NOTICE.md",
-                "META-INF/*.kotlin_module"
+                "META-INF/INDEX.LIST",
+                "META-INF/io.netty.versions.properties",
+                "META-INF/versions/9/previous-compilation-data.bin",
+                "META-INF/*.kotlin_module",
+                // The organisation table is compiled into BrandKnowledgeBaseExtra.kt; the source
+                // TSVs are only needed by scripts/gen-brands.py.
+                "brands/**"
             )
             pickFirsts += setOf(
                 "META-INF/javamail.default.providers",
@@ -109,43 +122,21 @@ android {
     }
 }
 
+val ktor = "3.0.3"
+
 dependencies {
-    // AndroidX core
     implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.webkit:webkit:1.12.1")
 
-    // Lifecycle / ViewModel / Flows
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
-
-    // Compose (Material 3)
-    val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
-    implementation("androidx.activity:activity-compose:1.9.3")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.8.4")
-
-    // Hilt (DI)
-    implementation("com.google.dagger:hilt-android:2.52")
-    ksp("com.google.dagger:hilt-compiler:2.52")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-
-    // Room (persistence)
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    ksp("androidx.room:room-compiler:2.6.1")
-
-    // Coroutines
+    // The embedded backend: Ktor's coroutine-based CIO engine (no Netty on Android).
+    implementation("io.ktor:ktor-server-core-jvm:$ktor")
+    implementation("io.ktor:ktor-server-cio-jvm:$ktor")
+    implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor")
+    implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    // Ktor logs through SLF4J; the simple binding prints to logcat via System.err.
+    implementation("org.slf4j:slf4j-simple:2.0.16")
 
     // Jakarta Mail (IMAP / POP3 / SMTP) — Eclipse Angus implementation. This transitively
     // brings angus-activation + jakarta.activation-api (DataHandler etc.), so no separate
@@ -156,5 +147,4 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }

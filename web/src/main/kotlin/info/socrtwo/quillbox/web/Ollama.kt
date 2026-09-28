@@ -10,11 +10,6 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.time.Duration
 
 /**
  * Optional enrichment with a locally running open-source LLM served by Ollama
@@ -23,14 +18,12 @@ import java.time.Duration
  * organisation the message impersonates and suggests extra rule conditions.
  */
 class Ollama(private val cfg: OllamaConfigDto) {
-    private val http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build()
     private val json = Json { ignoreUnknownKeys = true }
 
     fun test(): OllamaTestResponse = runCatching {
-        val req = HttpRequest.newBuilder(URI(cfg.url.trimEnd('/') + "/api/tags")).timeout(Duration.ofSeconds(5)).GET().build()
-        val res = http.send(req, HttpResponse.BodyHandlers.ofString())
-        if (res.statusCode() != 200) return OllamaTestResponse(false, error = "HTTP ${res.statusCode()}")
-        val models = json.parseToJsonElement(res.body()).jsonObject["models"]?.jsonArray
+        val res = Http.get(cfg.url.trimEnd('/') + "/api/tags", timeoutMs = 5000)
+        if (res.status != 200) return OllamaTestResponse(false, error = "HTTP ${res.status}")
+        val models = json.parseToJsonElement(res.body).jsonObject["models"]?.jsonArray
             ?.mapNotNull { it.jsonObject["name"]?.jsonPrimitive?.content } ?: emptyList()
         OllamaTestResponse(true, models)
     }.getOrElse { OllamaTestResponse(false, error = it.message ?: "cannot reach ${cfg.url}") }
@@ -65,13 +58,9 @@ class Ollama(private val cfg: OllamaConfigDto) {
             })
         }
         return runCatching {
-            val req = HttpRequest.newBuilder(URI(cfg.url.trimEnd('/') + "/api/chat"))
-                .timeout(Duration.ofSeconds(120))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(payload.toString())).build()
-            val res = http.send(req, HttpResponse.BodyHandlers.ofString())
-            if (res.statusCode() != 200) return LlmAssessmentDto(cfg.model, true, error = "Ollama HTTP ${res.statusCode()}: ${res.body().take(200)}")
-            val content = json.parseToJsonElement(res.body()).jsonObject["message"]?.jsonObject?.get("content")?.jsonPrimitive?.content
+            val res = Http.postJson(cfg.url.trimEnd('/') + "/api/chat", payload.toString(), timeoutMs = 120_000)
+            if (res.status != 200) return LlmAssessmentDto(cfg.model, true, error = "Ollama HTTP ${res.status}: ${res.body.take(200)}")
+            val content = json.parseToJsonElement(res.body).jsonObject["message"]?.jsonObject?.get("content")?.jsonPrimitive?.content
                 ?: return LlmAssessmentDto(cfg.model, true, error = "Empty response from model")
             val obj = json.parseToJsonElement(extractJson(content)).jsonObject
             LlmAssessmentDto(

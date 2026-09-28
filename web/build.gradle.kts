@@ -5,10 +5,18 @@ plugins {
 }
 
 group = "info.socrtwo.quillbox"
-version = "1.1.0"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
+}
+
+// src/main holds the portable backend (shared with the desktop launcher and the Android app,
+// which compile it from here); src/jvmMain holds the Netty entry point of the server zip.
+sourceSets {
+    main {
+        kotlin.srcDir("src/jvmMain/kotlin")
+    }
 }
 
 val ktor = "3.0.3"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The embedded backend listens on the loopback interface only; the WebView talks to it
+     over plain HTTP, which Android otherwise blocks for apps targeting API 28+. Everything
+     else (IMAP/SMTP TLS, HTTPS autodiscovery) keeps the secure defaults. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>

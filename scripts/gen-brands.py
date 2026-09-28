@@ -42,5 +42,5 @@ def kt(pkg):
     out.append("}")
     return '\n'.join(out)+'\n'
 open('/home/user/quillbox/web/src/main/kotlin/info/socrtwo/quillbox/web/spam/BrandKnowledgeBaseExtra.kt','w').write(kt('info.socrtwo.quillbox.web.spam'))
-open('/home/user/quillbox/app/src/main/java/info/socrtwo/quillbox/data/spam/BrandKnowledgeBaseExtra.kt','w').write(kt('info.socrtwo.quillbox.data.spam'))
+# The Android app compiles the web sources directly, so one generated file serves every platform.
 print('rows', len(rows), 'chunks', len(chunks), [len(c.encode()) for c in chunks])

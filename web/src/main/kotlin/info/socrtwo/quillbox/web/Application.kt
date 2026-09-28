@@ -5,13 +5,11 @@ import io.ktor.http.ContentDisposition
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.withCharset
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.install
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.http.content.staticResources
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.header
 import io.ktor.server.request.receive
@@ -32,12 +30,11 @@ import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger("quillbox")
 
-fun main() {
-    val port = System.getenv("PORT")?.toIntOrNull() ?: 8080
-    val host = System.getenv("HOST") ?: "0.0.0.0"
-    embeddedServer(Netty, port = port, host = host, module = Application::module).start(wait = true)
-}
-
+/**
+ * The whole Quillbox backend as a Ktor module. The JVM server (`ServerMain.kt`), the desktop
+ * launcher and the Android app all install exactly this module on their own engine, so every
+ * platform serves the same API and the same Outlook-style UI.
+ */
 fun Application.module() {
     install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false }) }
 
@@ -75,7 +72,16 @@ fun Application.module() {
     }
 
     routing {
-        staticResources("/", "web")
+        // The UI (index.html, styles.css, app.js) is read straight from the class path. This
+        // deliberately avoids Ktor's file/jar resource resolution so it also works when the
+        // resources live inside an Android APK.
+        get("/") { call.respondStatic("index.html") }
+        get("/index.html") { call.respondStatic("index.html") }
+        get("/{file}") {
+            val name = call.parameters["file"] ?: ""
+            if (name.startsWith("api")) { call.respond(HttpStatusCode.NotFound, ApiError("Not found")); return@get }
+            call.respondStatic(name)
+        }
 
         // --- setup ---------------------------------------------------------------------
         get("/api/autodiscover") {
@@ -245,6 +251,38 @@ fun Application.module() {
             }
         }
     }
+}
+
+private object StaticFiles {
+    private val cache = java.util.concurrent.ConcurrentHashMap<String, ByteArray>()
+    private val safeName = Regex("^[A-Za-z0-9._-]+$")
+
+    fun bytes(name: String): ByteArray? {
+        if (!safeName.matches(name) || name.startsWith(".")) return null
+        cache[name]?.let { return it }
+        val loaded = StaticFiles::class.java.classLoader?.getResourceAsStream("web/$name")?.use { it.readBytes() } ?: return null
+        cache[name] = loaded
+        return loaded
+    }
+
+    fun contentType(name: String): ContentType = when (name.substringAfterLast('.', "").lowercase()) {
+        "html" -> ContentType.Text.Html.withCharset(Charsets.UTF_8)
+        "css" -> ContentType.Text.CSS.withCharset(Charsets.UTF_8)
+        "js" -> ContentType.Application.JavaScript.withCharset(Charsets.UTF_8)
+        "json", "webmanifest" -> ContentType.Application.Json
+        "svg" -> ContentType.Image.SVG
+        "png" -> ContentType.Image.PNG
+        "ico" -> ContentType.parse("image/x-icon")
+        "woff2" -> ContentType.parse("font/woff2")
+        else -> ContentType.Application.OctetStream
+    }
+}
+
+private suspend fun ApplicationCall.respondStatic(name: String) {
+    val bytes = StaticFiles.bytes(name)
+    if (bytes == null) { respond(HttpStatusCode.NotFound, ApiError("Not found")); return }
+    response.header(HttpHeaders.CacheControl, if (name.endsWith(".html")) "no-cache" else "max-age=300")
+    respondBytes(bytes, StaticFiles.contentType(name))
 }
 
 private fun friendlyAuthError(e: Throwable): String {

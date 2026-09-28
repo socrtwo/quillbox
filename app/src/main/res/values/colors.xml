@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="quillbox_primary">#2E5D9F</color>
-    <color name="quillbox_background">#FFFBFE</color>
-    <color name="ic_launcher_background">#2E5D9F</color>
+    <!-- Matches the web UI's light palette (styles.css): --accent-pressed and --bg-elev. -->
+    <color name="quillbox_primary">#0F6CBD</color>
+    <color name="quillbox_topbar">#0C3B5E</color>
+    <color name="quillbox_background">#FFFFFF</color>
+    <color name="ic_launcher_background">#0F6CBD</color>
 </resources>

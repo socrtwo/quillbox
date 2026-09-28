@@ -78,6 +78,36 @@ function avatarColor(key) {
   return palette[h % palette.length];
 }
 function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+
+// ------------------------------------------------------------------ native shells
+// The Android app and the iOS app show this very page in a WebView. They identify themselves
+// (a JS bridge on Android, a user-agent token on iOS) so that pop-up windows become in-app
+// dialogs, printing goes through the platform, and wording fits a phone.
+const NATIVE = window.QuillboxAndroid ? "android" : /QuillboxApp\/[\w.]+ \(iOS\)/.test(navigator.userAgent) ? "ios" : null;
+const IOS_BRIDGE = (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.quillbox) || null;
+function openExternal(url) {
+  if (NATIVE === "android") { try { window.QuillboxAndroid.openExternal(url); return; } catch {} }
+  if (NATIVE === "ios" && IOS_BRIDGE) { try { IOS_BRIDGE.postMessage({ type: "open", url }); return; } catch {} }
+  const w = window.open(url, "_blank", "noopener");
+  if (!w) location.href = url;
+}
+/** Shows a document in a new browser window, or in an in-app dialog where pop-ups are unavailable. */
+function popup(title, { html, text }) {
+  if (!NATIVE) {
+    const w = window.open("", "_blank");
+    if (w) { w.document.write(html || `<title>${esc(title)}</title><pre style="white-space:pre-wrap;font-family:monospace">${esc(text || "")}</pre>`); w.document.close(); return; }
+  }
+  $("popupTitle").textContent = title;
+  const body = $("popupBody"); body.innerHTML = "";
+  if (html) { const f = el("iframe", { class: "body-frame popup-frame", sandbox: "allow-same-origin", title }); body.appendChild(f); f.srcdoc = html; f.onload = () => { try { f.style.height = Math.min(Math.max(f.contentDocument.documentElement.scrollHeight + 24, 200), 4000) + "px"; } catch {} }; }
+  else body.appendChild(el("pre", { class: "body-text mono", text: text || "" }));
+  $("popupDialog").showModal();
+}
+function nativePrint(title) {
+  if (NATIVE === "android") { try { window.QuillboxAndroid.print(title || "Quillbox message"); return true; } catch {} }
+  if (NATIVE === "ios" && IOS_BRIDGE) { try { IOS_BRIDGE.postMessage({ type: "print", title: title || "Quillbox message" }); return true; } catch {} }
+  return false;
+}
 function splitAddresses(s) { return String(s || "").split(/[,;]/).map((x) => x.trim()).filter(Boolean); }
 function domainOf(addr) { const i = (addr || "").lastIndexOf("@"); return i >= 0 ? addr.slice(i + 1).toLowerCase() : ""; }
 
@@ -151,7 +181,8 @@ const setup = {
   discovered: null,
   show() {
     $("app").classList.add("hidden"); $("setup").classList.remove("hidden");
-    $("suOrigin").textContent = location.host;
+    $("suOrigin").textContent = NATIVE === "android" ? "the Quillbox app on this phone" : location.host;
+    if (NATIVE === "android" && !this.rememberTouched) $("suRemember").checked = true;
     this.step(1);
   },
   step(n) {
@@ -1273,9 +1304,12 @@ const settingsUI = {
     const add = (k, v) => { kv.appendChild(el("dt", { text: k })); kv.appendChild(el("dd", { text: v || "—" })); };
     add("Name", a.displayName); add("Incoming", a.incomingHost ? `${a.protocol} ${a.incomingHost}:${a.incomingPort} (${a.incomingSecurity})` : a.protocol); add("Outgoing", a.smtpHost ? `SMTP ${a.smtpHost}:${a.smtpPort} (${a.smtpSecurity})` : ""); add("User name", a.username);
     add("Remembered on this device", localStorage.getItem("qb.account") ? "Yes (including password)" : "No");
+    if (NATIVE === "ios") add("Quillbox server", location.origin);
+    if (NATIVE === "android") add("Mail engine", "Running inside the Quillbox app on this phone (127.0.0.1)");
     host.appendChild(kv);
     host.appendChild(el("div", { class: "btn-row", style: { marginTop: "16px" } },
       el("button", { class: "btn", onclick: () => { localStorage.removeItem("qb.account"); toast("This device will ask for the password next time."); this.render(); } }, "Forget password on this device"),
+      NATIVE === "ios" && IOS_BRIDGE ? el("button", { class: "btn", onclick: () => IOS_BRIDGE.postMessage({ type: "changeServer" }) }, icon("settings"), "Change server…") : null,
       el("button", { class: "btn danger", onclick: () => signOut(false) }, icon("signout"), "Sign out")));
   },
 };
@@ -1350,6 +1384,9 @@ function wire() {
   $("suProtocol").onchange = () => { if ($("suProtocol").value === "POP3" && $("suIncomingPort").value === "993") $("suIncomingPort").value = "995"; if ($("suProtocol").value === "IMAP" && $("suIncomingPort").value === "995") $("suIncomingPort").value = "993"; };
 
   $("navToggle").onclick = () => { const ws = $("workspace"); if (innerWidth <= 700) ws.classList.toggle("nav-open"); else ws.classList.toggle("nav-collapsed"); };
+  // On phones the folder pane is a drawer: a tap anywhere outside it closes it.
+  $("workspace").addEventListener("click", (e) => { const ws = $("workspace"); if (ws.classList.contains("nav-open") && !e.target.closest("#folderPane")) { ws.classList.remove("nav-open"); e.preventDefault(); e.stopPropagation(); } }, true);
+  $("suRemember").addEventListener("change", () => { setup.rememberTouched = true; });
   $("btnNewMail").onclick = () => compose.open({ mode: "new" });
   $("btnRefresh").onclick = () => { list.fetch(); folders.load(); };
   $("btnTheme").onclick = () => { const cur = document.documentElement.dataset.theme; prefs.set("theme", cur === "dark" ? "light" : "dark"); applyTheme(); };
@@ -1394,10 +1431,17 @@ function wire() {
     const d = state.openDetail; if (!d) return;
     const menu = $("ctxMenu"); menu.innerHTML = "";
     const add = (label, ic, fn, cls = "") => menu.appendChild(el("button", { class: cls, onclick: () => { contextMenu.hide(); fn(); } }, icon(ic), label));
-    add("View message headers", "list", () => { const w = window.open("", "_blank"); const lines = Object.entries(d.headers || {}).map(([k, v]) => `${k}: ${v}`).join("\n\n"); w.document.write(`<pre style="white-space:pre-wrap;font-family:monospace">${esc(lines || "(no headers captured)")}</pre>`); });
-    add("Open in new window", "external", () => { const w = window.open("", "_blank"); w.document.write(`<title>${esc(d.subject)}</title><h2>${esc(d.subject)}</h2><p><b>${esc(d.fromName)}</b> &lt;${esc(d.fromAddress)}&gt;</p>${d.bodyHtml ? sanitizeHtml(d.bodyHtml, { allowImages: state.imagesOnce, folder: state.open.folder, uid: d.uid }).html : `<pre style="white-space:pre-wrap">${esc(d.bodyText)}</pre>`}`); });
-    add("Print", "print", () => { const w = window.open("", "_blank"); w.document.write(`<title>${esc(d.subject)}</title><h2>${esc(d.subject)}</h2><p><b>${esc(d.fromName)}</b> &lt;${esc(d.fromAddress)}&gt; · ${esc(fmtDate(d.date, { long: true }))}</p><hr>${d.bodyHtml ? sanitizeHtml(d.bodyHtml, { allowImages: true, folder: state.open.folder, uid: d.uid }).html : `<pre style="white-space:pre-wrap">${esc(d.bodyText)}</pre>`}`); w.document.close(); setTimeout(() => w.print(), 300); });
-    if (d.listUnsubscribe) { const m = d.listUnsubscribe.match(/<(https?:[^>]+)>/); const mail = d.listUnsubscribe.match(/<mailto:([^>]+)>/); if (m || mail) add("Unsubscribe", "block", () => { if (m) window.open(m[1], "_blank", "noopener"); else compose.open({ mode: "new" }), ($("cTo").value = mail[1].split("?")[0], $("cSubject").value = "unsubscribe"); }); }
+    const headerText = () => Object.entries(d.headers || {}).map(([k, v]) => `${k}: ${v}`).join("\n\n") || "(no headers captured)";
+    const printable = (allowImages) => `<title>${esc(d.subject)}</title><h2>${esc(d.subject)}</h2><p><b>${esc(d.fromName)}</b> &lt;${esc(d.fromAddress)}&gt; · ${esc(fmtDate(d.date, { long: true }))}</p><hr>${d.bodyHtml ? sanitizeHtml(d.bodyHtml, { allowImages, folder: state.open.folder, uid: d.uid }).html : `<pre style="white-space:pre-wrap">${esc(d.bodyText)}</pre>`}`;
+    add("View message headers", "list", () => popup("Message headers", { text: headerText() }));
+    if (!NATIVE) add("Open in new window", "external", () => popup(d.subject, { html: printable(state.imagesOnce) }));
+    add("Print", "print", () => {
+      if (nativePrint(d.subject)) return;
+      const w = window.open("", "_blank");
+      if (!w) { window.print(); return; }
+      w.document.write(printable(true)); w.document.close(); setTimeout(() => w.print(), 300);
+    });
+    if (d.listUnsubscribe) { const m = d.listUnsubscribe.match(/<(https?:[^>]+)>/); const mail = d.listUnsubscribe.match(/<mailto:([^>]+)>/); if (m || mail) add("Unsubscribe", "block", () => { if (m) openExternal(m[1]); else compose.open({ mode: "new" }), ($("cTo").value = mail[1].split("?")[0], $("cSubject").value = "unsubscribe"); }); }
     add("Trust sender (safe list)", "shield-ok", () => actions.trustSender(d));
     add("Block sender", "block", () => actions.blockSender(d), "danger");
     add("Delete permanently", "trash", () => actions.delete([d], true), "danger");
@@ -1437,6 +1481,34 @@ function wire() {
   window.addEventListener("resize", debounce(() => reading.fitFrame(), 150));
   document.addEventListener("visibilitychange", () => { if (!document.hidden && state.token) list.fetch({ silent: true }); });
 }
+
+// ============================================================================ native hooks
+/** Android back button (and the iOS shell): returns true when something was closed. */
+window.quillboxBack = function () {
+  if (!$("ctxMenu").classList.contains("hidden")) { contextMenu.hide(); return true; }
+  const dlg = qs("dialog[open]");
+  if (dlg) { if (dlg.id === "composeDialog") $("cClose").onclick(); else dlg.close(); return true; }
+  const ws = $("workspace");
+  if (ws.classList.contains("nav-open")) { ws.classList.remove("nav-open"); return true; }
+  if (state.token && ws.classList.contains("show-reading") && innerWidth <= 1000) { reading.close(); return true; }
+  if (state.token && state.search) { $("searchClear").onclick(); return true; }
+  if (!state.token && !$("setupStep2").classList.contains("hidden")) { setup.step(1); return true; }
+  return false;
+};
+/** mailto: links handed over by the shells (and the Android SENDTO intent). */
+window.quillboxMailto = function (url) {
+  if (!state.token) { toast("Sign in first, then the message will open."); return false; }
+  let to = "", params = new URLSearchParams();
+  try { const s = String(url).replace(/^mailto:/i, ""); const q = s.indexOf("?"); to = decodeURIComponent(q >= 0 ? s.slice(0, q) : s); if (q >= 0) params = new URLSearchParams(s.slice(q + 1)); } catch {}
+  compose.open({ mode: "new" });
+  $("cTo").value = [to, params.get("to") || ""].filter(Boolean).join(", ");
+  if (params.get("cc")) { $("cCcRow").classList.remove("hidden"); $("cCc").value = params.get("cc"); }
+  if (params.get("bcc")) { $("cBccRow").classList.remove("hidden"); $("cBcc").value = params.get("bcc"); }
+  if (params.get("subject")) $("cSubject").value = params.get("subject");
+  if (params.get("body")) $("cEditor").textContent = params.get("body");
+  return true;
+};
+if (NATIVE) document.documentElement.dataset.native = NATIVE;
 
 // ============================================================================ init
 (async function init() {
