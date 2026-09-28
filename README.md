@@ -99,11 +99,29 @@ then sign in as `demo@quillbox.test` / `demo` and, under *Server settings*, use 
 
 ### Setting up an account
 
-Enter your name, address and password. The server looks the settings up for you (built-in
-provider table → Mozilla ISPDB → the domain's own autoconfig → MX record → port probe), shows
-which provider it found and any caveats (for example that Gmail, Yahoo, iCloud, AOL and
-Fastmail need an *app password*), and lets you test the connection before signing in. Tick
-*Keep me signed in* to store the account in the browser.
+A three-step wizard, as in Outlook:
+
+1. **Choose your provider.** Tiles for the hundred most used mailbox domains worldwide plus
+   Proton Mail — Gmail, Yahoo, Outlook.com/Hotmail/Live/MSN, AOL, iCloud, Comcast/Xfinity,
+   Verizon, AT&T/SBCGlobal/BellSouth, Cox, Spectrum, EarthLink, Erols/Astound, Orange/Wanadoo,
+   Free, SFR, La Poste, GMX, WEB.DE, T-Online, Libero, Virgilio, TIM/Alice, Ziggo, KPN,
+   Telenet, Proximus, Bluewin, BT, Sky, Virgin Media, TalkTalk, QQ, NetEase 163/126, Sina,
+   Sohu, Alibaba, Yahoo! JAPAN, docomo, au, @nifty, BIGLOBE, OCN, Naver, Daum/Kakao, Nate,
+   Rediffmail, Yandex, Mail.ru, Rambler, UOL, BOL, iG, Terra, Telstra/BigPond, Optus and more
+   (`web/src/main/kotlin/.../Providers.kt`, 100+ providers, 350+ domains) — grouped by region
+   with a search box, plus **Other** for any mailbox. Historic brands that were merged
+   (Verizon → AOL, Erols → Astound, Voilà → Orange, Chello → Ziggo…) point at the successor's
+   servers and say so.
+2. **Name, address and password.** The provider's servers, caveats and *Create an app
+   password* link are shown right away (Gmail, Yahoo, iCloud, AOL, Fastmail, Yandex, Mail.ru
+   and QQ need an app password or authorisation code). With *Other* the settings are looked up
+   from the address (built-in table → Mozilla ISPDB → the domain's autoconfig → MX record → port
+   probe).
+3. **Review the server settings** and *Test connection* before signing in. Tick *Keep me
+   signed in* to store the account on the device.
+
+A branded splash screen covers start-up on every platform (system launch splash on Android and
+iOS, then the page's own splash until the mailbox is ready).
 
 ### Junk protection (on by default)
 

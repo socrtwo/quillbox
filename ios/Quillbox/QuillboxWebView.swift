@@ -107,17 +107,22 @@ struct QuillboxWebView: UIViewRepresentable {
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            Task { @MainActor in state.loadError = nil }
+            Task { @MainActor in
+                state.loadError = nil
+                // Let the page's own splash fade before revealing the web view.
+                try? await Task.sleep(nanoseconds: 350_000_000)
+                withAnimation(.easeOut(duration: 0.35)) { state.webReady = true }
+            }
         }
         func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
             let e = error as NSError
             if e.domain == NSURLErrorDomain && e.code == NSURLErrorCancelled { return }
-            Task { @MainActor in state.loadError = error.localizedDescription }
+            Task { @MainActor in state.loadError = error.localizedDescription; state.webReady = true }
         }
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             let e = error as NSError
             if e.domain == NSURLErrorDomain && e.code == NSURLErrorCancelled { return }
-            Task { @MainActor in state.loadError = error.localizedDescription }
+            Task { @MainActor in state.loadError = error.localizedDescription; state.webReady = true }
         }
 
         // MARK: pop-ups (target=_blank) → Safari; window.open("") → handled in-page

@@ -416,12 +416,41 @@ data class OllamaTestResponse(val ok: Boolean, val models: List<String> = emptyL
 // ---------------------------------------------------------------------------------------
 
 @Serializable
+data class ProviderDto(
+    val id: String,
+    val label: String,
+    val region: String,
+    val regionLabel: String,
+    val domains: List<String>,
+    val popular: Int = 0,
+    val incomingHost: String,
+    val incomingPort: Int,
+    val incomingSecurity: String,
+    val smtpHost: String,
+    val smtpPort: Int,
+    val smtpSecurity: String,
+    val usernameLocalPart: Boolean = false,
+    val notes: List<String> = emptyList(),
+    val appPasswordUrl: String? = null,
+    val oauthOnly: Boolean = false,
+    val status: String? = null,
+    val unsupported: Boolean = false
+)
+
+@Serializable
+data class RegionDto(val id: String, val label: String)
+
+@Serializable
+data class ProvidersResponse(val regions: List<RegionDto>, val providers: List<ProviderDto>)
+
+@Serializable
 data class AutodiscoverResponse(
     val email: String,
     val domain: String,
     val found: Boolean,
     val source: String,
     val provider: String? = null,
+    val providerId: String? = null,
     val incomingHost: String = "",
     val incomingPort: Int = 993,
     val protocol: String = "IMAP",

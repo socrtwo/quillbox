@@ -23,7 +23,7 @@
             android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboardHidden|keyboard"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Quillbox">
+            android:theme="@style/Theme.Quillbox.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

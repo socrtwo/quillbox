@@ -31,6 +31,8 @@ final class AppState: ObservableObject {
     @Published var loadError: String? = nil
     /// Incremented to force the web view to reload.
     @Published var reloadToken: Int = 0
+    /// True once the web client has rendered; the in-app splash fades out then.
+    @Published var webReady: Bool = false
 
     init() {
         let saved = UserDefaults.standard.string(forKey: "serverURL") ?? ""
@@ -49,6 +51,7 @@ final class AppState: ObservableObject {
     func useServer(_ url: String) {
         serverURL = url
         loadError = nil
+        webReady = false
         choosingServer = false
         reloadToken += 1
     }

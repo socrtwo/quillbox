@@ -84,6 +84,15 @@ fun Application.module() {
         }
 
         // --- setup ---------------------------------------------------------------------
+        get("/api/providers") { call.handle { ProvidersResponse(Providers.regions(), Providers.catalogue()) } }
+        get("/api/provider") {
+            call.handle {
+                val id = call.request.queryParameters["id"] ?: throw IllegalArgumentException("id is required")
+                val email = call.request.queryParameters["email"]?.trim()?.lowercase().orEmpty()
+                val p = Providers.byId(id) ?: throw IllegalArgumentException("Unknown provider")
+                Autodiscover.fromProvider(email, email.substringAfterLast('@', ""), p, "built-in provider list")
+            }
+        }
         get("/api/autodiscover") {
             call.handle {
                 val email = call.request.queryParameters["email"] ?: throw IllegalArgumentException("email is required")

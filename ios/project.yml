@@ -15,7 +15,10 @@ targets:
         CFBundleDisplayName: Quillbox
         CFBundleShortVersionString: "1.2.0"
         CFBundleVersion: "3"
-        UILaunchScreen: {}
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+          UIImageName: LaunchLogo
+          UIImageRespectsSafeAreaInsets: true
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
@@ -41,6 +44,7 @@ targets:
         CURRENT_PROJECT_VERSION: 3
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_VERSION: "5.0"
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 schemes:
   Quillbox:
     build:

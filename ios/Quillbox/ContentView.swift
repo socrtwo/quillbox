@@ -28,7 +28,27 @@ struct ContentView: View {
                     if let err = state.loadError {
                         ConnectionErrorView(message: err)
                     }
+                    if !state.webReady && state.loadError == nil {
+                        SplashView().transition(.opacity)
+                    }
                 }
+            }
+        }
+    }
+}
+
+/// Branded splash shown while the web client loads (matches the launch screen and the page's own splash).
+struct SplashView: View {
+    var body: some View {
+        ZStack {
+            LinearGradient(colors: [Color(red: 0.047, green: 0.231, blue: 0.369), Color(red: 0.059, green: 0.424, blue: 0.741), Color(red: 0.169, green: 0.533, blue: 0.847)],
+                           startPoint: .topLeading, endPoint: .bottomTrailing)
+                .ignoresSafeArea()
+            VStack(spacing: 10) {
+                Image("LaunchLogo").resizable().scaledToFit().frame(width: 110, height: 110)
+                Text("Quillbox").font(.system(size: 34, weight: .heavy)).foregroundColor(.white)
+                Text("Mail with built-in junk protection").font(.subheadline).foregroundColor(.white.opacity(0.85))
+                ProgressView().tint(.white).padding(.top, 18)
             }
         }
     }

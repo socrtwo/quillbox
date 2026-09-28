@@ -178,33 +178,127 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme
 
 // ============================================================================ setup wizard
 const setup = {
-  discovered: null,
+  discovered: null, provider: null, catalogue: null, regionFilter: "all", rememberTouched: false,
   show() {
     $("app").classList.add("hidden"); $("setup").classList.remove("hidden");
     $("suOrigin").textContent = NATIVE === "android" ? "the Quillbox app on this phone" : location.host;
     if (NATIVE === "android" && !this.rememberTouched) $("suRemember").checked = true;
-    this.step(1);
+    this.step(0);
+    this.loadProviders();
   },
   step(n) {
-    $("setupStep1").classList.toggle("hidden", n !== 1);
-    $("setupStep2").classList.toggle("hidden", n !== 2);
-    $("step2").classList.toggle("done", n === 2);
+    for (const i of [0, 1, 2]) { $("setupStep" + i).classList.toggle("hidden", n !== i); $("step" + i).classList.toggle("done", i <= n); }
+    if (n === 1) setTimeout(() => ($("suName").value ? $("suEmail") : $("suName")).focus(), 50);
   },
   error(msg, second = false) {
     const box = $(second ? "suError2" : "suError");
     box.classList.toggle("hidden", !msg); box.textContent = msg || "";
   },
+  // ---- step 0: provider picker
+  async loadProviders() {
+    if (!this.catalogue) {
+      try { this.catalogue = await api("/api/providers"); }
+      catch (e) { this.catalogue = { regions: [], providers: [] }; toast("Could not load the provider list: " + e.message, { danger: true }); }
+      this.renderRegions();
+    }
+    this.renderProviders();
+  },
+  renderRegions() {
+    const host = $("suRegionTabs"); host.innerHTML = "";
+    const present = new Set(this.catalogue.providers.filter((p) => p.domains.length).map((p) => p.region));
+    const tabs = [{ id: "all", label: "All" }, ...this.catalogue.regions.filter((r) => present.has(r.id) && r.id !== "popular")];
+    for (const r of tabs) host.appendChild(el("button", { class: r.id === this.regionFilter ? "active" : "", onclick: () => { this.regionFilter = r.id; this.renderRegions(); this.renderProviders(); } }, r.label));
+  },
+  providerMark(p) { return el("span", { class: "provider-mark", style: { background: avatarColor(p.id) }, text: initials(p.label.replace(/\(.*?\)/g, "")) }); },
+  tile(p) {
+    const domains = p.domains.slice(0, 3).join(", ") + (p.domains.length > 3 ? ", …" : "");
+    return el("button", { class: "provider-tile" + (p.unsupported ? " unsupported" : ""), type: "button", title: p.status || domains, onclick: () => this.choose(p) },
+      this.providerMark(p), el("span", { class: "txt" }, el("b", { text: p.label }), el("span", { text: p.status || domains })));
+  },
+  otherTile() {
+    return el("button", { class: "provider-tile other", type: "button", onclick: () => this.chooseOther() },
+      el("span", { class: "provider-mark", style: { background: "var(--text-4)" } }, icon("mail", 18)), el("span", { class: "txt" }, el("b", { text: "Other" }), el("span", { text: "Any IMAP or POP3 mailbox — looked up from your address" })));
+  },
+  renderProviders() {
+    const host = $("suProviders"); host.innerHTML = "";
+    const q = $("suProviderSearch").value.trim().toLowerCase();
+    const all = this.catalogue.providers.filter((p) => p.domains.length);
+    const byLabel = (a, b) => a.label.localeCompare(b.label);
+    if (q) {
+      const hits = all.filter((p) => p.label.toLowerCase().includes(q) || p.id.includes(q) || p.domains.some((d) => d.includes(q)) || p.regionLabel.toLowerCase().includes(q))
+        .sort((a, b) => (b.popular > 0) - (a.popular > 0) || (a.popular || 99) - (b.popular || 99) || byLabel(a, b));
+      if (!hits.length) host.appendChild(el("div", { class: "provider-empty", text: `No provider matches "${q}". Choose Other and Quillbox will look the settings up from your address.` }));
+      hits.forEach((p) => host.appendChild(this.tile(p)));
+      host.appendChild(this.otherTile());
+      return;
+    }
+    if (this.regionFilter === "all") {
+      host.appendChild(el("div", { class: "section", text: "Most popular" }));
+      all.filter((p) => p.popular > 0).sort((a, b) => a.popular - b.popular).forEach((p) => host.appendChild(this.tile(p)));
+      for (const r of this.catalogue.regions) {
+        if (r.id === "popular") continue;
+        const items = all.filter((p) => p.region === r.id).sort(byLabel);
+        if (!items.length) continue;
+        host.appendChild(el("div", { class: "section", text: r.label }));
+        items.forEach((p) => host.appendChild(this.tile(p)));
+      }
+    } else {
+      const region = this.catalogue.regions.find((r) => r.id === this.regionFilter);
+      host.appendChild(el("div", { class: "section", text: region ? region.label : "" }));
+      all.filter((p) => p.region === this.regionFilter).sort(byLabel).forEach((p) => host.appendChild(this.tile(p)));
+    }
+    host.appendChild(el("div", { class: "section", text: "Not listed" }));
+    host.appendChild(this.otherTile());
+  },
+  choose(p) {
+    this.provider = p;
+    $("suChosen").classList.remove("hidden");
+    const mark = $("suChosenMark"); mark.style.background = avatarColor(p.id); mark.textContent = initials(p.label.replace(/\(.*?\)/g, ""));
+    $("suChosenLabel").textContent = p.label;
+    $("suChosenDomains").textContent = p.domains.slice(0, 4).join(", ") + (p.domains.length > 4 ? ", …" : "");
+    $("suLead1").textContent = `Enter your ${p.label.replace(/ \(.*?\)/g, "")} address and password.`;
+    $("suEmail").placeholder = "you@" + p.domains[0];
+    const notes = [];
+    if (p.unsupported) notes.push(`<div class="error-box" style="margin:0 0 8px">${esc(p.notes[0] || "This provider offers no IMAP/SMTP access.")}</div>`);
+    else {
+      if (p.status) notes.push(`<div><b>${esc(p.status)}</b></div>`);
+      notes.push(`<div class="small muted">IMAP ${esc(p.incomingHost)}:${p.incomingPort} · SMTP ${esc(p.smtpHost)}:${p.smtpPort}</div>`);
+      if (p.oauthOnly) notes.push(`<div class="error-box" style="margin:8px 0 0">This provider may no longer accept password sign-in for IMAP. Try an app password; if it is rejected, the provider requires OAuth, which Quillbox does not support yet.</div>`);
+      if (p.notes.length) notes.push(`<ul>${p.notes.map((n) => `<li>${esc(n)}</li>`).join("")}</ul>`);
+      if (p.appPasswordUrl) notes.push(`<div style="margin-top:6px"><a href="${esc(p.appPasswordUrl)}" target="_blank" rel="noopener">Create an app password ↗</a></div>`);
+    }
+    const box = $("suProviderNotes"); box.innerHTML = notes.join(""); box.classList.remove("hidden");
+    $("suPasswordHint").textContent = p.appPasswordUrl ? `${p.label.replace(/ \(.*?\)/g, "")} requires an app password rather than your normal password.` : (p.usernameLocalPart ? "Sign in with the part of your address before the @." : "Your mailbox password.");
+    this.error(null);
+    this.step(1);
+  },
+  chooseOther() {
+    this.provider = null;
+    $("suChosen").classList.add("hidden"); $("suProviderNotes").classList.add("hidden");
+    $("suLead1").textContent = "Enter your address and password. Quillbox finds the server settings for you, the same way Outlook does.";
+    $("suEmail").placeholder = "you@example.com";
+    $("suPasswordHint").innerHTML = "Gmail, Yahoo, iCloud, AOL and Fastmail require an <em>app password</em> rather than your normal password.";
+    this.error(null);
+    this.step(1);
+  },
+  // ---- step 1: credentials
   async continueFromStep1() {
     const email = $("suEmail").value.trim().toLowerCase();
     const pw = $("suPassword").value;
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return this.error("Enter a valid email address.");
     if (!pw) return this.error("Enter your password (or an app password).");
+    if (this.provider && this.provider.unsupported) return this.error(`${this.provider.label} cannot be used with a mail client: ${this.provider.notes[0] || "no IMAP/SMTP access."}`);
     this.error(null);
-    const btn = $("suContinue"); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Looking up your provider…';
+    const btn = $("suContinue"); btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> ' + (this.provider ? "Preparing settings…" : "Looking up your provider…");
     try {
-      const d = await api("/api/autodiscover", { query: { email } });
+      const d = this.provider
+        ? await api("/api/provider", { query: { id: this.provider.id, email } })
+        : await api("/api/autodiscover", { query: { email } });
       this.discovered = d;
       this.fill(d, email);
+      if (this.provider && !this.provider.domains.includes(email.split("@")[1]) && !["google-workspace", "microsoft365"].includes(this.provider.id)) {
+        this.error(`${email.split("@")[1]} is not one of ${this.provider.label}'s usual domains. The settings below are ${this.provider.label}'s — check them, or go back and choose Other to look the domain up.`, true);
+      }
       this.step(2);
     } catch (e) {
       this.error("Could not look up settings: " + e.message);
@@ -1379,6 +1473,10 @@ function wire() {
   $("suPassword").onkeydown = (e) => { if (e.key === "Enter") setup.continueFromStep1(); };
   $("suEmail").onkeydown = (e) => { if (e.key === "Enter") $("suPassword").focus(); };
   $("suBack").onclick = () => setup.step(1);
+  $("suBack1").onclick = () => setup.step(0);
+  $("suChangeProvider").onclick = () => setup.step(0);
+  $("suProviderSearch").addEventListener("input", () => setup.catalogue && setup.renderProviders());
+  $("suProviderSearch").addEventListener("keydown", (e) => { if (e.key === "Enter") { const first = qs("#suProviders .provider-tile"); if (first) first.click(); } });
   $("suVerify").onclick = () => setup.verify();
   $("suSignIn").onclick = () => setup.signIn();
   $("suProtocol").onchange = () => { if ($("suProtocol").value === "POP3" && $("suIncomingPort").value === "993") $("suIncomingPort").value = "995"; if ($("suProtocol").value === "IMAP" && $("suIncomingPort").value === "995") $("suIncomingPort").value = "993"; };
@@ -1493,6 +1591,7 @@ window.quillboxBack = function () {
   if (state.token && ws.classList.contains("show-reading") && innerWidth <= 1000) { reading.close(); return true; }
   if (state.token && state.search) { $("searchClear").onclick(); return true; }
   if (!state.token && !$("setupStep2").classList.contains("hidden")) { setup.step(1); return true; }
+  if (!state.token && !$("setupStep1").classList.contains("hidden")) { setup.step(0); return true; }
   return false;
 };
 /** mailto: links handed over by the shells (and the Android SENDTO intent). */
@@ -1512,8 +1611,11 @@ if (NATIVE) document.documentElement.dataset.native = NATIVE;
 
 // ============================================================================ init
 (async function init() {
+  const shownAt = Date.now();
   applyTheme();
   wire();
   const resumed = await session.resume().catch(() => false);
   if (!resumed) setup.show();
+  // Keep the splash up for a moment so it does not flash, then fade it out.
+  setTimeout(() => { const sp = $("splash"); sp.classList.add("fade"); setTimeout(() => sp.remove(), 400); }, Math.max(0, 700 - (Date.now() - shownAt)));
 })();

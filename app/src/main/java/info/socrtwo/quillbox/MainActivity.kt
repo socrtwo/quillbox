@@ -39,6 +39,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import java.io.File
@@ -64,6 +65,8 @@ class MainActivity : ComponentActivity() {
     private var fileCallback: ValueCallback<Array<Uri>>? = null
     private var pendingMailto: String? = null
     private var loadedUrl: String? = null
+    /** False until the web UI has rendered once (or start-up failed): keeps the launch splash on screen. */
+    private var uiReady = false
 
     private val filePicker = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         val cb = fileCallback ?: return@registerForActivityResult
@@ -77,8 +80,12 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splash = installSplashScreen()
+        splash.setKeepOnScreenCondition { !uiReady }
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
+        // Never hold the system splash for more than a few seconds; the in-app screen takes over.
+        window.decorView.postDelayed({ uiReady = true }, 4000)
         buildLayout()
         setContentView(root)
         configureWebView()
@@ -163,6 +170,7 @@ class MainActivity : ComponentActivity() {
         LocalServer.start(this) { base ->
             if (isFinishing || isDestroyed) return@start
             if (base == null) {
+                uiReady = true
                 splashText.text = getString(R.string.start_failed) + "\n" + (LocalServer.error ?: "")
                 splashRetry.visibility = View.VISIBLE
                 return@start
@@ -203,6 +211,7 @@ class MainActivity : ComponentActivity() {
             }
             override fun onPageFinished(view: WebView, url: String?) {
                 if (url != null && isLocal(Uri.parse(url))) {
+                    uiReady = true
                     splash.visibility = View.GONE
                     pendingMailto?.let { m -> pendingMailto = null; deliverMailto(m) }
                 }
