@@ -80,8 +80,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splash = installSplashScreen()
-        splash.setKeepOnScreenCondition { !uiReady }
+        val launchSplash = installSplashScreen()
+        launchSplash.setKeepOnScreenCondition { !uiReady }
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         super.onCreate(savedInstanceState)
         // Never hold the system splash for more than a few seconds; the in-app screen takes over.
