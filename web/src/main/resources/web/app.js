@@ -178,7 +178,7 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme
 
 // ============================================================================ setup wizard
 const setup = {
-  discovered: null, provider: null, catalogue: null, regionFilter: "all", rememberTouched: false,
+  discovered: null, provider: null, catalogue: null, regionFilter: "all", rememberTouched: false, canned: false,
   show() {
     $("app").classList.add("hidden"); $("setup").classList.remove("hidden");
     $("suOrigin").textContent = NATIVE === "android" ? "the Quillbox app on this phone" : location.host;
@@ -296,10 +296,15 @@ const setup = {
         : await api("/api/autodiscover", { query: { email } });
       this.discovered = d;
       this.fill(d, email);
-      if (this.provider && !this.provider.domains.includes(email.split("@")[1]) && !["google-workspace", "microsoft365"].includes(this.provider.id)) {
-        this.error(`${email.split("@")[1]} is not one of ${this.provider.label}'s usual domains. The settings below are ${this.provider.label}'s — check them, or go back and choose Other to look the domain up.`, true);
-      }
+      // "Canned" = settings that came from the built-in table (a chosen tile, or a domain the
+      // lookup recognised). If they fail, the wizard explains and opens the manual form.
+      this.canned = !!(this.provider || d.providerId);
+      $("suAdvanced").querySelector("summary").textContent = "Server settings";
+      $("suStatus").textContent = "";
+      const offDomain = this.provider && !this.provider.domains.includes(email.split("@")[1]) && !["google-workspace", "microsoft365"].includes(this.provider.id);
+      if (offDomain) this.error(`${email.split("@")[1]} is not one of ${this.provider.label}'s usual domains. The settings below are ${this.provider.label}'s — check them, or go back and choose Other to look the domain up.`, true);
       this.step(2);
+      if (this.canned && d.found && !offDomain) this.verify({ auto: true });
     } catch (e) {
       this.error("Could not look up settings: " + e.message);
     } finally { btn.disabled = false; btn.textContent = "Continue"; }
@@ -345,14 +350,29 @@ const setup = {
       password: $("suPassword").value,
     };
   },
-  async verify() {
+  // When a pre-configured provider fails, say so and open the manual server settings.
+  cannedFailed(reason) {
+    const name = this.provider ? this.provider.label.replace(/ \(.*?\)/g, "") : (this.discovered && this.discovered.provider) || "the provider";
+    const auth = /password|credential|authenticat|login|sign-in/i.test(reason);
+    this.error(`The pre-configured settings for ${name} did not work: ${reason} ` +
+      (auth ? "Check the password (most providers need an app password) and the user name, or edit the server settings below." : "Check or edit the server settings below, then test the connection again."), true);
+    const adv = $("suAdvanced"); adv.open = true;
+    adv.querySelector("summary").textContent = "Server settings (manual configuration)";
+    setTimeout(() => { $("suError2").scrollIntoView({ behavior: "smooth", block: "nearest" }); $("suIncomingHost").focus({ preventScroll: true }); }, 50);
+  },
+  async verify({ auto = false } = {}) {
     this.error(null, true);
-    $("suStatus").innerHTML = '<span class="spinner"></span> Testing incoming and outgoing servers…';
+    const seq = (this.verifySeq = (this.verifySeq || 0) + 1);
+    $("suStatus").innerHTML = '<span class="spinner"></span> ' + (auto ? "Checking the pre-configured servers…" : "Testing incoming and outgoing servers…");
     try {
       const r = await api("/api/verify", { method: "POST", body: { account: this.account() } });
+      if (seq !== this.verifySeq || $("setupStep2").classList.contains("hidden")) return false;
       $("suStatus").innerHTML = `Incoming: <b>${esc(r.incoming)}</b> · SMTP: <b>${esc(r.smtp)}</b>`;
-      if (!r.ok) this.error("One of the servers rejected the connection. Check the settings and password.", true);
-    } catch (e) { $("suStatus").textContent = ""; this.error(e.message, true); }
+      if (r.ok) return true;
+      const reason = [r.incoming !== "ok" ? `incoming server: ${r.incoming}` : null, r.smtp !== "ok" ? `outgoing server: ${r.smtp}` : null].filter(Boolean).join("; ") + ".";
+      if (this.canned) this.cannedFailed(reason); else this.error("One of the servers rejected the connection. Check the settings and password.", true);
+    } catch (e) { if (seq !== this.verifySeq || $("setupStep2").classList.contains("hidden")) return false; $("suStatus").textContent = ""; if (this.canned) this.cannedFailed(e.message + "."); else this.error(e.message, true); }
+    return false;
   },
   async signIn() {
     this.error(null, true);
@@ -361,7 +381,7 @@ const setup = {
       const account = this.account();
       await session.open(account, $("suRemember").checked);
     } catch (e) {
-      this.error(e.message, true);
+      if (this.canned) this.cannedFailed(e.message + "."); else this.error(e.message, true);
     } finally { btn.disabled = false; btn.textContent = "Sign in"; }
   },
 };
