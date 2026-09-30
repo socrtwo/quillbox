@@ -22,13 +22,21 @@ class SpamEngine(
         val senderDomain = HeaderParser.addressDomain(facts.fromAddress)
         val senderApex = HeaderParser.registrableDomain(senderDomain)
         val text = facts.bodyText.ifBlank { facts.bodyHtml?.let { HeaderParser.htmlToText(it) } ?: "" }
-        val links = HeaderParser.extractLinks(facts.bodyHtml, facts.bodyText)
+        // Link-protection and redirect wrappers (Safe Links, URL Defense, google.com/url…) are
+        // stripped so blocklists and heuristics judge the real destination.
+        val links = HeaderParser.extractLinks(facts.bodyHtml, facts.bodyText).map { l -> l.copy(href = LinkInfrastructure.unwrap(l.href)) }
         val linkDomains = links.mapNotNull { HeaderParser.hostOf(it.href) }
             .filter { !HeaderParser.isIpLiteral(it) }
             .map { HeaderParser.registrableDomain(it) }
             .distinct()
         val ips = HeaderParser.extractReceivedIps(facts.receivedHeaders, facts.originatingIpHeader)
         val auth = HeaderParser.parseAuthenticationResults(facts.authenticationResults)
+        // The sender's identity is proven when DMARC passed, or when SPF passed and a DKIM
+        // signature from the From domain (or its registrable domain) verified.
+        val dkimAligned = auth.dkim == "pass" && auth.dkimDomain?.let { d ->
+            val da = HeaderParser.registrableDomain(d); da.isNotBlank() && (da == senderApex || d.equals(senderDomain, true))
+        } == true
+        val senderProven = auth.dmarc == "pass" || (auth.spf == "pass" && dkimAligned)
 
         // --- 1. lists & rules ---------------------------------------------------------
         val safe = matchesList(facts.fromAddress, config.safeSenders)
@@ -75,7 +83,13 @@ class SpamEngine(
             for (hit in blHits) {
                 val def = config.blacklists.firstOrNull { it.zone == hit.zone }
                 val base = def?.weight ?: 30
+                // An IP listing describes the sending server, which large senders share (Amazon
+                // SES, SendGrid, Google…) and which gets listed because of other tenants. When
+                // DMARC/DKIM prove the From domain, the listing is kept as a strong signal but no
+                // longer decides on its own; a listing of the sender's own domain still does.
+                val sharedIp = hit.kind == "ip" && senderProven
                 val w = when {
+                    sharedIp -> minOf(base, 15)
                     hit.kind == "ip" -> base
                     hit.subject == senderApex -> base
                     else -> maxOf(10, base - 10)          // a listed link domain
@@ -83,7 +97,8 @@ class SpamEngine(
                 blScore += w
                 reasons += SpamReason(
                     "BLACKLIST", "Listed on ${hit.list}",
-                    (if (hit.kind == "ip") "Sending server ${hit.subject}: " else "Domain ${hit.subject}: ") + hit.note, w
+                    (if (hit.kind == "ip") "Sending server ${hit.subject}: " else "Domain ${hit.subject}: ") + hit.note +
+                        (if (sharedIp) " (the sender is authenticated, so this is probably shared sending infrastructure listed because of other senders)" else ""), w
                 )
             }
             blStatus.filter { it.refused }.forEach {
@@ -148,7 +163,7 @@ class SpamEngine(
 
         // --- 6. heuristics -----------------------------------------------------------------
         if (!effectivelySafe) {
-            val h = ContentHeuristics.evaluate(facts, links, text)
+            val h = ContentHeuristics.evaluate(facts, links, text, ContentHeuristics.SenderContext(senderProven = senderProven))
             var total = 0
             for (r in h.sortedByDescending { it.weight }) {
                 val allowed = minOf(r.weight, 40 - total)
@@ -169,7 +184,7 @@ class SpamEngine(
             level = SpamLevel.SPAM
         } else {
             score = score.coerceIn(0, 100)
-            val strongIpHit = blHits.any { h -> h.kind == "ip" && (config.blacklists.firstOrNull { it.zone == h.zone }?.weight ?: 0) >= 40 }
+            val strongIpHit = !senderProven && blHits.any { h -> h.kind == "ip" && (config.blacklists.firstOrNull { it.zone == h.zone }?.weight ?: 0) >= 40 }
             val senderDomainHit = blHits.any { it.kind == "domain" && it.subject == senderApex }
             val forcedSpam = (config.blacklistHitIsSpam && (strongIpHit || senderDomainHit)) ||
                 (config.brandMismatchIsSpam && brand.mismatch && brand.knownBrand)
@@ -178,6 +193,22 @@ class SpamEngine(
                 score >= config.spamThreshold -> SpamLevel.SPAM
                 score >= config.suspiciousThreshold -> SpamLevel.SUSPICIOUS
                 else -> SpamLevel.CLEAN
+            }
+            // "Suspicious" needs either one strong signal or agreement between two independent
+            // families of evidence (authentication, blocklists, brand impersonation, the learned
+            // classifier, content). A pile of weak bulk-mail traits — undisclosed recipients, a
+            // shortener, a tracked link, a "sign in" mention — from an authenticated sender is
+            // ordinary mail, not a warning.
+            if (level == SpamLevel.SUSPICIOUS && !forcedSpam) {
+                val positive = reasons.filter { it.weight > 0 }
+                val strong = positive.any { it.weight >= 15 }
+                val families = positive.map { family(it.code) }.toMutableSet()
+                if (!senderProven && "content" in families) families += "unauthenticated"
+                if (!strong && families.size < 2) {
+                    level = SpamLevel.CLEAN
+                    reasons += SpamReason("WEAK_SIGNALS_ONLY", "Only weak, common bulk-mail traits",
+                        "No single strong signal and only one kind of evidence from an authenticated sender, so this is not treated as suspicious", 0)
+                }
             }
         }
 
@@ -200,6 +231,18 @@ class SpamEngine(
     }
 
     /** Entries may be full addresses, bare domains, or "@domain". Sub-domains match. */
+    /** Groups reason codes into independent evidence families for the "suspicious" rule. */
+    private fun family(code: String): String = when {
+        code.startsWith("BLACKLIST") -> "blocklist"
+        code.startsWith("DMARC") || code.startsWith("SPF") || code.startsWith("DKIM") -> "auth"
+        code == "BRAND_MISMATCH" || code == "ORG_MISMATCH" -> "brand"
+        // The classifier is an independent witness only once the user has taught it; before
+        // that it merely echoes the built-in seed corpus, which is content evidence again.
+        code == "BAYES" -> if (bayes.userExamples >= 15) "bayes" else "content"
+        code == "BLOCKED_SENDER" || code == "RULE" -> "rule"
+        else -> "content"
+    }
+
     fun matchesList(address: String, entries: List<String>): Boolean {
         val addr = address.trim().lowercase()
         if (addr.isBlank()) return false

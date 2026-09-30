@@ -29,7 +29,15 @@ object ContentHeuristics {
     private val shorteners = setOf("bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd", "buff.ly", "cutt.ly", "rb.gy", "shorturl.at", "tiny.cc", "lnkd.in", "rebrand.ly", "t.ly", "bl.ink")
     private val dangerousExt = setOf("exe", "scr", "js", "jse", "vbs", "vbe", "bat", "cmd", "com", "pif", "hta", "msi", "jar", "lnk", "iso", "img", "wsf", "ps1", "html", "htm", "shtml", "svg", "one")
 
-    fun evaluate(facts: MessageFacts, links: List<HeaderParser.Link>, text: String): List<SpamReason> {
+    /**
+     * What the engine already knows about the sender, used to weigh link evidence:
+     * [senderProven] is true when DMARC passed (or SPF and an aligned DKIM signature both
+     * passed), i.e. the From domain really sent this. Link/sender disagreement then cannot mean
+     * impersonation, so those checks are reduced to a fraction of their weight.
+     */
+    data class SenderContext(val senderProven: Boolean = false)
+
+    fun evaluate(facts: MessageFacts, links: List<HeaderParser.Link>, text: String, ctx: SenderContext = SenderContext()): List<SpamReason> {
         val out = ArrayList<SpamReason>()
         val subject = facts.subject
         val lower = (subject + "\n" + text).lowercase()
@@ -65,22 +73,42 @@ object ContentHeuristics {
         if (shortened.isNotEmpty()) {
             out += SpamReason("SHORT_URL", "Uses a link shortener", shortened.distinct().joinToString(", "), 6)
         }
+        // Link text vs. destination. A visible *brand* hostname whose link really goes somewhere
+        // unrelated is the classic phishing lure and scores fully; a tracked newsletter link
+        // ("example.com" → click.list-manage.com) or a link to another domain of the same
+        // organisation is normal. When the sender is authenticated the residual weight is small.
+        val senderApex = HeaderParser.registrableDomain(HeaderParser.addressDomain(facts.fromAddress))
         for (link in links) {
             val textHost = Regex("""(?:https?://)?(?:www\.)?([a-z0-9-]+(?:\.[a-z0-9-]+)+)""", RegexOption.IGNORE_CASE)
                 .find(link.text)?.groupValues?.get(1)?.lowercase() ?: continue
             val hrefHost = HeaderParser.hostOf(link.href) ?: continue
-            if (HeaderParser.registrableDomain(textHost) != HeaderParser.registrableDomain(hrefHost) && !HeaderParser.isIpLiteral(textHost)) {
-                out += SpamReason("LINK_TEXT_MISMATCH", "Link text shows one address but goes to another",
-                    "Shows \"$textHost\" but opens $hrefHost", 25)
-                break
+            if (HeaderParser.isIpLiteral(textHost)) continue
+            if (HeaderParser.registrableDomain(textHost) == HeaderParser.registrableDomain(hrefHost)) continue
+            if (LinkInfrastructure.sameOrganisation(textHost, hrefHost)) continue
+            if (LinkInfrastructure.isMailInfrastructure(hrefHost) && (ctx.senderProven || LinkInfrastructure.sameOrganisation(textHost, senderApex))) continue
+            val lure = LinkInfrastructure.isKnownBrandDomain(textHost)
+            val weight = when {
+                lure && !ctx.senderProven -> 25
+                lure -> 8
+                ctx.senderProven -> 0
+                else -> 6
             }
+            if (weight == 0) continue
+            out += SpamReason("LINK_TEXT_MISMATCH", "Link text shows one address but goes to another",
+                "Shows \"$textHost\" but opens $hrefHost" + (if (ctx.senderProven) " (sender is authenticated, so this weighs little)" else ""), weight)
+            break
         }
-        val senderApex = HeaderParser.registrableDomain(HeaderParser.addressDomain(facts.fromAddress))
-        val linkApexes = hosts.map { HeaderParser.registrableDomain(it) }.distinct()
+        // "Sign in" wording with every call-to-action link on a domain the sender's organisation
+        // does not own. Links on mail-service infrastructure are neutral (their real target is
+        // unknown without following the redirect), and an authenticated sender weighs little.
+        val ownedOrNeutral = hosts.filter { !LinkInfrastructure.isMailInfrastructure(it) }
+            .map { HeaderParser.registrableDomain(it) }.distinct()
+        val foreign = ownedOrNeutral.filter { !LinkInfrastructure.sameOrganisation(it, senderApex) }
         val mentionsLogin = lower.contains("log in") || lower.contains("login") || lower.contains("sign in")
-        if (mentionsLogin && senderApex.isNotBlank() && linkApexes.isNotEmpty() && linkApexes.none { it == senderApex }) {
+        if (mentionsLogin && senderApex.isNotBlank() && foreign.isNotEmpty() && foreign.size == ownedOrNeutral.size) {
             out += SpamReason("LOGIN_LINK_OFFSITE", "Asks you to sign in on a site unrelated to the sender",
-                "Sender $senderApex, links to ${linkApexes.take(3).joinToString(", ")}", 10)
+                "Sender $senderApex, links to ${foreign.take(3).joinToString(", ")}" + (if (ctx.senderProven) " (sender is authenticated)" else ""),
+                if (ctx.senderProven) 3 else 10)
         }
 
         // Structure
