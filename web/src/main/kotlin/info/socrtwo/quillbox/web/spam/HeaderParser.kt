@@ -141,24 +141,14 @@ object HeaderParser {
     fun isIpLiteral(host: String): Boolean =
         Regex("""^\d{1,3}(\.\d{1,3}){3}$""").matches(host) || host.contains(':')
 
-    private val secondLevelSuffixes = setOf(
-        "co.uk", "org.uk", "ac.uk", "gov.uk", "me.uk", "ltd.uk", "plc.uk", "net.uk",
-        "com.au", "net.au", "org.au", "edu.au", "gov.au", "co.nz", "org.nz", "net.nz",
-        "co.jp", "ne.jp", "or.jp", "ac.jp", "co.kr", "com.br", "net.br", "org.br",
-        "com.mx", "com.ar", "com.co", "com.pe", "com.ve", "co.za", "org.za",
-        "com.cn", "net.cn", "org.cn", "com.hk", "com.tw", "com.sg", "com.my", "co.id", "co.in",
-        "com.tr", "com.pl", "com.ua", "com.ru", "co.il", "com.eg", "com.sa", "com.ph", "com.vn",
-        "com.ng", "co.ke", "com.pk", "com.bd", "gov.in", "nic.in", "ac.in", "org.in", "net.in"
-    )
-
-    /** Registrable ("apex") domain: mail.paypal.com -> paypal.com, x.y.co.uk -> y.co.uk */
+    /**
+     * The organisation-level domain of a host, per the Public Suffix List (`co.uk`, `com.au`,
+     * `pvt.k12.ma.us`, …): `mail.example.co.uk` → `example.co.uk`. IP literals are returned as-is.
+     */
     fun registrableDomain(host: String): String {
         val h = host.lowercase().trimEnd('.')
-        if (isIpLiteral(h)) return h
-        val labels = h.split('.').filter { it.isNotEmpty() }
-        if (labels.size <= 2) return h
-        val lastTwo = labels.takeLast(2).joinToString(".")
-        return if (lastTwo in secondLevelSuffixes && labels.size >= 3) labels.takeLast(3).joinToString(".") else lastTwo
+        if (h.isEmpty() || isIpLiteral(h)) return h
+        return PublicSuffixList.registrableDomain(h)
     }
 
     fun addressDomain(address: String): String {

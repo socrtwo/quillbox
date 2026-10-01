@@ -8,6 +8,7 @@ import info.socrtwo.quillbox.web.Mapping.toRule
 import info.socrtwo.quillbox.web.Mapping.toSummaryDto
 import info.socrtwo.quillbox.web.spam.BayesClassifier
 import info.socrtwo.quillbox.web.spam.BlacklistChecker
+import info.socrtwo.quillbox.web.spam.HeaderParser
 import info.socrtwo.quillbox.web.spam.MessageFacts
 import info.socrtwo.quillbox.web.spam.Rule
 import info.socrtwo.quillbox.web.spam.RuleAction
@@ -46,6 +47,8 @@ class AccountContext(
     @Volatile var settings: AccountSettingsDto = store.loadSettings(account.email)
         private set
     val bayes: BayesClassifier = store.loadBayes(account.email)
+    /** What this mailbox knows about each sender (replies, opens, junk marks, habitual link domains). */
+    val history: SenderHistory = store.loadHistory(account.email)
     private val engine = SpamEngine(blacklists, bayes)
 
     private val cache = ConcurrentHashMap<String, CachedAnalysis>()
@@ -107,6 +110,7 @@ class AccountContext(
     }
 
     private fun persistBayes() = runCatching { store.saveBayes(account.email, bayes) }
+    private fun persistHistory() { if (history.dirty) runCatching { store.saveHistory(account.email, history) } }
 
     // --- folders ------------------------------------------------------------------------
 
@@ -198,7 +202,7 @@ class AccountContext(
         val isInbox = folder.equals(MailSession.INBOX, ignoreCase = true)
         val results = coroutineScope {
             raws.map { (uid, raw) ->
-                async(Dispatchers.IO) { Triple(uid, raw, engine.analyze(raw.toFacts(userAddresses), cfg, rules)) }
+                async(Dispatchers.IO) { Triple(uid, raw, engine.analyze(raw.toFacts(userAddresses), cfg, rules, history.reputation(raw.summary.fromAddress))) }
             }.awaitAll()
         }
         val moves = HashMap<String, MutableList<Long>>()      // destination -> uids
@@ -233,6 +237,7 @@ class AccountContext(
                 dto = dto.copy(autoMoved = true, autoMovedTo = dest)
                 moved++
             }
+            if (previous == null && raw.summary.fromAddress.isNotBlank()) history.seen(raw.summary.fromAddress, verdict.linkDomains, verdict.isSpam)
             cache[k] = CachedAnalysis(dto, preview(raw.bodyText, raw.bodyHtml), System.currentTimeMillis(), raw.summary.subject, raw.summary.fromAddress)
         }
         if (moves.isNotEmpty() || markRead.isNotEmpty() || flag.isNotEmpty()) {
@@ -254,6 +259,7 @@ class AccountContext(
         if (!initialised) initialised = true
         bump()
         persistCache()
+        persistHistory()
     }
 
     /** Maps a rule's folder name to a real server path, creating it at the top level if needed. */
@@ -281,8 +287,9 @@ class AccountContext(
         val realFolder = if (folder == LOCAL_JUNK) MailSession.INBOX else folder
         val raw = io { mail.getMessage(realFolder, uid) } ?: return null
         val k = key(raw.summary, realFolder)
+        if (raw.summary.fromAddress.isNotBlank() && !raw.summary.seen) { history.opened(raw.summary.fromAddress); persistHistory() }
         val cached = cache[k] ?: run {
-            val verdict = withContext(Dispatchers.IO) { engine.analyze(raw.toFacts(userAddresses), settings.spam.toConfig(), spamRules()) }
+            val verdict = withContext(Dispatchers.IO) { engine.analyze(raw.toFacts(userAddresses), settings.spam.toConfig(), spamRules(), history.reputation(raw.summary.fromAddress)) }
             CachedAnalysis(verdict.toDto(), preview(raw.bodyText, raw.bodyHtml), System.currentTimeMillis(), raw.summary.subject, raw.summary.fromAddress)
                 .also { cache[k] = it; persistCache() }
         }
@@ -312,7 +319,7 @@ class AccountContext(
         val raw = io { mail.getMessage(realFolder, uid) } ?: return null
         val facts = raw.toFacts(userAddresses)
         val cfg = settings.spam.toConfig()
-        val verdict = withContext(Dispatchers.IO) { engine.analyze(facts, cfg, spamRules()) }
+        val verdict = withContext(Dispatchers.IO) { engine.analyze(facts, cfg, spamRules(), history.reputation(facts.fromAddress)) }
         val junkName = if (mail.isImap) "Junk" else LOCAL_JUNK
         var proposal = RuleProposer.propose(facts, verdict, if (cfg.useBayes) bayes else null, junkName).toDto()
         val llm = if (settings.ollama.enabled) withContext(Dispatchers.IO) { Ollama(settings.ollama).assess(facts, verdict.senderDomain) } else null
@@ -428,7 +435,7 @@ class AccountContext(
             if (localJunkAdd.isNotEmpty() || localJunkRemove.isNotEmpty()) s = s.copy(pop3Junk = (s.pop3Junk + localJunkAdd - localJunkRemove.toSet()).distinct())
             if (s != settings) { settings = s; store.saveSettings(account.email, s) }
         }
-        persistBayes(); persistCache(); bump()
+        persistBayes(); persistCache(); persistHistory(); bump()
         return BatchResult(ok, req.items.size - ok, errors.filter { it.isNotBlank() }, movedRefs)
     }
 
@@ -440,11 +447,12 @@ class AccountContext(
             val raws = runCatching { io { mail.fetchMessages(realFolder, refs.map { it.uid }) } }.getOrDefault(emptyMap())
             for ((_, raw) in raws) { learn(key(raw.summary, realFolder), raw.toFacts(userAddresses), req.spam); ok++ }
         }
-        persistBayes(); persistCache(); bump()
+        persistBayes(); persistCache(); persistHistory(); bump()
         return BatchResult(ok, req.items.size - ok)
     }
 
     private fun learn(k: String, facts: MessageFacts, spam: Boolean) {
+        if (facts.fromAddress.isNotBlank()) { if (spam) history.markedJunk(facts.fromAddress) else history.markedNotJunk(facts.fromAddress) }
         val tokens = BayesClassifier.tokenize(facts)
         val prev = cache[k]
         when (prev?.verdict?.trained) {
@@ -516,6 +524,8 @@ class AccountContext(
     suspend fun send(req: SendRequest): ApiStatus {
         touch()
         val message = io { mail.send(req) }
+        (req.to + req.cc).map { HeaderParser.splitAddress(it).second.ifBlank { it } }.filter { it.contains('@') }.forEach { history.replied(it) }
+        persistHistory()
         if (mail.isImap) {
             runCatching { io { mail.append(mail.ensureFolderForRole("sent"), message, Flags(Flags.Flag.SEEN)) } }
             req.replyTo?.let { ref -> runCatching { io { mail.setFlag(ref.folder, listOf(ref.uid), Flags.Flag.ANSWERED, true) } } }

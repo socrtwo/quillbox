@@ -135,12 +135,13 @@ all free and needing no API key:
 | **Authentication results** | SPF / DKIM / DMARC verdicts recorded by your own mail provider. |
 | **Impersonation detector** | An offline dictionary of ~2,500 organisations (Fortune/Global 500 companies, banks, insurers, retailers, carriers, government agencies, universities) and the domains they really send from; every domain was checked to resolve in DNS when the table was generated (`web/src/main/resources/brands/*.tsv`, regenerated with `scripts/gen-brands.py`). The sender's display name, address, subject and body signature are scanned for a claimed organisation and compared with the real sending domain; look-alike domains (`paypa1.com`, `arnazon.com`, `secure-paypal-login.net`, `paypal.com.verify.ru`) are caught with homoglyph normalisation and edit distance. A mismatch is shown as **"Claims to be PayPal — domain is not PayPal's"**. |
 | **Learned classifier** | A naive-Bayes model that trains on your *Junk* / *Not junk* clicks (seeded with a small built-in corpus, and deliberately weak until you have taught it). |
-| **Content heuristics** | Urgency and prize language, link-text/href mismatches, bare-IP links, shorteners, hidden text, dangerous attachment types, Reply-To on another domain, and so on. Link evidence is weighed against what is known about the sender: when DMARC (or SPF plus an aligned DKIM signature) proves the From domain, link/sender disagreement weighs little; links on another domain of the same organisation (facebookmail.com → facebook.com, e.paypal.com → paypal-communication.com) or on mail-service click trackers and link-protection gateways (Mailchimp, SendGrid, Salesforce Marketing Cloud, Safe Links, Proofpoint…) are not disagreement at all, and wrapped links are unwrapped to their real destination first. A shown brand hostname that opens somewhere else from an unauthenticated sender still scores fully. |
+| **Content heuristics** | Urgency and prize language, link-text/href mismatches, bare-IP links, shorteners, hidden text, dangerous attachment types, Reply-To on another domain, and so on. Link evidence is weighed against what is known about the sender: when DMARC (or SPF plus an aligned DKIM signature) proves the From domain, link/sender disagreement weighs little; links on another domain of the same organisation (facebookmail.com → facebook.com, e.paypal.com → paypal-communication.com) or on mail-service click trackers and link-protection gateways (Mailchimp, SendGrid, Salesforce Marketing Cloud, Safe Links, Proofpoint…) are not disagreement at all, and wrapped links are unwrapped to their real destination first. A shown brand hostname that opens somewhere else from an unauthenticated sender still scores fully. Links are judged by role: only the calls to action count, while footer plumbing (unsubscribe, preferences, privacy, view in browser), social icons and app-store buttons are ignored, and a link whose own text says *sign in* / *verify* is the one judged for off-site sign-in requests. Domains are reduced to their registrable form with the full Public Suffix List (`web/src/main/resources/psl/icann.dat`, ICANN section, refreshed with `scripts/update-psl.py`), so `mail.example.co.uk` and `shop.example.co.jp` compare correctly. |
+| **Sender history** | The account's own experience with each sender, kept in `sender-history.json` next to the Bayes model: messages received, opened and replied to, *Junk* / *Not junk* marks, and the link domains the sender habitually uses. A sender you have replied to, marked not junk or opened three times (and never marked junk) is a *known correspondent*: the verdict gets a −10 credit and the link and sign-in checks are relaxed. Link domains a sender has used in three or more non-junk messages count as that sender's own. Free-mail and shared sending domains are tracked per address, everything else per organisation domain; one *Junk* click revokes the trust. |
 | **Rules, safe and blocked senders** | Deterministic and always win. |
 
 A message is only *suspicious* when there is one strong signal or two independent kinds of
 evidence (authentication failure, blocklist, brand impersonation, the classifier once you have
-trained it, content). A pile of weak bulk-mail traits from an authenticated sender stays clean.
+trained it, sender history, content). A pile of weak bulk-mail traits from an authenticated sender stays clean.
 
 Every verdict is explained: the reading pane shows the **sender's address in large bold type** with
 the domain underlined and coloured by verdict, badges for the claimed organisation and the
@@ -218,17 +219,17 @@ Notes on the architecture choices:
 
 ## Releases
 
-Pushing a tag such as `v1.2.0` makes GitHub Actions build every target and attach the files
-to one GitHub Release (`Releases → Quillbox v1.2.0`):
+Pushing a tag such as `v1.3.0` makes GitHub Actions build every target and attach the files
+to one GitHub Release (`Releases → Quillbox v1.3.0`):
 
 | Target | Release file |
 |---|---|
-| Android, ChromeOS | `quillbox-v1.2.0.apk` (signed when the signing secrets exist, else `-unsigned`) |
-| Windows | `quillbox-desktop-v1.2.0-windows-x64.msi`, or the portable `.zip` |
-| macOS | `quillbox-desktop-v1.2.0-macos-arm64.dmg`, or the portable `.tar.gz` |
-| Linux x64 | `quillbox-desktop-v1.2.0-linux-x64.deb`, or the portable `.tar.gz` |
-| Raspberry Pi OS (64-bit) / Linux arm64 | `quillbox-desktop-v1.2.0-linux-arm64.deb`, or the portable `.tar.gz` |
-| Web / any OS with Java 17+ (servers, Termux, ChromeOS Linux) | `quillbox-web-v1.2.0-any-jvm.zip` → unzip, run `bin/quillbox-web` |
+| Android, ChromeOS | `quillbox-v1.3.0.apk` (signed when the signing secrets exist, else `-unsigned`) |
+| Windows | `quillbox-desktop-v1.3.0-windows-x64.msi`, or the portable `.zip` |
+| macOS | `quillbox-desktop-v1.3.0-macos-arm64.dmg`, or the portable `.tar.gz` |
+| Linux x64 | `quillbox-desktop-v1.3.0-linux-x64.deb`, or the portable `.tar.gz` |
+| Raspberry Pi OS (64-bit) / Linux arm64 | `quillbox-desktop-v1.3.0-linux-arm64.deb`, or the portable `.tar.gz` |
+| Web / any OS with Java 17+ (servers, Termux, ChromeOS Linux) | `quillbox-web-v1.3.0-any-jvm.zip` → unzip, run `bin/quillbox-web` |
 | iOS | `Quillbox-iOS-simulator.app.zip` (unsigned simulator build; a device build needs an Apple Developer account) |
 
 ### Making a release from Termux (Android)
@@ -256,8 +257,8 @@ Build and test the web/JVM server on the phone (this is the same zip the release
 ```bash
 cd ~/quillbox/web
 chmod +x gradlew
-./gradlew build distZip --no-daemon                   # runs the junk-engine tests, writes build/distributions/quillbox-web-1.2.0.zip
-cd build/distributions && unzip -o quillbox-web-1.2.0.zip && cd quillbox-web-1.2.0
+./gradlew build distZip --no-daemon                   # runs the junk-engine tests, writes build/distributions/quillbox-web-1.3.0.zip
+cd build/distributions && unzip -o quillbox-web-1.3.0.zip && cd quillbox-web-1.3.0
 PORT=8080 ./bin/quillbox-web                          # open http://localhost:8080 in the phone browser
 ```
 
@@ -268,15 +269,15 @@ cd ~/quillbox
 git checkout main && git pull
 # bump the version first if needed: app/build.gradle.kts (versionCode/versionName),
 #   web/build.gradle.kts (version), desktop/build.gradle.kts (version, packageVersion)
-git commit -am "Release v1.2.0"        # only if you changed something
+git commit -am "Release v1.3.0"        # only if you changed something
 git push
-git tag -a v1.2.0 -m "Quillbox 1.2.0"
-git push origin v1.2.0                 # <- this triggers the Android, Desktop, Web and iOS release builds
+git tag -a v1.3.0 -m "Quillbox 1.3.0"
+git push origin v1.3.0                 # <- this triggers the Android, Desktop, Web and iOS release builds
 
 gh run list --limit 8                  # watch the four workflows
 gh run watch                           # follow one interactively
-gh release view v1.2.0                 # list the attached files when they are done
-gh release download v1.2.0 -D ~/storage/downloads/quillbox-v1.2.0
+gh release view v1.3.0                 # list the attached files when they are done
+gh release download v1.3.0 -D ~/storage/downloads/quillbox-v1.3.0
 ```
 
 If the repository has no signing secrets, the APK arrives unsigned; sign it on the phone:
@@ -285,7 +286,7 @@ If the repository has no signing secrets, the APK arrives unsigned; sign it on t
 pkg install -y apksigner
 keytool -genkeypair -v -keystore ~/quillbox-release.jks -alias quillbox -keyalg RSA -keysize 2048 -validity 10000
 apksigner sign --ks ~/quillbox-release.jks --ks-key-alias quillbox \
-  --out quillbox-v1.2.0.apk ~/storage/downloads/quillbox-v1.2.0/quillbox-v1.2.0-unsigned.apk
+  --out quillbox-v1.3.0.apk ~/storage/downloads/quillbox-v1.3.0/quillbox-v1.3.0-unsigned.apk
 ```
 
 To have CI sign it instead, add the secrets `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`

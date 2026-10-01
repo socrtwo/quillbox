@@ -35,7 +35,31 @@ object ContentHeuristics {
      * passed), i.e. the From domain really sent this. Link/sender disagreement then cannot mean
      * impersonation, so those checks are reduced to a fraction of their weight.
      */
-    data class SenderContext(val senderProven: Boolean = false)
+    data class SenderContext(
+        val senderProven: Boolean = false,
+        /** The user has corresponded with this sender (replied, opened several, marked not junk) and never marked it junk. */
+        val knownSender: Boolean = false,
+        /** Link domains this sender has used in several earlier messages the user did not mark as junk. */
+        val familiarLinkApexes: Set<String> = emptySet()
+    )
+
+    private val auxiliaryText = Regex("""\b(unsubscribe|opt[ -]?out|manage (your |my )?(preferences|subscriptions?|emails?)|email preferences|view (this|it|email|in|online)|view in (a )?browser|privacy( policy| notice)?|terms( of (service|use))?|legal|help cent(er|re)|contact us|faq|support|forward to a friend|add (us )?to (your )?(address book|contacts)|app store|google play|download (the|our) app)\b""", RegexOption.IGNORE_CASE)
+    private val auxiliaryPath = Regex("""(unsub|optout|opt-out|preferences|privacy|terms|legal|/help|/support|/faq|view-?in-?browser|webversion|mirror)""", RegexOption.IGNORE_CASE)
+    private val socialHosts = setOf("facebook.com", "twitter.com", "x.com", "instagram.com", "linkedin.com", "youtube.com", "youtu.be", "pinterest.com", "tiktok.com", "threads.net", "reddit.com", "whatsapp.com", "t.me", "apple.com", "google.com", "play.google.com", "apps.apple.com")
+    private val loginText = Regex("""\b(sign in|log ?in|verify|confirm|update (your|my) (account|password|payment|details)|my account|secure (your|my) account|reset (your|my) password|review (your|my) account|validate)\b""", RegexOption.IGNORE_CASE)
+
+    /** Footer plumbing, social icons and app-store buttons: never the call to action, so not judged. */
+    fun isAuxiliaryLink(link: HeaderParser.Link): Boolean {
+        val host = HeaderParser.hostOf(link.href)?.lowercase() ?: return true
+        val apex = HeaderParser.registrableDomain(host)
+        if (apex in socialHosts || host in socialHosts) return true
+        if (auxiliaryText.containsMatchIn(link.text.trim())) return true
+        val path = link.href.substringAfter("://", link.href).substringAfter('/', "")
+        return auxiliaryPath.containsMatchIn(path)
+    }
+
+    /** True when the anchor text itself asks the reader to sign in, verify or update an account. */
+    fun isLoginLink(link: HeaderParser.Link): Boolean = loginText.containsMatchIn(link.text)
 
     fun evaluate(facts: MessageFacts, links: List<HeaderParser.Link>, text: String, ctx: SenderContext = SenderContext()): List<SpamReason> {
         val out = ArrayList<SpamReason>()
@@ -78,14 +102,20 @@ object ContentHeuristics {
         // ("example.com" → click.list-manage.com) or a link to another domain of the same
         // organisation is normal. When the sender is authenticated the residual weight is small.
         val senderApex = HeaderParser.registrableDomain(HeaderParser.addressDomain(facts.fromAddress))
-        for (link in links) {
+        fun ownedBySender(host: String): Boolean =
+            LinkInfrastructure.sameOrganisation(host, senderApex) || HeaderParser.registrableDomain(host) in ctx.familiarLinkApexes
+        // Only the calls to action are judged: footer plumbing (unsubscribe, preferences, privacy,
+        // view in browser), social icons and app-store buttons are skipped.
+        val actionLinks = links.filter { !isAuxiliaryLink(it) }
+        if (!ctx.knownSender) for (link in actionLinks) {
             val textHost = Regex("""(?:https?://)?(?:www\.)?([a-z0-9-]+(?:\.[a-z0-9-]+)+)""", RegexOption.IGNORE_CASE)
                 .find(link.text)?.groupValues?.get(1)?.lowercase() ?: continue
             val hrefHost = HeaderParser.hostOf(link.href) ?: continue
             if (HeaderParser.isIpLiteral(textHost)) continue
             if (HeaderParser.registrableDomain(textHost) == HeaderParser.registrableDomain(hrefHost)) continue
             if (LinkInfrastructure.sameOrganisation(textHost, hrefHost)) continue
-            if (LinkInfrastructure.isMailInfrastructure(hrefHost) && (ctx.senderProven || LinkInfrastructure.sameOrganisation(textHost, senderApex))) continue
+            if (HeaderParser.registrableDomain(hrefHost) in ctx.familiarLinkApexes && ownedBySender(textHost)) continue
+            if (LinkInfrastructure.isMailInfrastructure(hrefHost) && (ctx.senderProven || ownedBySender(textHost))) continue
             val lure = LinkInfrastructure.isKnownBrandDomain(textHost)
             val weight = when {
                 lure && !ctx.senderProven -> 25
@@ -98,17 +128,27 @@ object ContentHeuristics {
                 "Shows \"$textHost\" but opens $hrefHost" + (if (ctx.senderProven) " (sender is authenticated, so this weighs little)" else ""), weight)
             break
         }
-        // "Sign in" wording with every call-to-action link on a domain the sender's organisation
-        // does not own. Links on mail-service infrastructure are neutral (their real target is
-        // unknown without following the redirect), and an authenticated sender weighs little.
-        val ownedOrNeutral = hosts.filter { !LinkInfrastructure.isMailInfrastructure(it) }
-            .map { HeaderParser.registrableDomain(it) }.distinct()
-        val foreign = ownedOrNeutral.filter { !LinkInfrastructure.sameOrganisation(it, senderApex) }
-        val mentionsLogin = lower.contains("log in") || lower.contains("login") || lower.contains("sign in")
-        if (mentionsLogin && senderApex.isNotBlank() && foreign.isNotEmpty() && foreign.size == ownedOrNeutral.size) {
-            out += SpamReason("LOGIN_LINK_OFFSITE", "Asks you to sign in on a site unrelated to the sender",
-                "Sender $senderApex, links to ${foreign.take(3).joinToString(", ")}" + (if (ctx.senderProven) " (sender is authenticated)" else ""),
-                if (ctx.senderProven) 3 else 10)
+        // A sign-in request whose link leads to a domain the sender's organisation does not own.
+        // Preferred evidence is a link whose own text says "sign in" / "verify"; failing that, the
+        // body wording plus the calls to action. Mail-service infrastructure links are neutral
+        // (their real target is unknown without following the redirect), familiar and
+        // organisation-owned domains are fine, and an authenticated sender weighs little.
+        if (!ctx.knownSender && senderApex.isNotBlank()) {
+            val loginLinks = actionLinks.filter { isLoginLink(it) }
+            // With no explicit sign-in link every link counts, footer ones included: a sender-owned
+            // unsubscribe link still shows the mail links to the sender's own domain.
+            val judged = (if (loginLinks.isNotEmpty()) loginLinks else links)
+                .mapNotNull { HeaderParser.hostOf(it.href) }
+                .filter { !LinkInfrastructure.isMailInfrastructure(it) && !HeaderParser.isIpLiteral(it) }
+                .map { HeaderParser.registrableDomain(it) }.distinct()
+            val foreign = judged.filter { !ownedBySender(it) }
+            val mentionsLogin = loginLinks.isNotEmpty() || lower.contains("log in") || lower.contains("login") || lower.contains("sign in")
+            if (mentionsLogin && foreign.isNotEmpty() && foreign.size == judged.size) {
+                out += SpamReason("LOGIN_LINK_OFFSITE", "Asks you to sign in on a site unrelated to the sender",
+                    "Sender $senderApex, " + (if (loginLinks.isNotEmpty()) "sign-in link goes to " else "links to ") + foreign.take(3).joinToString(", ") +
+                        (if (ctx.senderProven) " (sender is authenticated)" else ""),
+                    if (ctx.senderProven) 3 else 10)
+            }
         }
 
         // Structure

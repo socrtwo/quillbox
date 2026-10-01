@@ -102,6 +102,17 @@ class DataStore(rootDir: File? = null) {
         writeAtomic(File(accountDir(email), "bayes.tsv"), bayes.serialize())
     }
 
+    fun loadHistory(email: String): SenderHistory {
+        val f = File(accountDir(email), "sender-history.json")
+        val loaded = if (f.exists()) runCatching { json.decodeFromString<SenderHistoryFile>(f.readText()) }.getOrNull() else null
+        return SenderHistory(loaded?.senders ?: emptyMap())
+    }
+
+    fun saveHistory(email: String, history: SenderHistory) {
+        writeAtomic(File(accountDir(email), "sender-history.json"), Json { ignoreUnknownKeys = true; encodeDefaults = true }.encodeToString(SenderHistoryFile(senders = history.snapshot())))
+        history.markClean()
+    }
+
     fun loadCache(email: String): AnalysisCache {
         val f = File(accountDir(email), "analysis-cache.json")
         return if (f.exists()) runCatching { json.decodeFromString<AnalysisCache>(f.readText()) }.getOrDefault(AnalysisCache()) else AnalysisCache()

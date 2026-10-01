@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -28,6 +29,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -88,6 +90,9 @@ class MainActivity : ComponentActivity() {
         window.decorView.postDelayed({ uiReady = true }, 4000)
         buildLayout()
         setContentView(root)
+        // The launch theme paints the window in the splash blue. Replace it with the page colour
+        // so nothing blue shows through when the keyboard resizes the layout.
+        window.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.quillbox_background)))
         configureWebView()
         pendingMailto = mailtoFrom(intent)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -131,14 +136,25 @@ class MainActivity : ComponentActivity() {
         webView = WebView(this).apply { setBackgroundColor(bg) }
         val body = FrameLayout(this)
         body.addView(webView, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+        // The in-app starting screen continues the launch splash: the same blue, white text.
         splash = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; setBackgroundColor(bg)
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; setBackgroundColor(topbar)
             val pad = (24 * resources.displayMetrics.density).toInt(); setPadding(pad, pad, pad, pad)
         }
-        splash.addView(ProgressBar(this))
+        val logo = ImageView(this).apply {
+            setImageResource(R.drawable.ic_splash)
+            val size = (120 * resources.displayMetrics.density).toInt()
+            layoutParams = LinearLayout.LayoutParams(size, size)
+        }
+        splash.addView(logo)
+        splash.addView(TextView(this).apply {
+            text = getString(R.string.app_name); textSize = 28f; gravity = Gravity.CENTER
+            setTextColor(Color.WHITE); setTypeface(typeface, android.graphics.Typeface.BOLD)
+        })
+        splash.addView(ProgressBar(this).apply { indeterminateTintList = android.content.res.ColorStateList.valueOf(Color.WHITE) })
         splashText = TextView(this).apply {
             text = getString(R.string.starting); textSize = 16f; gravity = Gravity.CENTER
-            setTextColor(if (dark) 0xFFF0F0F0.toInt() else 0xFF242424.toInt())
+            setTextColor(Color.WHITE)
             setPadding(0, (16 * resources.displayMetrics.density).toInt(), 0, 0)
         }
         splash.addView(splashText)
@@ -154,7 +170,10 @@ class MainActivity : ComponentActivity() {
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             topStrip.layoutParams = topStrip.layoutParams.apply { height = bars.top }
+            // The strip under the page is sized to whatever covers the bottom (navigation bar, or the
+            // keyboard while it is up) and painted in the page colour, never the splash blue.
             bottomStrip.layoutParams = bottomStrip.layoutParams.apply { height = maxOf(bars.bottom, ime.bottom) }
+            bottomStrip.setBackgroundColor(ContextCompat.getColor(this, R.color.quillbox_background))
             root.setPadding(bars.left, 0, bars.right, 0)
             topStrip.requestLayout(); bottomStrip.requestLayout()
             WindowInsetsCompat.CONSUMED

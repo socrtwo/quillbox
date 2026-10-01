@@ -17,7 +17,7 @@ class SpamEngine(
     val bayes: BayesClassifier = BayesClassifier().apply { seed() }
 ) {
 
-    fun analyze(facts: MessageFacts, config: SpamConfig, rules: List<Rule>): SpamVerdict {
+    fun analyze(facts: MessageFacts, config: SpamConfig, rules: List<Rule>, reputation: SenderReputation = SenderReputation.NONE): SpamVerdict {
         val reasons = ArrayList<SpamReason>()
         val senderDomain = HeaderParser.addressDomain(facts.fromAddress)
         val senderApex = HeaderParser.registrableDomain(senderDomain)
@@ -163,7 +163,11 @@ class SpamEngine(
 
         // --- 6. heuristics -----------------------------------------------------------------
         if (!effectivelySafe) {
-            val h = ContentHeuristics.evaluate(facts, links, text, ContentHeuristics.SenderContext(senderProven = senderProven))
+            if (reputation.knownCorrespondent) {
+                reasons += SpamReason("KNOWN_SENDER", "A sender you deal with", reputation.summary.replaceFirstChar { it.uppercase() } + "; link and wording checks are relaxed for them", -10)
+            }
+            val h = ContentHeuristics.evaluate(facts, links, text, ContentHeuristics.SenderContext(
+                senderProven = senderProven, knownSender = reputation.knownCorrespondent, familiarLinkApexes = reputation.familiarLinkApexes))
             var total = 0
             for (r in h.sortedByDescending { it.weight }) {
                 val allowed = minOf(r.weight, 40 - total)
@@ -240,6 +244,7 @@ class SpamEngine(
         // that it merely echoes the built-in seed corpus, which is content evidence again.
         code == "BAYES" -> if (bayes.userExamples >= 15) "bayes" else "content"
         code == "BLOCKED_SENDER" || code == "RULE" -> "rule"
+        code == "KNOWN_SENDER" -> "history"
         else -> "content"
     }
 
